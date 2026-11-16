@@ -15,6 +15,7 @@ import { assertSafe, safeSnapshot, RedlineError } from '../core/redlines.mjs';
 import { goMap, isHalted, sleep } from './combat-daemon.mjs';
 import { recordSample, predictEquipDelta } from './verifier.mjs';
 import { resolveTarget as resolveTargetImpl } from './resolver.mjs';
+import { bestInSlot, clearCache as clearEvalCache } from './evaluate.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const SNAP_DIR = path.join(process.env.TL_DATA_DIR ? path.resolve(process.env.TL_DATA_DIR) : path.join(ROOT, 'data'), 'equip-snapshots');
@@ -33,6 +34,11 @@ export function resolveTarget(target, game, opts = {}) {
 
 export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWrite = false } = {}) {
   const canWrite = () => allowWrite && stage >= 2 && !isHalted();
+  // 珍兽投喂熔断：投喂被证明不涨级后，不再每轮烧 5M 经验（经验优先给技能升级）
+  let petFeedNoGain = 0;
+  let petFeedDisabled = false;
+  // 官方评分本轮判过的槽位（供 equipBest 跳过，避免两套模型互相推翻）
+  let evalHandledSlots = new Set();
   const report = { at: new Date().toISOString(), stage, dryRun: !canWrite(), actions: [], blocked: [], errors: [], before: null, after: null };
 
   const note = (msg, extra = {}) => { report.actions.push({ at: new Date().toISOString().slice(11, 19), msg, ...extra }); log(msg); };
@@ -264,8 +270,94 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
     }
   }
 
+  // ── 2.5 官方评分换装（EQUIPMENT_EVALUATE，权威）──────────────
+  //
+  // 2026-11-16 起，换装决策以服务端评分为准，不再用自建的 lib-value 权重。
+  // 原因：verifier 里 3 个换装样本错了 2 个
+  //   （预测 +439 实测 -55、预测 +165 实测 -408），absMean 误差 338 战力。
+  // lib-value 降级为预筛选 / 定价 / 降级方案。
+  //
+  // 官方评分的额外好处：能处理「同槽多件」的槽位（戒指/饰品）。
+  // 老逻辑遇到同槽多件直接跳过，现在可以在同一基准下比出哪件最优。
+  async function equipByEvaluation(game) {
+    let changed = 0;
+    // 官方评分处理过的槽位：交给 equipBest 跳过，避免两套模型互相推翻
+    const handledSlots = new Set();
+    let g = game;
+
+    const slotsOf = gg => [...new Set((gg.equipments || []).map(e => e.equipTmpl?.slotType).filter(x => x != null))]
+      .sort((a, b) => a - b);
+
+    // 2026-11-16 修：原实现把 slots / eqs 在循环外算死，换完第一件后
+    // g 已经换成新快照，但循环还在用旧的 eqs → 同一个槽位被重复评估、
+    // 甚至把刚换上去的又换下来。现在每个槽位都从当前 g 重新取数据。
+    for (const slot of slotsOf(g)) {
+      if (isHalted()) break;
+      const eqs = g.equipments || [];
+      const cands = eqs.filter(e => e.equipTmpl?.slotType === slot && e.evaluationToken);
+      if (cands.length < 2) continue;
+
+      let r;
+      try {
+        r = await bestInSlot(ws, g, slot);
+      } catch (e) {
+        report.errors.push(`evaluate slot${slot}: ${e?.message || e}`);
+        continue;
+      }
+      // 官方已经对这个槽位给出结论（不管换不换），lib-value 都不该再插手
+      handledSlots.add(slot);
+      if (!r.shouldSwap) continue;
+
+      const target = r.best.item;
+      const before = g.role?.combatPower ?? 0;
+      const snap = snapshotEquipped(g, `eval-slot${slot}`);
+
+      const res = await guarded(
+        { action: 'EQUIP_ITEM', op: 'EQUIP_ITEM', unequip: true, snapshot: snap, itemId: target.id, item: target, owned: eqs },
+        () => ws.req('EQUIP_ITEM', { roleEquipId: target.id }, { ms: 8000 }),
+      );
+
+      if (!res?.success) continue;
+      changed++;
+      note(`官方评分换装 slot${slot} ${r.equippedNow?.equipTmpl?.name || '空'} → ${target.equipTmpl?.name}（伤害${(r.best.raw.damagePct || 0).toFixed(2)}% 综合+${r.best.score.toFixed(2)}）`);
+
+      // 复核真实战力；战力明显下降就回滚
+      try {
+        const g2 = await refresh();
+        const after = g2?.role?.combatPower ?? before;
+        recordSample({
+          action: 'EQUIP_ITEM_EVAL', predicted: Math.round(r.best.score * 100), measured: after - before,
+          beforePower: before, afterPower: after,
+          detail: { slot, from: r.equippedNow?.equipTmpl?.name, to: target.equipTmpl?.name, evalScore: r.best.score, damagePct: r.best.raw.damagePct },
+        });
+        if (after < before - 200) {
+          note(`⚠️ 换装后战力下降 ${before} → ${after}，尝试回滚`);
+          if (r.equippedNow) {
+            const rb = await guarded(
+              { action: 'EQUIP_ITEM', op: 'EQUIP_ITEM_ROLLBACK', unequip: true, itemId: r.equippedNow.id, item: r.equippedNow, owned: g2?.equipments || eqs },
+              () => ws.req('EQUIP_ITEM', { roleEquipId: r.equippedNow.id }, { ms: 8000 }),
+            ).catch(() => null);
+            if (rb?.success) {
+              changed--;
+              note(`↩️ 已回滚 slot${slot} 到 ${r.equippedNow.equipTmpl?.name}`);
+              const g3 = await refresh().catch(() => null);
+              if (g3) g = g3;
+            } else {
+              note(`❌ slot${slot} 回滚失败，需人工处理`);
+            }
+          }
+        } else if (g2) {
+          g = g2;
+        }
+      } catch { }
+      // 换装后基准变了，评分缓存必须作废
+      clearEvalCache();
+    }
+    return { changed, handledSlots, game: g };
+  }
+
   // ── 3. 配装：装备价值 + 真实战力双模型（实际战力只增不减）────
-  async function equipBest(g) {
+  async function equipBest(g, skipSlots = new Set()) {
     const plan = bestLoadout(g.equipments || [], g.equipSets || [], false, { minGain: 400, maxSteps: 4, gemInfo: g.gemInfo });
     let changed = 0;
     const rejected = new Set();   // 本次维护内已证明「换上去战力反而降」的候选
@@ -284,6 +376,8 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
     const safeEquip = async (hit, why, { minPredicted = 150 } = {}) => {
       if (rejected.has(hit.id)) return false;
       const slot = hit.equipTmpl?.slotType;
+      // 官方评分已经判过的槽位，不再用自建模型推翻
+      if (skipSlots.has(slot)) return false;
       if (unsafeSlots.has(slot)) { note(`跳过 slot${slot} 自动换装（同槽多件）`); return false; }
       const old = (g.equipments || []).find(x => x.isEquipped && x.equipTmpl?.slotType === slot);
       if (old?.id === hit.id) return true;
@@ -603,10 +697,13 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
       const hasPair = ready30.some(p => p.pet.sex === 'MALE') && ready30.some(p => p.pet.sex === 'FEMALE');
       if (hasPair) note('繁殖条件已满足（一公一母均 30 级）→ 可去苏州云飘飘 deposit；经验仍喂出战珍兽');
 
-      if (cand) {
+      if (cand && !petFeedDisabled) {
         // 实测 2026-11-15：一次性喂 40.77M 经验给 Lv.45 出战乌龟，
         // 角色经验清零但珍兽等级/战力(cp 13552)完全没变 → 大额一次性投喂无效或溢出丢失。
         // 改为单轮最多 5M，喂完立刻复核等级/战力，没涨就不再自动喂。
+        //
+        // 2026-11-16：投喂一旦被证明无效就熔断，别每轮继续烧 5M 经验。
+        // 经验对技能升级是实打实的战斗力，喂给不涨级的珍兽等于白扔。
         const amount = Math.min(expNow - 500_000, 5_000_000);
         const r = await guarded(
           { action: 'PET_COMMAND', op: 'PET_FEED', petId: cand.pet.id, pet: cand, pets: petsArr },
@@ -616,7 +713,17 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
           const after = (g.pets || []).find(p => p.id === cand.pet.id) || null;
           const gained = after ? (after.level - cand.pet.level) : 0;
           note(`喂出战珍兽 ${cand.speciesName} ${amount.toLocaleString()} 经验（原 Lv.${cand.pet.level} 资质${cand.average}%）→ Lv.${after ? after.level : '?'}（+${gained}）`);
-          if (after && gained <= 0) note('⚠️ 喂食后珍兽等级未变 → 本轮起停止自动投喂，需人工核对 PET_FEED 语义');
+          if (after && gained <= 0) {
+            // 连续两次喂食都不涨级 → 熔断，后面的轮次不再烧经验
+            petFeedNoGain++;
+            note(`⚠️ 喂食后珍兽等级未变（第 ${petFeedNoGain} 次）`);
+            if (petFeedNoGain >= 2) {
+              petFeedDisabled = true;
+              note('🛑 珍兽投喂已熔断：连续两次不涨级，经验改用于升技能');
+            }
+          } else if (after && gained > 0) {
+            petFeedNoGain = 0;
+          }
         }
       }
     }
@@ -631,7 +738,12 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
       try { arr = JSON.parse(sk.skillDetail?.expCost || '[]'); } catch { }
       const nx = arr.find(x => x.skill_level === sk.currentLevel + 1);
       if (!nx || nx.exp > (g.role?.currentExp || 0)) continue;
-      if (nx.exp < 30_000_000) continue;   // 经验留给珍兽
+      // 2026-11-16 修：原来 `if (nx.exp < 30_000_000) continue;  // 经验留给珍兽`
+      // 把所有便宜技能都挡死了（普通技能升级只要几百到几千万），实战里从没升过一次，
+      // 而珍兽每轮吃掉 500 万经验。技能直接决定伤害 → 打怪慢一倍（277s vs 136s 一批）。
+      // 改为：留一笔经验做珍兽口粮后，剩下的优先升最便宜的那一级，先吃到即时收益。
+      const feedReserve = Number(process.env.TL_FEED_RESERVE || 6_000_000); // 珍兽口粮预留
+      if (nx.exp > (g.role?.currentExp || 0) - feedReserve) continue;
       if (!best || nx.exp < best.cost) best = { id: sk.id, cost: nx.exp, name: sk.skillDetail?.name, lv: `${sk.currentLevel}→${sk.currentLevel + 1}` };
     }
     if (!best) return;
@@ -660,7 +772,16 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
     for (const [name, fn] of [
       ['potions', () => potions(g)],
       ['cleanup', () => cleanup(g)],
-      ['equip', () => equipBest(g)],
+      // 先官方评分换装（权威），再走 lib-value 兜底。
+      // 关键：官方判过的槽位要传给 equipBest 跳过，否则两套模型会互相推翻
+      // （实测出现过：官方换上去，lib-value 立刻换回来）。
+      ['equipEval', async () => {
+        const r = await equipByEvaluation(g);
+        evalHandledSlots = r.handledSlots;
+        // 函数内部已经把最新的 game 拿回来了，直接用，别再额外刷新
+        if (r.game) g = r.game;
+      }],
+      ['equip', () => equipBest(g, evalHandledSlots)],
       ['shop', () => shop(g)],
       ['gems', () => gems(g)],
       ['appraise', () => appraise(g)],
@@ -755,7 +876,7 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
     return resolveTargetImpl(target, g, opts);
   }
 
-  return { maintain, autoMaintain: maintain, craftSlot, upgradePet, listAuction, resolve, refresh, report };
+  return { maintain, autoMaintain: maintain, craftSlot, upgradePet, listAuction, resolve, refresh, report, equipByEvaluation };
 }
 
 export { LUOYANG, SUZHOU, MAP_XUANWU };

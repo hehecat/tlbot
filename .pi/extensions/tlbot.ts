@@ -110,6 +110,8 @@ let wantDaemon = false;
 let daemonConfig: any = {};
 let reconnectAt = 0;
 let reconnectAttempt = 0;
+let lastCloseSig = "";   // 上一次记录过的断开码，避免同一断因每 5 秒刷一次日志
+let pausedByWatchdog = false;   // daemon 的暂停是不是看门狗造成的（重连成功后要恢复）
 let schedState = loadSched();
 let schedBusy = false;
 let lastPatrolAt = Date.now();
@@ -118,6 +120,8 @@ let autobotEnabled = process.env.TL_AUTOBOT != null
   : (_auto0.autobotEnabled ?? true);
 let patrolMs = Number(process.env.TL_PATROL_MS || _auto0.patrolMs || 60 * 60_000);
 const RECONNECT_DELAYS = [3000, 6000, 12000];
+// 连接已断但 daemon 还记着自己在跑，超过这个时长就强制兜底重连
+const FORCE_RECONNECT_AFTER_MS = Number(process.env.TL_FORCE_RECONNECT_MS || 90_000);
 
 function buildRuntime(ws: any, initialGame: any = null): Runtime {
   // 每次（重）连接后尽快跑一次后勤：断线可能丢失出战珍兽/临时状态，需重新召唤/校正
@@ -249,9 +253,27 @@ setInterval(async () => {
   }
 
   if (rt?.ws?.state?.closed) {
-    log(`WS 已断开 code=${rt.ws.state.closeCode ?? '?'} reason=${rt.ws.state.closeReason || ''}`);
-    // daemon 在跑：交给它批次间重连，避免这里 stop 掉它
-    if (rt.daemon?.running) return;
+    // 只在断开码变化时记一次，否则每 5 秒刷一行一模一样的东西把日志淹掉
+    const sig = `${rt.ws.state.closeCode ?? '?'}/${rt.ws.state.closeReason || ''}`;
+    if (sig !== lastCloseSig) {
+      lastCloseSig = sig;
+      log(`WS 已断开 code=${rt.ws.state.closeCode ?? '?'} reason=${rt.ws.state.closeReason || ''}`);
+    }
+    // daemon 在跑：交给它批次间重连，避免这里 stop 掉它。
+    // 但如果 daemon 本身卡在 "running" 而连接长时间没恢复，这里要强制兜底，
+    // 否则会出现「日志一直刷断开、实际谁都没在重连」的假活状态。
+    if (rt.daemon?.running) {
+      const deadMs = Date.now() - (rt.connectedAt || 0);
+      if (deadMs < FORCE_RECONNECT_AFTER_MS) return;
+      log(`连接已断 ${Math.round(deadMs / 1000)}s 且 daemon 仍在跑 → 强制重连`);
+      // 2026-11-16 修：这里原来只 pause 不 resume，一旦触发过就永久停摆
+      // （实测 03:55 触发后，挂机停了 8 小时没人发现）。
+      // 记下"这个 pause 是我们造成的"，重连成功后必须恢复。
+      pausedByWatchdog = true;
+      rt.daemon.pause?.('stale-connection');
+    }
+  } else {
+    lastCloseSig = '';
   }
 
   if (Date.now() < reconnectAt) return;
@@ -260,11 +282,89 @@ setInterval(async () => {
   reconnectAttempt++;
   log(`重连尝试 #${reconnectAttempt}`);
   if (rt?.ws?.state?.closed) {
-    try { await rt.reconnect(); reconnectAttempt = 0; } catch (e: any) { log('重连失败', e?.message || String(e)); }
+    try {
+      await rt.reconnect();
+      reconnectAttempt = 0;
+      // 重连成功 → 把看门狗自己造成的暂停解除
+      if (pausedByWatchdog) {
+        pausedByWatchdog = false;
+        rt.daemon?.resume?.();
+        log('重连成功 → 恢复战斗循环');
+      }
+    } catch (e: any) { log('重连失败', e?.message || String(e)); }
   } else {
     await getRuntime();
   }
 }, 5000).unref?.();
+
+// ── 挂机自愈看门狗：daemon 停摆超过 3 分钟就拉起来 ─────────────
+// 2026-11-16 加：实测出现过「daemon 被 pause 后再也没人 resume」，
+// 结果挂机整整停了 8 小时没人发现（日志还在刷、进程还在、就是不干活）。
+// 这个看门狗是最后一道兜底，纯 JS，不花 token。
+let lastAliveAt = Date.now();
+let stalledSince = 0;
+setInterval(() => {
+  try {
+    if (STAGE < 2 || !AUTOPILOT || isHalted()) { stalledSince = 0; return; }
+    const r = rt;
+    if (!r?.store) return;
+
+    const snap = r.store.getSnapshot();
+    const combat = snap?.combat || {};
+    // "活着"的定义：战斗进度在推进，或刚收到过战斗状态包
+    const progressed = (combat.defeated ?? 0) > 0 || combat.stage === 'running';
+    const fresh = combat.lastStateAt && (Date.now() - Date.parse(combat.lastStateAt) < 60_000);
+
+    if (progressed && fresh) {
+      lastAliveAt = Date.now();
+      stalledSince = 0;
+      return;
+    }
+
+    // daemon 不处于 running（可能是 paused，也可能是 loop 已停）→ 兜底拉起
+    const running = r.daemon?.running;
+    const paused = r.daemon?.paused;
+    const deadFor = Date.now() - lastAliveAt;
+
+    if (!running && !isHalted() && deadFor > 180_000) {
+      log(`⏰ daemon 停摆 ${Math.round(deadFor / 1000)}s（paused=${paused}）→ 自愈`);
+      try {
+        pausedByWatchdog = false;
+        // start() 内部会把 _paused 重置为 false，对 paused 和 stopped 两种情况都有效
+        r.daemon?.start?.();
+        lastAliveAt = Date.now();
+        stalledSince = 0;
+      } catch (e: any) { log('自愈失败', e?.message || String(e)); }
+    }
+  } catch { }
+}, 60_000).unref?.();
+
+// ── 状态落盘：每 30 秒写一次 tl_status.json，供外部监控（不参与决策）──
+// 2026-11-16 加：v2 之前只在内存里维护状态，外部只能靠 logs 猜。
+const TL_STATUS_FILE = path.join(ROOT, "tl_status.json");
+setInterval(() => {
+  try {
+    const r = rt;
+    if (!r || !r.store) return;
+    const snap = r.store.getSnapshot();
+    const ds = r.daemon?.status?.() || null;
+    const out = {
+      at: new Date().toISOString(),
+      stage: STAGE,
+      autopilot: AUTOPILOT,
+      autobot: autobotEnabled,
+      halted: isHalted(),
+      ws: { closed: !!r.ws?.state?.closed, connectedAt: r.connectedAt },
+      daemon: ds,
+      me: snap.me,
+      combat: snap.combat,
+      rates: snap.rates,
+      pets: snap.pets,
+      health: { unknown: snap.health?.unknown, packets: snap.health?.packets, stalled: snap.health?.stalled },
+    };
+    fs.writeFileSync(TL_STATUS_FILE, JSON.stringify(out, null, 1));
+  } catch { }
+}, 30_000).unref?.();
 
 // ── .halt：5 秒内安静（D4）────────────────────────────────
 let haltLatched = false;

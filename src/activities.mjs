@@ -13,7 +13,10 @@ const LUOYANG = 4;
 const SUZHOU = 5;
 const TOWER_MAP = 20070;
 const MAP_XUANWU = 20080;
-const MAP_ZL = 20050;
+const MAP_ZL = 20050;          // 珍珑棋局（BOSS 90002）
+const MAP_CAMP = 20051;        // 伪宋军领地（50 小怪 + 10 精英 + BOSS 90103）
+const MAP_BEAR = 20052;        // 熊林（BOSS 90202，需除熊害令牌 51002）
+const ITEM_BEAR_TOKEN = 51002; // 除熊害令牌，伪宋军首领 40% 掉落
 
 export function createActivities(ws, store, { log = () => { }, stage = 0, allowWrite = false } = {}) {
   const canWrite = () => allowWrite && stage >= 2 && !isHalted();
@@ -178,39 +181,95 @@ export function createActivities(ws, store, { log = () => { }, stage = 0, allowW
     }
   }
 
-  // ── 每日副本：珍珑棋局 + 伪宋军 ─────────────────────────────
+  // ── 每日副本：珍珑棋局 + 伪宋军 + 熊林 ───────────────────────
+  //
+  // 2026-11-16 修正三处：
+  //   ① 伪宋军次数改读服务端的 remainingToday（原本用 dailyMaxEntries-enteredToday 自己算）
+  //   ② 补上熊林（BEAR_ENTER）—— 之前完全漏掉，它是伪宋军首领掉落令牌开启的下一环
+  //   ③ 熊林打之前先确认背包里有「除熊害令牌 51002」，没有就跳过并说明原因
   async function taskDungeon() {
     const A = 'daily_tasks';
-    const zl = await ws.req('ZL_STATUS', {}, { ms: 8000 });
-    const z = zl?.data || {};
-    note(A, `珍珑棋局 令牌${z.tokenCount ?? '?'} 今日已领${z.claimedToday ?? '?'}`);
-    if (!z.claimedToday) {
-      const cl = await guarded(A, { action: 'ZL_CLAIM_TOKEN', op: 'ZL_CLAIM_TOKEN' },
-        () => ws.req('ZL_CLAIM_TOKEN', {}, { ms: 8000 }));
-      if (cl?.success) note(A, '领棋局令牌 ✓');
+
+    // ── 1. 珍珑棋局 ──
+    try {
+      const zl = await ws.req('ZL_STATUS', {}, { ms: 8000 });
+      const z = zl?.data || {};
+      note(A, `珍珑棋局 令牌${z.tokenCount ?? '?'} 今日已领${z.claimedToday ?? '?'}`);
+      if (!z.claimedToday) {
+        const cl = await guarded(A, { action: 'ZL_CLAIM_TOKEN', op: 'ZL_CLAIM_TOKEN' },
+          () => ws.req('ZL_CLAIM_TOKEN', {}, { ms: 8000 }));
+        if (cl?.success) note(A, '领棋局令牌 ✓');
+      }
+      // 有令牌才进
+      const z2 = await ws.req('ZL_STATUS', {}, { ms: 6000 }).catch(() => null);
+      const tokens = z2?.data?.tokenCount ?? z.tokenCount ?? 0;
+      if (tokens > 0) {
+        const en = await guarded(A, { action: 'ZL_ENTER', op: 'ZL_ENTER' },
+          () => ws.req('ZL_ENTER', {}, { ms: 10000 }));
+        if (en?.success) {
+          note(A, '进珍珑棋局 ✓');
+          await sleep(800);
+          const res = await fightInMap(ws, store, MAP_ZL, { mode: 'dungeon', secsMax: 480_000, label: '珍珑棋局' });
+          note(A, `珍珑棋局 ${res.why} ${res.kills} 只 ${res.secs}s`);
+        } else {
+          note(A, '进珍珑棋局失败: ' + (en?.message || '未知'));
+        }
+      } else {
+        note(A, '珍珑棋局无令牌，跳过');
+      }
+    } catch (e) {
+      out.errors.push({ activity: A, msg: '珍珑棋局异常: ' + (e?.message || e) });
     }
 
-    const en = await guarded(A, { action: 'ZL_ENTER', op: 'ZL_ENTER' },
-      () => ws.req('ZL_ENTER', {}, { ms: 10000 }));
-    if (en?.success) {
-      note(A, '进珍珑棋局 ✓');
-      await sleep(800);
-      const res = await fightInMap(ws, store, MAP_ZL, { mode: 'dungeon', secsMax: 480_000, label: '珍珑棋局' });
-      note(A, `珍珑棋局 ${res.why} ${res.kills} 只 ${res.secs}s`);
-    } else if (en?.message) note(A, '进珍珑棋局: ' + en.message);
-
+    // ── 2. 伪宋军（每天 5 次）──
     for (let i = 0; i < 5; i++) {
       if (isHalted()) break;
-      const before = await ws.req('CAMP_STATUS', {}, { ms: 6000 });
-      const left = (before?.data?.dailyMaxEntries || 0) - (before?.data?.enteredToday || 0);
-      if (left <= 0) { note(A, '伪宋军次数已用完'); break; }
+      let remaining;
+      try {
+        const st = await ws.req('CAMP_STATUS', {}, { ms: 6000 });
+        const sd = st?.data || {};
+        // 服务端直接给剩余次数，不要再拿 max-entered 自己算
+        remaining = Number(sd.remainingToday ?? 0);
+        if (i === 0) note(A, `伪宋军 剩余 ${remaining}/${sd.dailyMaxEntries ?? '?'} 次（今日已进 ${sd.enteredToday ?? '?'}）`);
+      } catch (e) {
+        note(A, 'CAMP_STATUS 失败: ' + (e?.message || e));
+        break;
+      }
+      if (remaining <= 0) { if (i === 0) note(A, '伪宋军次数已用完'); break; }
+
       const r = await guarded(A, { action: 'CAMP_ENTER', op: 'CAMP_ENTER' },
         () => ws.req('CAMP_ENTER', {}, { ms: 10000 }));
       if (!r?.success) { note(A, '进伪宋军失败: ' + (r?.message || '')); break; }
       await sleep(800);
-      const res = await fightInMap(ws, store, 20051, { mode: 'dungeon', secsMax: 480_000, label: `伪宋军#${i + 1}` });
+      const res = await fightInMap(ws, store, MAP_CAMP, { mode: 'dungeon', secsMax: 480_000, label: `伪宋军#${i + 1}` });
       note(A, `伪宋军 #${i + 1} ${res.why} ${res.kills} 只 ${res.secs}s`);
       await sleep(600);
+    }
+
+    // ── 3. 熊林（需要除熊害令牌，由伪宋军首领掉落）──
+    try {
+      const g = await refresh();
+      const tokenCount = (g?.bagItems || [])
+        .filter(b => b.itemId === ITEM_BEAR_TOKEN)
+        .reduce((a, b) => a + (b.count || 1), 0);
+      if (tokenCount <= 0) {
+        note(A, `熊林跳过：无除熊害令牌（伪宋军首领 40% 掉落，今日未获得）`);
+      } else if ((g?.role?.level ?? 0) < 30) {
+        note(A, `熊林跳过：等级不足（当前 ${g?.role?.level}，需 30）`);
+      } else {
+        note(A, `熊林 令牌 ${tokenCount} 个 → 进入`);
+        const en = await guarded(A, { action: 'BEAR_ENTER', op: 'BEAR_ENTER' },
+          () => ws.req('BEAR_ENTER', {}, { ms: 10000 }));
+        if (en?.success) {
+          await sleep(800);
+          const res = await fightInMap(ws, store, MAP_BEAR, { mode: 'dungeon', secsMax: 480_000, label: '熊林' });
+          note(A, `熊林 ${res.why} ${res.kills} 只 ${res.secs}s`);
+        } else {
+          note(A, '进熊林失败: ' + (en?.message || '未知'));
+        }
+      }
+    } catch (e) {
+      out.errors.push({ activity: A, msg: '熊林异常: ' + (e?.message || e) });
     }
   }
 

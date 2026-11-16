@@ -21,6 +21,22 @@ export function isHalted() {
   try { return fs.existsSync(HALT_FILE); } catch { return false; }
 }
 
+// 判定「卡住」的正确口径。
+//
+// 实测（2026-11-16）：服务端 COMBAT_STATE 约 7 包/秒，而 defeated 约 10 秒才 +1
+// （取决于伤害）。所以「多少个包没变」不能用小数字——35 包只等于 5 秒，完全正常。
+//
+// 真正的判据应该是「多久没有一次击杀」，并以本批已观测到的击杀节奏为基准：
+//   · 记下最近一次 defeated 推进的时刻
+//   · 用本批平均击杀间隔 × 倍数作为容忍窗口（击杀慢的批次自动放宽）
+//   · 从没击杀过（刚开批）时用下限兜底
+const KILL_GAP_TOLERANCE = Number(process.env.TL_KILL_GAP_FACTOR || 6); // 平均间隔的 6 倍
+const MIN_STALL_MS = Number(process.env.TL_MIN_STALL_MS || 90_000);    // 至少容忍 90 秒
+
+// preparing 阶段收到第几个状态包时补发一次 COMBAT_START。
+// 服务端进入 preparing 约 5 秒转 running；这里按包数而不是秒数计。
+const PREP_STATES_BEFORE_RETRY = Number(process.env.TL_PREP_RETRY || 12);
+
 // ── 单场战斗 ────────────────────────────────────────────────
 // mode:
 //   batch  普通地图无尽刷怪：打满本批 total 或 idle 即结束（默认）
@@ -28,12 +44,18 @@ export function isHalted() {
 //   floor   塔：清层（seenLow 后打满）或 idle/死亡
 // 返回 { why, kills, total, secs, started }
 export function fightInMap(ws, store, mapId, {
-  mode = 'batch', secsMax = 200_000, label = '战斗', signal = null, onTick = null,
+  // 2026-11-16：secsMax 从 200s 提到 480s。丹霞岭一批 80 只实测要 3-4 分钟，
+  // 200 秒会在快打满时被砍掉（实测打到 63/80 就被判超时）。
+  // 这个值现在只是最后一道防死锁的保险，正常结束靠状态判据（打满/idle/无进度包）。
+  mode = 'batch', secsMax = 480_000, label = '战斗', signal = null, onTick = null,
 } = {}) {
   return new Promise(resolve => {
     const t0 = Date.now();
     let done = false, started = false, idle = 0, lastStage = '', lastDef = -1;
     let seenLow = false, everHadProgress = false, lastChangeAt = Date.now();
+    let staleStates = 0;   // 连续多少个 COMBAT_STATE 没有 defeated 推进
+    let prepStates = 0;    // 连续收到多少个 preparing 状态包
+    const killGaps = [];   // 本批击杀间隔样本（自适应卡死阈值）
     let sync = null;
 
     let guard = null;
@@ -73,7 +95,21 @@ export function fightInMap(ws, store, mapId, {
       if (p.defeated != null) {
         const def = Number(p.defeated) || 0;
         const total = Number(p.total) || 0;
-        if (def !== lastDef) { lastDef = def; lastChangeAt = Date.now(); }
+        // 用「连续多少个状态包 defeated 没变」判断卡住，而不是用秒数。
+        // 服务端在 running 时持续推 COMBAT_STATE；只要 defeated 推进，
+        // 不管多慢都说明在打，不该中断。
+        if (def !== lastDef) {
+          const t = Date.now();
+          if (lastDef >= 0 && def > lastDef) {
+            // 记录击杀间隔，用于自适应卡死判定
+            const gap = t - lastChangeAt;
+            killGaps.push(gap);
+            if (killGaps.length > 8) killGaps.shift();
+          }
+          lastDef = def; lastChangeAt = t; staleStates = 0;
+        } else if (stage === 'running') {
+          staleStates++;
+        }
         if (def > 0 && total > 0 && def < total) { seenLow = true; everHadProgress = true; }
         if (total > 0 && def >= total && (mode === 'dungeon' || seenLow)) return fin('打满');
       }
@@ -87,22 +123,28 @@ export function fightInMap(ws, store, mapId, {
       if (stage === 'idle') {
         idle++;
         if (idle >= 3 && everHadProgress) return fin('idle');
-        // 从未开打就一直 idle → 重发 START（每 ~2 秒一次）
+        // 从未开打就一直 idle → 每第 6 个 idle 包重发一次 START
+        // （按包数而不是时钟：服务端推 idle 的节奏就是它的真实节拍）
         if (!started && !everHadProgress) {
           if (idle % 6 === 0) {
             if (isHalted()) return fin('halt');
             try { ws.send('COMBAT_START', { mapId }); } catch { }
           }
-          if (Date.now() - t0 > 45_000) return fin('未进入战斗');
+          if (idle >= 60) return fin('未进入战斗');
         }
       } else idle = 0;
 
-      // preparing 超 25 秒 → 重发
-      if (stage === 'preparing' && Date.now() - t0 > 25_000) {
-        if (isHalted()) return fin('halt');
-        try { ws.send('COMBAT_START', { mapId }); } catch { }
-        started = false;
-      }
+      // preparing 停留过久 → 重发一次 START。
+      // 2026-11-16 修：原写法 `Date.now() - t0 > 25_000` 一旦成立就永久成立，
+      // 之后每来一个状态包都重发 START，等于自己反复打断自己的战斗。
+      // 改为按「连续收到多少个 preparing 包」计，且只重发一次。
+      if (stage === 'preparing') {
+        prepStates++;
+        if (prepStates === PREP_STATES_BEFORE_RETRY) {
+          if (isHalted()) return fin('halt');
+          try { ws.send('COMBAT_START', { mapId }); } catch { }
+        }
+      } else prepStates = 0;
 
       // 死亡 → 停止，交给 daemon 重进
       if (started && hp != null && hp <= 0) return fin('死亡');
@@ -115,13 +157,33 @@ export function fightInMap(ws, store, mapId, {
       if (/等级不足|无法识别/.test(m)) return fin('致命错误');
     });
 
-    // 进度哨兵：running 且 60 秒无进度 → 换批；还没开打且 25 秒无状态 → 判定被踢
+    // 进度哨兵 —— 只看状态，不看时钟。
+    // 2026-11-16 修：原逻辑「running 且 60 秒无进度 → 换批」会误杀慢波次：
+    // 丹霞岭一批 80 只正常要 2-3 分钟，只要一波打得慢就退出重来，
+    // 而后台勤每重开一次都补药 600 + 喂珍兽 500 万经验 + 重新配装。
+    // 实测触发 286 次 → 金币从 834 万烧到 188 万，死亡从 4 累计到 830。
+    //
+    // 现在改为纯状态判据：
+    //   · defeated 推进 → 一定在打，绝不中断
+    //   · defeated 连续 STALE_STATES_LIMIT 个状态包都没变 → 判定卡住
+    //   · 一个状态包都没收到（连接断了）→ 由 ws 层的静默检测负责
     guard = setInterval(() => {
       if (done) return;
       if (isHalted() || signal?.aborted) return fin(isHalted() ? 'halt' : 'aborted');
-      const silent = Date.now() - lastChangeAt;
-      if (!started && Date.now() - t0 > 25_000) return fin('无战斗状态');
-      if (lastStage === 'running' && silent > 60_000) return fin('无进度');
+      // 从未开打：靠 idle 计数和 START 重发自愈，不用时钟
+      if (!started) return;
+      if (lastStage !== 'running') return;
+
+      // 自适应窗口：本批平均击杀间隔 × 倍数，但不低于 MIN_STALL_MS。
+      // 打得快的批次窗口小、打得慢的自动放宽，不会因为伤害低被误杀。
+      const avgGap = killGaps.length
+        ? killGaps.reduce((a, b) => a + b, 0) / killGaps.length
+        : MIN_STALL_MS;
+      const windowMs = Math.max(MIN_STALL_MS, avgGap * KILL_GAP_TOLERANCE);
+
+      if (Date.now() - lastChangeAt > windowMs) {
+        return fin(`无击杀${Math.round((Date.now() - lastChangeAt) / 1000)}s`);
+      }
     }, 2000);
 
     setTimeout(() => {
@@ -149,9 +211,11 @@ export async function goMap(ws, store, mapId, { ms = 10_000 } = {}) {
 // ── CombatDaemon ────────────────────────────────────────────
 export class CombatDaemon {
   constructor(ws, store, { log = () => { }, defaultMapId = 10027, reconnect = null, maxSessionMs = null, onContractEnd = null } = {}) {
+    // 实例标识：诊断「多个 daemon 并发」这类问题时靠它区分日志来源
+    this.id = Math.random().toString(36).slice(2, 6);
     this.ws = ws;
     this.store = store;
-    this.log = log;
+    this.log = (...a) => log(`[d${this.id}]`, ...a);
     this.reconnectFn = reconnect;
     this.maxSessionMs = Number(maxSessionMs ?? process.env.TL_SESSION_MS ?? 120_000);
     this.sessionAt = Date.now();
@@ -187,10 +251,20 @@ export class CombatDaemon {
   get busy() { return this._busy; }
 
   configure(patch = {}) {
+    const oldMap = this.config.mapId;
     if (patch.mapId != null) this.config.mapId = Number(patch.mapId);
     if (patch.monsterId !== undefined) this.config.monsterId = patch.monsterId;
     if (patch.potionThreshold != null) this.config.potionThreshold = Number(patch.potionThreshold);
     this.log(`[combat] 配置 ${JSON.stringify(this.config)}`);
+
+    // 2026-11-16 修：原来改 mapId 后当前这批还要打满 80 只才切图，
+    // 实测出现「配置已改成 10030，日志还在 map=10027」的情况。
+    // 地图变了就立刻中断当前批，让 loop 用新配置重新开始。
+    if (patch.mapId != null && Number(patch.mapId) !== oldMap) {
+      this.log(`[combat] 地图切换 ${oldMap} → ${this.config.mapId}，中断当前批`);
+      try { this._abort?.('map-changed'); } catch { }
+      try { if (!isHalted()) this.ws.send('COMBAT_STOP'); } catch { }
+    }
     return this.status();
   }
 
@@ -275,12 +349,26 @@ export class CombatDaemon {
 
   start() {
     if (this._loopPromise) { this._paused = false; return this.status(); }
+    // 防抖：短时间内反复 start 说明上层在空转（看门狗/后勤循环互相触发）。
+    // 2026-11-16 实测出现过 start 被调 33 次、心跳日志一分钟刷 54 条的雪崩。
+    const nowMs = Date.now();
+    if (this._lastStartAt && nowMs - this._lastStartAt < 10_000) {
+      this.log(`[combat] start 间隔过短（${nowMs - this._lastStartAt}ms），忽略`);
+      return this.status();
+    }
+    this._lastStartAt = nowMs;
     this._stopped = false;
     this._running = true;
     this._paused = false;
     this.stats.startedAt = new Date().toISOString();
     this.sessionAt = Date.now();
-    this._loopPromise = this._loop().finally(() => { this._loopPromise = null; });
+    this._loopPromise = this._loop()
+      .catch(e => { this.log('[combat] loop 崩溃', e?.message || String(e)); })
+      .finally(() => {
+        // 诊断：loop 意外退出是重大事件（会导致 start 被反复调用、心跳堆积）
+        this.log(`[combat] ⚠️ loop 退出（stopped=${this._stopped} paused=${this._paused}）`);
+        this._loopPromise = null;
+      });
     if (this._heartbeat) clearInterval(this._heartbeat);
     this._heartbeat = setInterval(() => {
       if (this._stopped || this._paused) return;

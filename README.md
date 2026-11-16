@@ -1,172 +1,192 @@
 # tlbot
 
-一个《天龙八部》网页版的自动化挂机引擎。基于 WebSocket 协议逆向，模块化设计，支持 7×24 无人值守。
+A WebSocket automation engine for a browser MMORPG. Reverse-engineered protocol, modular design, built for 24/7 unattended operation.
 
-不依赖任何浏览器自动化 —— 直接跟游戏服务端对话。
+No browser automation — it talks to the game server directly.
 
 ```
-WebSocket ──> state-store ──> combat-daemon ──> 打怪循环
-                    │
-                    ├──> logistics ──> 补药/清仓/配装/鉴定/喂珍兽
-                    ├──> activities ──> 日常/副本/爬塔/刷蛋
-                    └──> probe-benchmark ──> 状态采集 + 排行榜对比
+                   ┌─────────────────────────────────┐
+                   │  engine/runtime.mjs             │
+                   │    sole WebSocket holder        │
+  ┌────────────────┤    combat / logistics / daily   │
+  │  agent layer   └──────────────┬──────────────────┘
+  │                               │
+  │  HTTP :9527                   │  ENTER_GAME returns
+  │  ├ /status                    │  the entire game
+  │  ├ /gear      ────────────────┤  definition:
+  │  ├ /gamedata                  │   · 42 maps
+  │  └ /maintain                  │   · 5078 equipment templates
+  │                               │   · 52 sets, 76 shop items
+  pi · Alma · Claude · curl       │   · skill costs, constants
+  └───────────────────────────────┘
 ```
 
-## 特点
+## What makes it different
 
-- **零 LLM 挂机** —— 战斗和后勤是纯 JavaScript 内存循环，不烧 token。LLM 只在需要做战略决策时介入
-- **模块化** —— 6.6k 行拆成 8 个业务模块 + 5 个核心库，不是一个大脚本
-- **红线保护** —— 卖装备、放生珍兽、花元宝等不可逆操作前强制过断言，防止自动化误伤
-- **实测校准** —— 每次换装记录「预测收益 vs 实际战力变化」，偏差超阈值会告警
-- **断线自愈** —— 指数退避重连，会话被服务端撤销也能恢复
+**The engine is standalone.** It runs as a plain Node process with zero agent dependencies. Any LLM — or no LLM at all — can drive it over a small HTTP API. If your agent dies, the bot keeps farming.
 
-## 快速开始
+**Game data is self-discovering.** `ENTER_GAME` returns the full game definition, so there are no hardcoded map tables to maintain. Every reconnect diffs the metadata and logs what changed — map added, drop table changed, shop restocked, constants shifted. Game updates are detected, not manually patched.
+
+**Equipment decisions come from the server.** The game exposes `EQUIPMENT_EVALUATE`, which returns the exact damage/hit/dodge/critical delta for swapping a piece. We tried building our own stat-weight model first; across three swaps it was wrong twice. Now the server decides, and our model is demoted to pre-filtering and pricing.
+
+**Red lines are assertions, not documentation.** Selling, releasing pets, spending premium currency — every write goes through `core/redlines.mjs`. Violations throw before the packet is sent.
+
+## Quick start
 
 ```bash
-# 1. 装依赖
-npm install
+# credentials
+cp creds.example.json creds.json     # or: TL_USER=... TL_PASS=...
 
-# 2. 配账号
-cp creds.example.json creds.json
-# 编辑 creds.json 填入你的账号密码
+# run
+./enginectl.sh start
 
-# 3. 跑起来
-scripts/hostctl.sh start
-
-# 看状态
-scripts/hostctl.sh status
-scripts/hostctl.sh logs
+# watch
+./enginectl.sh status
+./enginectl.sh logs
+./enginectl.sh wlogs
 ```
 
-如果不用 `creds.json`，也可以走环境变量：
+The engine exposes its state at `http://127.0.0.1:9527/status/brief`.
 
-```bash
-TL_USER=your_account TL_PASS=your_password scripts/hostctl.sh start
-```
-
-## 目录结构
+## Layout
 
 ```
+engine/
+  runtime.mjs      WebSocket + combat loop + scheduler (standalone)
+  http.mjs         HTTP control surface — any agent can drive
+  gamedata.mjs     auto-discovery and diffing of game metadata
+  watchdog.mjs     probe DNS/HTTP/WS; start engine when server returns
+
 core/
-  lib-ws.mjs         WebSocket 会话封装（persistenceRevision 乐观锁）
-  lib-value.mjs      装备价值模型（属性权重 / 套装加成 / 配装最优解）
-  lib-power.mjs      战力公式
-  redlines.mjs       红线断言（不可逆操作前强制检查）
-  sets.json          52 个套装定义
+  lib-ws.mjs       session wrapper (persistenceRevision optimistic lock)
+  lib-value.mjs    item valuation, set analysis, loadout search
+  lib-power.mjs    combat power formula
+  redlines.mjs     assertions guarding irreversible operations
+  sets.json        52 set definitions
 
 src/
-  state-store.mjs    内存状态树 + 协议白名单 + 未知包捕获
-  combat-daemon.mjs  战斗循环（可 pause/resume）
-  logistics.mjs      后勤：补药 → 清仓 → 配装 → 商城 → 宝石 → 鉴定 → 珍兽 → 技能
-  activities.mjs     日常任务 / 副本 / 爬塔 / 刷珍兽蛋
-  probe-benchmark.mjs 状态采集 + 排行榜差距分析
-  verifier.mjs       预测 vs 实测偏差记录
-  resolver.mjs       目标解析
-  scheduler.mjs      纯 JS 定时调度
+  state-store.mjs    in-memory state tree + unknown-packet capture
+  combat-daemon.mjs  battle loop (pause/resume hard boundary)
+  logistics.mjs      potions → cleanup → equip → shop → gems → appraise → pets → skills
+  activities.mjs     daily tasks / dungeons / tower / pet eggs
+  evaluate.mjs       official equipment scoring
+  probe-benchmark.mjs state capture + leaderboard gap
+  verifier.mjs       predicted vs measured deviation log
 
-scripts/
-  pi-host.mjs        常驻宿主（可选，整合 Pi coding agent）
-  hostctl.sh         启动/停止/状态/日志
-  stability-watch.mjs 稳定性看门狗
-
-.pi/
-  extensions/tlbot.ts  把引擎暴露成 LLM 可调用的工具
-  skills/              领域知识（配装 / 珍兽 / 逆向探测）
+.pi/                 optional Pi coding-agent adapter
 ```
 
-## 核心概念
+## Design notes
 
-### 单账号单会话
+### One account, one session
 
-游戏服务端只允许一个 WebSocket 连接。第二条连接会把第一条踢掉（`4001 Session replaced`）。
+The server allows exactly one WebSocket per account. A second connection kicks the first with `4001 Session replaced`. This single constraint shapes everything:
 
-**这是整套设计的根本约束。** 所以：
+- Only one process may hold the socket
+- Starting a new system requires stopping the old one first
+- Start scripts check for stale pidfiles before connecting
 
-- 同一时刻只允许一个进程持有 WS
-- 切换系统前必须先停旧的，否则两边互相踢
-- 启动脚本会检查是否有旧进程的 pidfile
+Debugging story: we once ran two engines against the same account for hours. Each reconnect kicked the other, and both kept "recovering," producing 4,355 `Session replaced` events before anyone noticed.
 
-### 战斗循环的完成判定
+### Batch completion is judged by state, not by clock
 
-游戏地图分两种：
+A naive "if no progress in 60 seconds, restart the batch" check looks reasonable and is catastrophic. One batch of 80 monsters takes 2–3 minutes; a slow wave trips the timer, the batch aborts, and the full maintenance sequence runs again — buying 600 potions, feeding 5M exp to a pet, re-evaluating gear. We measured 286 spurious aborts: gold drained from 8.34M to 1.88M and deaths accumulated from 4 to 830.
 
-- **普通地图** —— 无尽刷怪，`total` 是一批上限（通常 80）
-- **副本** —— 固定波次
+The correct signal is the state stream itself:
 
-判断一批打完不能只看 `defeated >= total`，因为连接后首帧可能带上一批的残留进度。正确的判定是：
+1. Must observe `defeated < total` first (proves the batch actually started — the first frame after connecting often carries the previous batch's leftover count)
+2. Then `defeated >= total` means the batch is done
+3. Three consecutive `idle` frames also means done
+4. Stall detection counts *state packets without progress*, with the tolerance window derived from this batch's own observed kill rate
 
-1. 必须先观察到 `defeated < total`（证明这批真的在打）
-2. 然后 `defeated >= total` 才算打完
-3. `stage === 'idle'` 连续出现 3 次也算结束
-4. `preparing` 超过 25 秒要重发 `COMBAT_START`（服务器偶尔会漏）
+`preparing` retry has a matching trap: `Date.now() - start > 25s` is true forever once it becomes true, so re-sending `COMBAT_START` on every subsequent frame means the bot keeps interrupting its own fight.
 
-### 战力公式
+### Combat power is not the whole story
 
-服务端返回的 `combatPower` 有水分，真实强度要自己算：
+The formula the server reports is incomplete — it omits set `all_atk%` bonuses and the defense mitigation curve `def/(def+5000)`. Our own model filled those gaps but drifted: three recorded swap predictions had errors of +1416, −55, and −408 against measured power.
 
-```
-hp*0.3 + mp*0.2 + (extAtk+intAtk)*4 + (extDef+intDef)*3
-+ (critRate+precision)*5 + (critDef+avoidance)*3 + 元素攻*2 + 元素防*1.5
-```
+Then we found `EQUIPMENT_EVALUATE`. It returns four separate percentages (damage, hit, dodge, critical) relative to the current loadout. That is exactly the "actual offense and defense effect" a single power number hides — and it revealed that swapping for a +3.16% damage item cost 732 total power, because the item traded defense for attack. On a bot whose throughput depends on not dying, that is a losing trade.
 
-这个公式漏掉了套装 `all_atk%` 和防御减伤曲线 `def/(def+5000)`，所以 `lib-value.mjs` 里做了补充。
+Gear changes therefore require all three: damage not negative, official equipment power not down more than 2%, and combined score meaningfully better.
 
-### 珍兽系统
+### Pets
 
-- `form` 分 `BABY`（资质 91–119%）和 `MUTANT`（164–197%）
-- 繁殖需要双方 ≥30 级、从未繁殖过、在苏州 `deposit`
-- 1 小时后双方各得一只二代
+- `form` is `BABY` (91–119% aptitude) or `MUTANT` (164–197%)
+- Breeding needs both parents ≥30, never bred, deposited in Suzhou; each parent yields one offspring after an hour
+- Feeding 40M exp at once changed neither level nor combat power — feeding is capped at 5M per cycle and auto-disabled after two consecutive cycles with no level gain
 
-### 强化与熔炼
+### Enhance and smelt
 
-- 强化只乘 `baseStats`，倍率 = `{1:10, 2:20, 3:30, 4:45, 5:65, 6:90, 7:120, 8:155, 9:195}%`
-- 鉴定只对 `req ≥ 50` 的武器开放
-- 熔炼要求武器双资质（`extScore` 和 `intScore`）都 > 1500
-- **已鉴定的武器可以重掷资质**，代价 1 个金刚砂
+- Enhancement multiplies `baseStats` only; multipliers `{1:10, 2:20, 3:30, 4:45, 5:65, 6:90, 7:120, 8:155, 9:195}%`
+- Appraisal is weapon-only, `req ≥ 50`
+- Smelting requires both `extScore` and `intScore` above 1500
+- An appraised weapon can be re-rolled for a different aptitude at the cost of one diamond sand
 
-## 配置
+## Configuration
 
-全部走环境变量：
+Environment variables:
 
-| 变量 | 说明 | 默认 |
+| Variable | Meaning | Default |
 |---|---|---|
-| `TL_USER` / `TL_PASS` | 账号密码 | — |
-| `TL_WS_URL` | 游戏服务端地址 | 见 `core/lib-ws.mjs` |
-| `TL_MAP` | 挂机地图 ID | 10027 |
-| `TL_STAGE` | 运行阶段（0 只读 / 1 接管战斗 / 2 全量） | 0 |
-| `AUTOPILOT` | `off` 时只跑循环不唤醒 LLM | `on` |
+| `TL_USER` / `TL_PASS` | credentials | — |
+| `TL_WS_URL` | game endpoint | see `core/lib-ws.mjs` |
+| `TL_MAP` | farming map id | 10027 |
+| `TL_STAGE` | 0 read-only / 1 combat / 2 full | 2 |
+| `TL_PORT` | HTTP control port (0 disables) | 9527 |
+| `TL_MAINT_MS` | maintenance interval | 30 min |
+| `TL_AUTOPILOT` | `off` = loop only, no dailies | `on` |
 
-## 安全红线
+## HTTP API
 
-`core/redlines.mjs` 里固化了六条，所有写操作发包前强制检查：
+```
+GET  /status              full snapshot
+GET  /status/brief        one-line summary (cheapest for agents)
+GET  /gear                loadout + official scoring suggestions
+GET  /drops?map=&limit=   drop statistics
+GET  /gamedata            metadata summary + recent changes
+GET  /gamedata/maps       map list (?type=normal|dungeon)
+GET  /gamedata/best-map   highest-tier map for current level
+GET  /gamedata/skills     skill upgrade plan with exp requirements
+POST /maintain            run maintenance now
+POST /daily               run dailies now
+POST /combat/{start|pause|resume}
+POST /config              { mapId, potionThreshold }
+POST /reconnect           force a new session
+POST /halt | /unhalt      emergency stop
+```
 
-1. 同槽战力前 2 强 —— 永不卖、永不分解、永不放生
-2. 珍兽最高资质个体 —— 永不放生
-3. 单次消耗元宝 > 0 —— 必须先 dry-run
-4. 单次金币消耗 > 总额 30% —— 拒绝
-5. 摘除已穿戴装备 —— 必须先快照物品 ID
-6. 不可逆操作（熔炼 / 重掷 / 出售）—— 先 dry-run
+## Safety
 
-**这些是断言函数，不是文档说明。** 触发就 `throw`，动作不会发出。
+`core/redlines.mjs` enforces six rules before any write packet:
 
-## 紧急停止
+1. Top-2 gear per slot — never sold, never dismantled, never released
+2. Highest-aptitude pet — never released
+3. Any premium-currency spend — dry-run first
+4. Gold spend above 30% of balance — refused
+5. Removing worn gear — snapshot item ids first
+6. Irreversible operations (smelt / re-roll / sell) — dry-run first
+
+These are assertion functions. They throw; the packet is not sent.
+
+## Emergency stop
 
 ```bash
 touch .halt
 ```
 
-5 秒内停止一切主动发包。这是最后一道闸，不管系统卡在什么状态都有效。
+All outbound packets stop within five seconds. Works regardless of what state the engine is in.
 
-## 已知限制
+## Known ceilings
 
-- 免费路线的收益天花板很低：强化精华野外不掉、打孔材料只在元宝商城
-- 套装很难凑齐（商城刷不到缺失的槽位）
-- 熔炼要求双资质 >1500，实测最好只有 1469，差 31
-- 炉石（金刚砂）来源有限
+- Enhancement essence does not drop in open-field maps — only dungeon bosses
+- Socket materials are premium-currency shop only
+- Smelting needs double aptitude > 1500; best observed is 1469
+- Set pieces rarely appear in the shop, so completing a set is luck-bound
+- Ancient Tomb maps have real drop tables but the monsters there out-damage a mid-gear character; they are the only open-field source of set drops
 
-## 免责声明
+## Disclaimer
 
-仅供学习 WebSocket 协议和自动化技术使用。请自行承担使用风险，遵守游戏的服务条款。
+For learning WebSocket protocol work and automation techniques. Use at your own risk and respect the game's terms of service.
 
 ## License
 

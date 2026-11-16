@@ -4,27 +4,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const DIR = path.dirname(new URL(import.meta.url).pathname);
+// 2026-11-14 重构：本文件已移入 core/，creds.json 仍在项目根。
+// 先找 core/creds.json，找不到再回退到上一级（项目根）。
+const CREDS_PATH = [path.join(DIR, 'creds.json'), path.join(DIR, '..', 'creds.json')]
+  .find(p => fs.existsSync(p));
+export const creds = JSON.parse(fs.readFileSync(CREDS_PATH, 'utf8'));
 
-// 凭据来源优先级：环境变量 > creds.json
-//   TL_USER / TL_PASS  —— 直接给账号密码（适合 CI / 容器）
-//   creds.json         —— { "username": "...", "password": "..." }
-// 先找 core/creds.json，找不到再回退到项目根。
-function loadCreds() {
-  if (process.env.TL_USER && process.env.TL_PASS) {
-    return { username: process.env.TL_USER, password: process.env.TL_PASS };
-  }
-  const p = [path.join(DIR, 'creds.json'), path.join(DIR, '..', 'creds.json')]
-    .find(x => fs.existsSync(x));
-  if (!p) {
-    throw new Error(
-      '缺少凭据：请创建 creds.json（见 creds.example.json），或设置环境变量 TL_USER / TL_PASS',
-    );
-  }
-  return JSON.parse(fs.readFileSync(p, 'utf8'));
-}
-export const creds = loadCreds();
-
-// 游戏服务端地址，按需覆盖即可
 const WS_URL = process.env.TL_WS_URL || 'wss://tl.jayczee.top:1212/ws';
 const OPEN_TIMEOUT = Number(process.env.TL_WS_OPEN_TIMEOUT || 15000);
 
