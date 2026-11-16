@@ -16,6 +16,7 @@ import { goMap, isHalted, sleep } from './combat-daemon.mjs';
 import { recordSample, predictEquipDelta } from './verifier.mjs';
 import { resolveTarget as resolveTargetImpl } from './resolver.mjs';
 import { bestInSlot, clearCache as clearEvalCache } from './evaluate.mjs';
+import { audit } from '../core/audit.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const SNAP_DIR = path.join(process.env.TL_DATA_DIR ? path.resolve(process.env.TL_DATA_DIR) : path.join(ROOT, 'data'), 'equip-snapshots');
@@ -188,7 +189,10 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
         { action: 'WAREHOUSE_DEPOSIT', op: 'WAREHOUSE_DEPOSIT', itemId: x.id, item: x, owned: eqs },
         () => ws.req('WAREHOUSE_DEPOSIT', { roleEquipId: x.id, count: 1 }, { ms: 5000 }),
       );
-      if (r?.success) note(`存仓 ${x.equipTmpl?.name}（价值 ${Math.round(iv(x))}）`);
+      if (r?.success) {
+        note(`存仓 ${x.equipTmpl?.name}（价值 ${Math.round(iv(x))}）`);
+        audit.log('deposit_equip', { cat: 'gear', reason: whyKeep, gain: [], extra: { item: x.equipTmpl?.name, iv: Math.round(iv(x)) } });
+      }
       await sleep(200);
     }
 
@@ -246,7 +250,10 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
         { action: 'SHOP_SELL', op: 'SHOP_SELL', itemId: x.id, item: x, owned: eqs, dryRun: false, confirmed: true },
         () => ws.req('SHOP_SELL', { roleEquipId: x.id, count: 1 }, { ms: 5000 }),
       );
-      if (r?.success) note(`直卖 ${x.equipTmpl?.name}`);
+      if (r?.success) {
+        note(`直卖 ${x.equipTmpl?.name}`);
+        audit.log('sell_equip', { cat: 'shop', reason: '非前2强 / 白蓝垃圾件', cost: [{ item: x.equipTmpl?.name, n: 1 }], extra: { mode: 'direct', price: 0 } });
+      }
       await sleep(150);
     }
     for (const x of toConsign) {
@@ -258,7 +265,10 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
         },
         () => ws.req('CONSIGNMENT_CREATE', { roleEquipId: x.id, count: 1, price, currency: 1, targetNickname: null }, { ms: 6000 }),
       );
-      if (r?.success) note(`挂售 ${x.equipTmpl?.name} ${price}金`);
+      if (r?.success) {
+        note(`挂售 ${x.equipTmpl?.name} ${price}金`);
+        audit.log('consign_equip', { cat: 'shop', reason: '品质/属性达标，等买家', cost: [{ item: x.equipTmpl?.name, n: 1 }], extra: { price } });
+      }
       else if (/最多同时上架/.test(r?.message || '')) {
         const r2 = await guarded(
           { action: 'SHOP_SELL', op: 'SHOP_SELL', itemId: x.id, item: x, owned: eqs, dryRun: false, confirmed: true },
@@ -320,6 +330,9 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
       if (!res?.success) continue;
       changed++;
       note(`官方评分换装 slot${slot} ${r.equippedNow?.equipTmpl?.name || '空'} → ${target.equipTmpl?.name}（伤害${(r.best.raw.damagePct || 0).toFixed(2)}% 综合+${r.best.score.toFixed(2)}）`);
+      audit.log('equip_swap', { cat: 'gear', reason: `官方评分 damage+${(r.best.raw.damagePct||0).toFixed(2)}% score+${r.best.score.toFixed(2)}`,
+        before: { power: before }, extra: { slot, from: r.equippedNow?.equipTmpl?.name || '空', to: target.equipTmpl?.name,
+        evalPower: r.best.raw.equipmentPower, damagePct: r.best.raw.damagePct } });
 
       // 复核真实战力；战力明显下降就回滚
       try {
@@ -549,6 +562,8 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
         let ap = {};
         try { ap = JSON.parse(r.data?.equipments?.find(e => e.id === x.id)?.appraisalStats || '[]'); } catch { }
         note(`鉴定 ${eqFlag(x) ? '[穿]' : ''}${x.equipTmpl?.name}${ap.extScore != null ? ` 双资质 ${ap.extScore}/${ap.intScore}` : ''}`);
+        audit.log('appraise', { cat: 'gear', reason: 'req>=50 武器未鉴定', cost: [{ item: '鉴定费(金币)' }],
+          gain: [{ item: `${x.equipTmpl?.name} 双资质 ${ap.extScore}/${ap.intScore}` }], extra: { itemId: x.id } });
       }
       await sleep(400);
     }
@@ -672,7 +687,11 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
           { action: 'PET_COMMAND', op: 'PET_RELEASE', petId: w.pet.id, pet: w, pets: petsArr, dryRun: false, confirmed: true },
           () => ws.req('PET_COMMAND', { action: 'release', confirm: true, petId: w.pet.id, requestId: crypto.randomUUID() }, { ms: 8000 }),
         );
-        if (r?.success) note(`放生低资质珍兽 ${w.speciesName} ${w.average}%`);
+        if (r?.success) {
+          note(`放生低资质珍兽 ${w.speciesName} ${w.average}%`);
+          audit.log('release_pet', { cat: 'pet', reason: `栏位满，放生最低资质（红线 R2 保护最高资质）`,
+            cost: [{ item: `${w.speciesName} Lv.${w.level} 资质${w.average}%` }], extra: { petId: w.pet?.id } });
+        }
       }
     }
 
@@ -713,6 +732,10 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
           const after = (g.pets || []).find(p => p.id === cand.pet.id) || null;
           const gained = after ? (after.level - cand.pet.level) : 0;
           note(`喂出战珍兽 ${cand.speciesName} ${amount.toLocaleString()} 经验（原 Lv.${cand.pet.level} 资质${cand.average}%）→ Lv.${after ? after.level : '?'}（+${gained}）`);
+          audit.log('pet_feed', { cat: 'pet', reason: '出战珍兽吃经验升战力',
+            cost: [{ item: '角色经验', n: amount }],
+            gain: gained > 0 ? [{ item: `${cand.speciesName} Lv.${cand.pet.level}→${after?.level}`, n: gained }] : [],
+            extra: { species: cand.speciesName, gainLevels: gained } });
           if (after && gained <= 0) {
             // 连续两次喂食都不涨级 → 熔断，后面的轮次不再烧经验
             petFeedNoGain++;
@@ -751,7 +774,11 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
       { action: 'UPGRADE_SKILL', op: 'UPGRADE_SKILL' },
       () => ws.req('UPGRADE_SKILL', { roleSkillId: best.id }, { ms: 6000 }),
     );
-    if (r?.success) note(`技能 +1 ${best.name} ${best.lv}（耗经验 ${best.cost}）`);
+    if (r?.success) {
+      note(`技能 +1 ${best.name} ${best.lv}（耗经验 ${best.cost}）`);
+      audit.log('skill_up', { cat: 'gear', reason: '性价比最高的一级', cost: [{ item: '角色经验', n: best.cost }],
+        gain: [{ item: `${best.name} ${best.lv}` }] });
+    }
   }
 
   // ── 主入口 ─────────────────────────────────────────────────

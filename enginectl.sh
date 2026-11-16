@@ -29,8 +29,23 @@ case "${1:-status}" in
     fi
     mkdir -p "$ROOT/logs"
     cd "$ROOT" || exit 1
+
+    # ── fake-ip 绕过 ──
+    # Clash 的 TUN+fake-ip 会把域名解析成 198.18.x.x 假地址，
+    # 而订阅里通常有 IP-CIDR,198.18.0.0/16,DIRECT 规则，导致 WS 连不上。
+    # 启动前用公共 DNS 查一次真实 IP，通过 TL_DNS_FIX 传给引擎覆盖 dns.lookup。
+    if [ -z "${TL_DNS_FIX:-}" ]; then
+      TL_DNS_FIX=$("$NODE" "$ROOT/scripts/resolve-ip.mjs" 2>/dev/null || true)
+      if [ -n "${TL_DNS_FIX:-}" ]; then
+        export TL_DNS_FIX
+        echo "  DNS 覆盖：$TL_DNS_FIX"
+      else
+        echo "  DNS 未取到真实 IP，按默认方式连接"
+      fi
+    fi
+
     sleep "${TL_START_DELAY:-3}"
-    TL_STAGE="$STAGE" TL_PORT="$PORT" nohup "$NODE" engine/runtime.mjs >> "$ROOT/logs/engine.out" 2>&1 &
+    TL_STAGE="$STAGE" TL_PORT="$PORT" TL_DNS_FIX="${TL_DNS_FIX:-}" nohup "$NODE" engine/runtime.mjs >> "$ROOT/logs/engine.out" 2>&1 &
     sleep 4
     if alive; then
       echo "engine 已启动 pid=$(cat "$PIDFILE") stage=$STAGE port=$PORT"

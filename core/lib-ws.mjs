@@ -2,6 +2,7 @@
 // 关键：所有写操作都要在外层带 revision = role.persistenceRevision
 import fs from 'node:fs';
 import path from 'node:path';
+import dns from 'node:dns';
 
 const DIR = path.dirname(new URL(import.meta.url).pathname);
 // 2026-11-14 重构：本文件已移入 core/，creds.json 仍在项目根。
@@ -12,6 +13,62 @@ export const creds = JSON.parse(fs.readFileSync(CREDS_PATH, 'utf8'));
 
 const WS_URL = process.env.TL_WS_URL || 'wss://tl.jayczee.top:1212/ws';
 const OPEN_TIMEOUT = Number(process.env.TL_WS_OPEN_TIMEOUT || 15000);
+
+// ── DNS 静态覆盖（绕过 fake-ip）────────────────────────────
+//
+// 背景：Clash/mihomo 的 TUN + fake-ip 模式会给所有域名返回 198.18.x.x
+// 的假地址，再把真实解析交给代理。但订阅里通常有一条
+//   IP-CIDR,198.18.0.0/16,DIRECT,no-resolve
+// 用来防止假地址被误解析——副作用是「按 IP 匹配」，sniffing 关闭时
+// 无法还原域名，于是所有走 fake-ip 的流量都变成直连假地址，必然失败。
+//
+// 实测：wss 连不上（非 101），但同一域名的真实 IP 直连 2ms 就通。
+// 解决办法是覆盖 dns.lookup 让它返回固定 IP，SNI 仍然是原域名，
+// 证书校验不受影响。
+//
+// 用法：TL_DNS_FIX="tl.jayczee.top=115.195.72.142,other.host=1.2.3.4"
+export function installDnsFix(spec = process.env.TL_DNS_FIX || '') {
+  if (globalThis.__tlDnsFixMap) return globalThis.__tlDnsFixMap;
+
+  const map = {};
+  for (const pair of String(spec).split(',')) {
+    const [host, ip] = pair.split('=').map(x => x && x.trim());
+    if (host && ip) map[host] = ip;
+  }
+  if (!Object.keys(map).length) return null;
+
+  const orig = dns.lookup;
+  dns.lookup = function patched(host, opts, cb) {
+    if (typeof opts === 'function') { cb = opts; opts = {}; }
+    const fixed = map[host];
+    if (fixed) {
+      if (opts && opts.all) return process.nextTick(() => cb(null, [{ address: fixed, family: 4 }]));
+      return process.nextTick(() => cb(null, fixed, 4));
+    }
+    return orig.call(dns, host, opts, cb);
+  };
+
+  globalThis.__tlDnsFixMap = map;
+  return map;
+}
+
+// 模块加载时自动生效（TL_DNS_FIX 有值时）
+const DNS_FIX = installDnsFix();
+
+// 记录这次实际连上的 IP，供下次在 fake-ip 环境里直接复用
+function rememberWorkingIp() {
+  try {
+    const fixed = globalThis.__tlDnsFixMap;
+    if (!fixed) return;                       // 没走 IP 覆盖，说明系统 DNS 是好的
+    const ip = Object.values(fixed)[0];
+    if (!ip) return;
+    const cacheFile = path.join(DIR, '..', 'data', 'ws-ip.txt');
+    fs.mkdirSync(path.dirname(cacheFile), { recursive: true });
+    const old = (() => { try { return fs.readFileSync(cacheFile, 'utf8').trim().split('\n').filter(Boolean); } catch { return []; } })();
+    const next = [ip, ...old.filter(x => x !== ip)].slice(0, 5);
+    fs.writeFileSync(cacheFile, next.join('\n') + '\n');
+  } catch { }
+}
 
 export function createSession({ trace = false } = {}) {
   const ws = new WebSocket(WS_URL);
@@ -126,6 +183,8 @@ export function createSession({ trace = false } = {}) {
           if (!g || !g.data) return bad('enter fail');
           state.pr = g.data.role.persistenceRevision;
           state.ready = true;
+          // 连接成功后把这次用的 IP 记进缓存，供下次 fake-ip 环境下复用
+          rememberWorkingIp();
           ok(g.data);
         });
       });

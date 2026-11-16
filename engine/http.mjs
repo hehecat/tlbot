@@ -127,6 +127,23 @@ export function startHttp(engine, port = 9527) {
         });
       }
 
+      // ── 审计日志 ──
+      if (method === 'GET' && p === '/audit') {
+        const date = url.searchParams.get('date') || new Date().toISOString().slice(0, 10);
+        const action = url.searchParams.get('action');
+        const cat = url.searchParams.get('cat');
+        const limit = Number(url.searchParams.get('limit') || 100);
+        let rows = engine.audit?.read?.(date) || [];
+        if (action) rows = rows.filter(r => r.action === action);
+        if (cat) rows = rows.filter(r => r.cat === cat);
+        return json(res, 200, { date, count: rows.length, rows: rows.slice(-limit) });
+      }
+
+      if (method === 'GET' && p === '/audit/summary') {
+        const date = url.searchParams.get('date') || new Date().toISOString().slice(0, 10);
+        return json(res, 200, engine.audit?.summary?.(date) || { error: '审计模块未加载' });
+      }
+
       // ── 游戏元数据（自动同步的成果）──
       if (method === 'GET' && p === '/gamedata') {
         const gd = engine.gamedata;
@@ -237,6 +254,8 @@ export function startHttp(engine, port = 9527) {
             'GET /status/brief': '一行摘要（省 token，推荐先看这个）',
             'GET /gear': '当前配装 + 官方评分建议（耗时 20-30s）',
             'GET /drops?map=&limit=': '掉落统计',
+            'GET /audit?date=&action=&cat=&limit=': '审计日志（每次改状态的操作为一行，含 reason/cost/gain）',
+            'GET /audit/summary?date=': '当天审计汇总（按 action 聚合 + 消耗/产出总计）',
             'GET /gamedata': '游戏元数据摘要（地图/套装/商城/技能数量 + 最近变化）',
             'GET /gamedata/maps?type=normal|dungeon': '地图列表',
             'GET /gamedata/best-map': '按当前等级推荐最高收益地图',

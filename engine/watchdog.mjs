@@ -49,36 +49,48 @@ function log(...a) {
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // ── 探测 ───────────────────────────────────────────────────
-async function probeDns() {
+// 用公共 DNS 查真实 IP —— 系统 DNS 在 fake-ip 模式下只会返回 198.18.x.x，
+// 那个地址不能被当作「服务器可达」的证据（它永远解析得到）。
+async function resolveRealIp() {
   try {
-    const a = await Promise.race([
-      dns.lookup(HOST),
+    const r = new dns.Resolver();
+    r.setServers(['223.5.5.5', '119.29.29.29']);
+    const addrs = await Promise.race([
+      r.resolve4(HOST),
       sleep(10_000).then(() => { throw new Error('DNS 超时'); }),
     ]);
-    return { ok: true, address: a.address };
+    const real = (addrs || []).filter(a => !a.startsWith('198.18.') && !a.startsWith('198.19.'));
+    if (!real.length) return { ok: false, error: 'DNS: 只拿到 fake-ip' };
+    return { ok: true, address: real[0] };
   } catch (e) {
     return { ok: false, error: `DNS: ${e.code || e.message}` };
   }
 }
 
-function probeHttp() {
+function probeHttp(ip) {
   return new Promise(resolve => {
     const t = Date.now();
-    const req = https.get(PROBE_URL, { rejectUnauthorized: false, timeout: 12_000 }, res => {
+    const opts = { rejectUnauthorized: false, timeout: 12_000, servername: HOST };
+    if (ip) { opts.host = ip; opts.port = PORT; opts.path = '/'; }
+    const req = ip
+      ? https.get({ ...opts, headers: { Host: HOST } }, handle)
+      : https.get(PROBE_URL, opts, handle);
+    function handle(res) {
       res.resume();
       resolve({ ok: res.statusCode === 200, status: res.statusCode, ms: Date.now() - t });
-    });
+    }
     req.on('error', e => resolve({ ok: false, error: `HTTP: ${e.code || e.message}` }));
     req.on('timeout', () => { req.destroy(); resolve({ ok: false, error: 'HTTP 超时' }); });
   });
 }
 
-function probeWs() {
+function probeWs(ip) {
   return new Promise(resolve => {
     const t = Date.now();
     let done = false;
-    const finish = r => { if (done) return; done = true; try { ws.close(); } catch { } resolve(r); };
-    const ws = new WebSocket(WS_URL);
+    let ws = null;
+    const finish = r => { if (done) return; done = true; try { ws?.close(); } catch { } resolve(r); };
+    try { ws = new WebSocket(WS_URL); } catch (e) { return finish({ ok: false, error: `WS 构造失败: ${e.message}` }); }
     const timer = setTimeout(() => finish({ ok: false, error: 'WS 握手超时' }), 12_000);
     ws.onopen = () => { clearTimeout(timer); finish({ ok: true, ms: Date.now() - t }); };
     ws.onerror = e => { clearTimeout(timer); finish({ ok: false, error: `WS: ${e?.message || 'error'}` }); };
@@ -86,11 +98,15 @@ function probeWs() {
 }
 
 async function probeAll() {
-  const d = await probeDns();
+  const d = await resolveRealIp();
   if (!d.ok) return { ok: false, stage: 'dns', detail: d };
-  const h = await probeHttp();
+
+  // 用真实 IP 探测 HTTP（绕过 fake-ip，才能反映服务器真实状态）
+  const h = await probeHttp(d.address);
   if (!h.ok) return { ok: false, stage: 'http', detail: h, dns: d };
-  const w = await probeWs();
+
+  // WS 走真实 IP + SNI，与引擎实际连接方式一致
+  const w = await probeWs(d.address);
   if (!w.ok) return { ok: false, stage: 'ws', detail: w, dns: d, http: h };
   return { ok: true, dns: d, http: h, ws: w };
 }

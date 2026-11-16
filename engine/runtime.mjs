@@ -26,8 +26,12 @@ import { createActivities } from '../src/activities.mjs';
 import { decideActions, loadState as loadSched, saveState as saveSched, dateKey } from '../src/scheduler.mjs';
 import { scanAllSlots, bestInSlot, clearCache as clearEvalCache } from '../src/evaluate.mjs';
 import * as gamedata from './gamedata.mjs';
+import { audit } from '../core/audit.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
+// data 目录：子模块（activities/logistics）通过 TL_DATA_DIR 找落盘位置，
+// 不设置的话它们会各自按 process.cwd() 猜，容易散在不同地方。
+if (!process.env.TL_DATA_DIR) process.env.TL_DATA_DIR = path.join(ROOT, 'data');
 export const HALT_FILE = path.join(ROOT, '.halt');
 
 const STAGE = Number(process.env.TL_STAGE ?? 2);
@@ -192,6 +196,21 @@ async function runDaily() {
   const wasRunning = state.daemon?.running;
   try {
     if (wasRunning) { state.daemon.pause('activity'); await state.daemon.whenIdle?.(20_000); }
+
+    // ① 材料加工（纯收益，先做）
+    // 宝石合成 / 布银合成 / 强化 / 熔炼投经验
+    try {
+      const c = await state.activities.craftMaterials();
+      log(`[craft] 宝石${c?.gems?.gained || 0} 棉布+${c?.cotton?.cotton || 0} 秘银+${c?.cotton?.mithril || 0} 强化${c?.enhance?.ok || 0}/${(c?.enhance?.ok || 0) + (c?.enhance?.fail || 0)} 熔炼${c?.smelt?.invested ? '已投' : '-'}`);
+    } catch (e) { log(`[craft] 异常: ${e?.message || e}`); }
+
+    // ② 苏州抽奖（在线满 30 分钟就有次数）
+    try {
+      const l = await state.activities.lottery({ maxDraws: 20 });
+      if (l?.draws) log(`[lottery] 抽了 ${l.draws} 次: ${(l.rewards || []).join(', ')}`);
+    } catch (e) { log(`[lottery] 异常: ${e?.message || e}`); }
+
+    // ③ 常规日常
     const res = await state.activities.dailyTasks();
     state.schedState.lastDailyKey = dateKey(Date.now());
     saveSched(state.schedState);
@@ -309,6 +328,7 @@ export const engine = {
     return d;
   },
   gamedata,
+  audit,
   maintain: runMaintain,
   daily: runDaily,
   reconnect,

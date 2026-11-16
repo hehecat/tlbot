@@ -62,6 +62,7 @@ core/
   lib-value.mjs    item valuation, set analysis, loadout search
   lib-power.mjs    combat power formula
   redlines.mjs     assertions guarding irreversible operations
+  audit.mjs        append-only operation log (reason / cost / gain)
   sets.json        52 set definitions
 
 src/
@@ -143,6 +144,8 @@ GET  /status              full snapshot
 GET  /status/brief        one-line summary (cheapest for agents)
 GET  /gear                loadout + official scoring suggestions
 GET  /drops?map=&limit=   drop statistics
+GET  /audit?date=&cat=&action=&limit=  operation log
+GET  /audit/summary?date=  daily aggregate of cost and gain
 GET  /gamedata            metadata summary + recent changes
 GET  /gamedata/maps       map list (?type=normal|dungeon)
 GET  /gamedata/best-map   highest-tier map for current level
@@ -154,6 +157,28 @@ POST /config              { mapId, potionThreshold }
 POST /reconnect           force a new session
 POST /halt | /unhalt      emergency stop
 ```
+
+## Audit log
+
+Every operation that changes game state writes one line to `data/audit/YYYY-MM-DD.jsonl`. A line answers four questions: what happened, why it was decided, what it cost, what it produced.
+
+```json
+{"ts":"2026-11-16T11:59:39Z","cat":"craft","action":"smelt_invest","ok":true,
+ "reason":"progress not full, investing spare exp",
+ "cost":[{"item":"character exp","n":365018}],
+ "extra":{"progress":"173094984/880000000"}}
+```
+
+Fourteen operations are instrumented: gear deposit/swap/appraise, shop sell/consign, pet release/feed, gem synthesis, cloth synthesis, mithril synthesis, enhancement, smelting investment, lottery draw, skill upgrade.
+
+Query through the API:
+
+```
+GET /audit?date=2026-11-16&cat=craft&limit=50
+GET /audit/summary?date=2026-11-16
+```
+
+The summary aggregates by action and totals every cost and gain for the day — useful for answering "what did the bot actually consume today".
 
 ## Safety
 
