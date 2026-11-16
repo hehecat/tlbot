@@ -1,0 +1,23 @@
+{
+  "name": "tlbot",
+  "version": "1.0.0",
+  "description": "WebSocket-based automation engine for a web MMORPG — modular, zero-LLM idle loop, red-line protected",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "sh scripts/hostctl.sh start",
+    "stop": "sh scripts/hostctl.sh stop",
+    "status": "sh scripts/hostctl.sh status",
+    "logs": "sh scripts/hostctl.sh logs",
+    "test": "node --test test/"
+  },
+  "keywords": [
+    "websocket",
+    "automation",
+    "bot",
+    "game"
+  ]
+}

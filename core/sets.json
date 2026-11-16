@@ -1,0 +1,2215 @@
+[
+ {
+  "name": "摩柯",
+  "count": 3,
+  "members": [
+   {
+    "id": 10510000,
+    "name": "摩柯云铁盔",
+    "slot": 3
+   },
+   {
+    "id": 10511000,
+    "name": "摩柯云铁鞋",
+    "slot": 5
+   },
+   {
+    "id": 10512000,
+    "name": "摩柯云铁手",
+    "slot": 11
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 270
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 470,
+     "ext_def": 54,
+     "ext_atk": 40
+    }
+   }
+  ]
+ },
+ {
+  "name": "无相",
+  "count": 3,
+  "members": [
+   {
+    "id": 10513001,
+    "name": "无相精铁甲",
+    "slot": 2
+   },
+   {
+    "id": 10514001,
+    "name": "无相精铁腕",
+    "slot": 4
+   },
+   {
+    "id": 10515001,
+    "name": "无相精铁肩",
+    "slot": 10
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 483
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "ext_atk": 200,
+     "hp": 983
+    }
+   }
+  ]
+ },
+ {
+  "name": "韦陀",
+  "count": 4,
+  "members": [
+   {
+    "id": 10500002,
+    "name": "韦陀",
+    "slot": 1
+   },
+   {
+    "id": 10520002,
+    "name": "韦陀之枯",
+    "slot": 6
+   },
+   {
+    "id": 10521002,
+    "name": "韦陀腰带",
+    "slot": 9
+   },
+   {
+    "id": 10522002,
+    "name": "韦陀指环",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 525
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "hp": 1575,
+     "crit_def": 4,
+     "ext_def": 120,
+     "ext_atk": 210,
+     "crit_rate": 4,
+     "all_atk": 15
+    }
+   }
+  ]
+ },
+ {
+  "name": "金刚",
+  "count": 3,
+  "members": [
+   {
+    "id": 10512003,
+    "name": "金刚散铁手",
+    "slot": 11
+   },
+   {
+    "id": 10514003,
+    "name": "金刚散铁腕",
+    "slot": 4
+   },
+   {
+    "id": 10522003,
+    "name": "金刚指环",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 900
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "ext_atk": 320,
+     "hp": 1300
+    }
+   }
+  ]
+ },
+ {
+  "name": "般若",
+  "count": 4,
+  "members": [
+   {
+    "id": 10511004,
+    "name": "般若银铁鞋",
+    "slot": 5
+   },
+   {
+    "id": 10513004,
+    "name": "般若银铁甲",
+    "slot": 2
+   },
+   {
+    "id": 10515004,
+    "name": "般若银铁肩",
+    "slot": 10
+   },
+   {
+    "id": 10521004,
+    "name": "般若腰环",
+    "slot": 9
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 500
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "ext_atk": 650,
+     "hp": 3750,
+     "holy_def": 8,
+     "ext_def": 300,
+     "all_atk": 20
+    }
+   }
+  ]
+ },
+ {
+  "name": "摩尼",
+  "count": 3,
+  "members": [
+   {
+    "id": 10513010,
+    "name": "摩尼炼铁甲",
+    "slot": 2
+   },
+   {
+    "id": 10514010,
+    "name": "摩尼炼铁腕",
+    "slot": 4
+   },
+   {
+    "id": 10515010,
+    "name": "摩尼炼铁肩",
+    "slot": 10
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 125
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "ext_atk": 138,
+     "hp": 275
+    }
+   }
+  ]
+ },
+ {
+  "name": "揭谛",
+  "count": 3,
+  "members": [
+   {
+    "id": 10520011,
+    "name": "揭谛之埃",
+    "slot": 6
+   },
+   {
+    "id": 10521011,
+    "name": "揭谛腰带",
+    "slot": 9
+   },
+   {
+    "id": 10522011,
+    "name": "揭谛指环",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 500,
+     "precision": 141,
+     "avoidance": 30,
+     "ext_atk": 100
+    }
+   }
+  ]
+ },
+ {
+  "name": "烈焰",
+  "count": 4,
+  "members": [
+   {
+    "id": 10500012,
+    "name": "烈焰",
+    "slot": 1
+   },
+   {
+    "id": 10510012,
+    "name": "烈焰仪铁盔",
+    "slot": 3
+   },
+   {
+    "id": 10511012,
+    "name": "烈焰仪铁鞋",
+    "slot": 5
+   },
+   {
+    "id": 10512012,
+    "name": "烈焰仪铁手",
+    "slot": 11
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 4,
+    "effects": {
+     "hp": 1350,
+     "crit_def": 4,
+     "fire_atk": 20,
+     "ext_atk": 430,
+     "crit_rate": 4,
+     "all_atk": 15
+    }
+   }
+  ]
+ },
+ {
+  "name": "怒焰",
+  "count": 3,
+  "members": [
+   {
+    "id": 10510013,
+    "name": "怒焰寒铁盔",
+    "slot": 3
+   },
+   {
+    "id": 10520013,
+    "name": "怒焰之链",
+    "slot": 6
+   },
+   {
+    "id": 10523013,
+    "name": "怒焰护符",
+    "slot": 8
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 1800,
+     "precision": 120,
+     "avoidance": 65,
+     "ext_atk": 600
+    }
+   }
+  ]
+ },
+ {
+  "name": "地火",
+  "count": 4,
+  "members": [
+   {
+    "id": 10511014,
+    "name": "地火缘铁鞋",
+    "slot": 5
+   },
+   {
+    "id": 10513014,
+    "name": "地火缘铁甲",
+    "slot": 2
+   },
+   {
+    "id": 10515014,
+    "name": "地火缘铁肩",
+    "slot": 10
+   },
+   {
+    "id": 10521014,
+    "name": "地火腰带",
+    "slot": 9
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 500
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "hp": 1500,
+     "fire_def": 8,
+     "ext_atk": 480,
+     "all_atk": 20
+    }
+   }
+  ]
+ },
+ {
+  "name": "降龙",
+  "count": 3,
+  "members": [
+   {
+    "id": 10520020,
+    "name": "降龙之焰",
+    "slot": 6
+   },
+   {
+    "id": 10521020,
+    "name": "降龙腰带",
+    "slot": 9
+   },
+   {
+    "id": 10522020,
+    "name": "降龙指环",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 100,
+     "precision": 30,
+     "avoidance": 18,
+     "ext_atk": 68
+    }
+   }
+  ]
+ },
+ {
+  "name": "潜龙",
+  "count": 3,
+  "members": [
+   {
+    "id": 10510021,
+    "name": "潜龙柔铁盔",
+    "slot": 3
+   },
+   {
+    "id": 10511021,
+    "name": "潜龙柔铁鞋",
+    "slot": 5
+   },
+   {
+    "id": 10512021,
+    "name": "潜龙柔铁手",
+    "slot": 11
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 315
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 1115,
+     "ext_atk": 160,
+     "avoidance": 31
+    }
+   }
+  ]
+ },
+ {
+  "name": "见龙",
+  "count": 4,
+  "members": [
+   {
+    "id": 10501002,
+    "name": "见龙",
+    "slot": 1
+   },
+   {
+    "id": 10513022,
+    "name": "见龙璀铁甲",
+    "slot": 2
+   },
+   {
+    "id": 10514022,
+    "name": "见龙璀铁腕",
+    "slot": 4
+   },
+   {
+    "id": 10515022,
+    "name": "见龙璀铁肩",
+    "slot": 10
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 300
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "hp": 1500,
+     "crit_def": 4,
+     "ext_atk": 240,
+     "crit_rate": 4,
+     "poison_atk": 20,
+     "all_atk": 15
+    }
+   }
+  ]
+ },
+ {
+  "name": "龙战",
+  "count": 3,
+  "members": [
+   {
+    "id": 10510023,
+    "name": "龙战潜铁盔",
+    "slot": 3
+   },
+   {
+    "id": 10512023,
+    "name": "龙战潜铁手",
+    "slot": 11
+   },
+   {
+    "id": 10522023,
+    "name": "龙战指环",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 925
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 1325,
+     "precision": 120,
+     "avoidance": 65,
+     "ext_atk": 80
+    }
+   }
+  ]
+ },
+ {
+  "name": "神龙",
+  "count": 4,
+  "members": [
+   {
+    "id": 10513024,
+    "name": "神龙魅铁甲",
+    "slot": 2
+   },
+   {
+    "id": 10520024,
+    "name": "神龙之碧",
+    "slot": 6
+   },
+   {
+    "id": 10523024,
+    "name": "神龙之寒",
+    "slot": 8
+   },
+   {
+    "id": 10552024,
+    "name": "神龙之尘",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 500
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "hp": 2250,
+     "poison_def": 8,
+     "ext_atk": 630,
+     "all_atk": 20
+    }
+   }
+  ]
+ },
+ {
+  "name": "无极",
+  "count": 3,
+  "members": [
+   {
+    "id": 10510030,
+    "name": "无极纤丝帽",
+    "slot": 3
+   },
+   {
+    "id": 10511030,
+    "name": "无极纤丝鞋",
+    "slot": 5
+   },
+   {
+    "id": 10512030,
+    "name": "无极纤丝手",
+    "slot": 11
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 350,
+     "int_atk": 170
+    }
+   }
+  ]
+ },
+ {
+  "name": "两仪",
+  "count": 3,
+  "members": [
+   {
+    "id": 10513031,
+    "name": "两仪缅丝衣",
+    "slot": 2
+   },
+   {
+    "id": 10514031,
+    "name": "两仪缅丝护腕",
+    "slot": 4
+   },
+   {
+    "id": 10515031,
+    "name": "两仪缅丝肩",
+    "slot": 10
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 250
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 650,
+     "precision": 120,
+     "avoidance": 40,
+     "int_atk": 80
+    }
+   }
+  ]
+ },
+ {
+  "name": "四象",
+  "count": 4,
+  "members": [
+   {
+    "id": 10502002,
+    "name": "四象",
+    "slot": 1
+   },
+   {
+    "id": 10520032,
+    "name": "四象之海",
+    "slot": 6
+   },
+   {
+    "id": 10521032,
+    "name": "四象腰带",
+    "slot": 9
+   },
+   {
+    "id": 10522032,
+    "name": "四象指环",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 4,
+    "effects": {
+     "holy_atk": 20,
+     "crit_def": 4,
+     "crit_rate": 4,
+     "int_atk": 340,
+     "hp": 900,
+     "all_atk": 15
+    }
+   }
+  ]
+ },
+ {
+  "name": "六合",
+  "count": 3,
+  "members": [
+   {
+    "id": 10512033,
+    "name": "六合丝麻手",
+    "slot": 11
+   },
+   {
+    "id": 10514033,
+    "name": "六合丝麻护腕",
+    "slot": 4
+   },
+   {
+    "id": 10522033,
+    "name": "六合指环",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 3,
+    "effects": {
+     "int_atk": 480,
+     "precision": 120,
+     "avoidance": 65,
+     "hp": 1200
+    }
+   }
+  ]
+ },
+ {
+  "name": "八卦",
+  "count": 4,
+  "members": [
+   {
+    "id": 10511034,
+    "name": "八卦棉麻鞋",
+    "slot": 5
+   },
+   {
+    "id": 10513034,
+    "name": "八卦棉麻衣",
+    "slot": 2
+   },
+   {
+    "id": 10515034,
+    "name": "八卦棉麻肩",
+    "slot": 10
+   },
+   {
+    "id": 10521034,
+    "name": "八卦腰带",
+    "slot": 9
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 500
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "int_atk": 430,
+     "holy_def": 8,
+     "all_atk": 20,
+     "hp": 1250
+    }
+   }
+  ]
+ },
+ {
+  "name": "九阴",
+  "count": 3,
+  "members": [
+   {
+    "id": 10513040,
+    "name": "九阴繁丝衣",
+    "slot": 2
+   },
+   {
+    "id": 10514040,
+    "name": "九阴繁丝腕",
+    "slot": 4
+   },
+   {
+    "id": 10515040,
+    "name": "九阴繁丝肩",
+    "slot": 10
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 300
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 600,
+     "int_def": 46,
+     "int_atk": 60
+    }
+   }
+  ]
+ },
+ {
+  "name": "守心",
+  "count": 3,
+  "members": [
+   {
+    "id": 10520041,
+    "name": "守心之冥",
+    "slot": 6
+   },
+   {
+    "id": 10521041,
+    "name": "守心腰带",
+    "slot": 9
+   },
+   {
+    "id": 10522041,
+    "name": "守心指环",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 483
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 583,
+     "int_def": 90,
+     "int_atk": 20
+    }
+   }
+  ]
+ },
+ {
+  "name": "九影",
+  "count": 4,
+  "members": [
+   {
+    "id": 10503002,
+    "name": "九影",
+    "slot": 1
+   },
+   {
+    "id": 10510042,
+    "name": "九影明月帽",
+    "slot": 3
+   },
+   {
+    "id": 10511042,
+    "name": "九影明月鞋",
+    "slot": 5
+   },
+   {
+    "id": 10512042,
+    "name": "九影明月手",
+    "slot": 11
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 400
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "hp": 550,
+     "crit_def": 4,
+     "crit_rate": 4,
+     "int_def": 120,
+     "int_atk": 30,
+     "all_atk": 15
+    }
+   }
+  ]
+ },
+ {
+  "name": "摄魂",
+  "count": 3,
+  "members": [
+   {
+    "id": 10510043,
+    "name": "摄魂宿夜帽",
+    "slot": 3
+   },
+   {
+    "id": 10520043,
+    "name": "摄魂之影",
+    "slot": 6
+   },
+   {
+    "id": 10523043,
+    "name": "摄魂护符",
+    "slot": 8
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 900
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 1900,
+     "int_def": 220,
+     "int_atk": 200
+    }
+   }
+  ]
+ },
+ {
+  "name": "控鹤",
+  "count": 4,
+  "members": [
+   {
+    "id": 10511044,
+    "name": "控鹤光秀鞋",
+    "slot": 5
+   },
+   {
+    "id": 10513044,
+    "name": "控鹤光秀袍",
+    "slot": 2
+   },
+   {
+    "id": 10515044,
+    "name": "控鹤光秀肩",
+    "slot": 10
+   },
+   {
+    "id": 10521044,
+    "name": "控鹤腰带",
+    "slot": 9
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 675
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "int_def": 300,
+     "hp": 2675,
+     "int_atk": 400,
+     "all_atk": 20,
+     "ice_def": 8
+    }
+   }
+  ]
+ },
+ {
+  "name": "摘星",
+  "count": 3,
+  "members": [
+   {
+    "id": 10520050,
+    "name": "摘星之咏",
+    "slot": 6
+   },
+   {
+    "id": 10521050,
+    "name": "摘星腰带",
+    "slot": 9
+   },
+   {
+    "id": 10522050,
+    "name": "摘星指环",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 3,
+    "effects": {
+     "int_atk": 108,
+     "precision": 30,
+     "avoidance": 18,
+     "hp": 300
+    }
+   }
+  ]
+ },
+ {
+  "name": "三阴",
+  "count": 3,
+  "members": [
+   {
+    "id": 10510051,
+    "name": "三阴璓勉帽",
+    "slot": 3
+   },
+   {
+    "id": 10511051,
+    "name": "三阴璓勉鞋",
+    "slot": 5
+   },
+   {
+    "id": 10512051,
+    "name": "三阴璓勉手",
+    "slot": 11
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 600
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "int_atk": 160,
+     "hp": 900
+    }
+   }
+  ]
+ },
+ {
+  "name": "抽髓",
+  "count": 4,
+  "members": [
+   {
+    "id": 10503012,
+    "name": "抽髓",
+    "slot": 1
+   },
+   {
+    "id": 10513052,
+    "name": "抽髓残海衣",
+    "slot": 2
+   },
+   {
+    "id": 10514052,
+    "name": "抽髓残海腕",
+    "slot": 4
+   },
+   {
+    "id": 10515052,
+    "name": "抽髓残海肩",
+    "slot": 10
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 4,
+    "effects": {
+     "hp": 1800,
+     "crit_def": 4,
+     "crit_rate": 4,
+     "poison_atk": 20,
+     "int_atk": 520,
+     "all_atk": 15
+    }
+   }
+  ]
+ },
+ {
+  "name": "缠魂",
+  "count": 3,
+  "members": [
+   {
+    "id": 10510053,
+    "name": "缠魂玄明帽",
+    "slot": 3
+   },
+   {
+    "id": 10512053,
+    "name": "缠魂玄明手",
+    "slot": 11
+   },
+   {
+    "id": 10522053,
+    "name": "缠魂指环",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 900
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 1900,
+     "precision": 120,
+     "avoidance": 65,
+     "int_atk": 200
+    }
+   }
+  ]
+ },
+ {
+  "name": "锁魂",
+  "count": 4,
+  "members": [
+   {
+    "id": 10513054,
+    "name": "锁魂逆风衣",
+    "slot": 2
+   },
+   {
+    "id": 10520054,
+    "name": "锁魂之髓",
+    "slot": 6
+   },
+   {
+    "id": 10523054,
+    "name": "锁魂之华",
+    "slot": 8
+   },
+   {
+    "id": 10552054,
+    "name": "锁魂之誓",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 500
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "int_atk": 680,
+     "poison_def": 8,
+     "all_atk": 20,
+     "hp": 2500
+    }
+   }
+  ]
+ },
+ {
+  "name": "踏雪",
+  "count": 3,
+  "members": [
+   {
+    "id": 10510060,
+    "name": "踏雪分金首",
+    "slot": 3
+   },
+   {
+    "id": 10511060,
+    "name": "踏雪分金鞋",
+    "slot": 5
+   },
+   {
+    "id": 10512060,
+    "name": "踏雪分金手",
+    "slot": 11
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 150
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 300,
+     "precision": 30,
+     "avoidance": 18,
+     "ext_atk": 78
+    }
+   }
+  ]
+ },
+ {
+  "name": "葬花",
+  "count": 3,
+  "members": [
+   {
+    "id": 10513061,
+    "name": "葬花蜇龙的怒吼",
+    "slot": 2
+   },
+   {
+    "id": 10514061,
+    "name": "葬花蜇龙腕",
+    "slot": 4
+   },
+   {
+    "id": 10515061,
+    "name": "葬花蜇龙肩",
+    "slot": 10
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 150
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 850,
+     "ext_atk": 240,
+     "precision": 91
+    }
+   }
+  ]
+ },
+ {
+  "name": "卷无",
+  "count": 4,
+  "members": [
+   {
+    "id": 10504002,
+    "name": "卷无",
+    "slot": 1
+   },
+   {
+    "id": 10520062,
+    "name": "卷无之噬",
+    "slot": 6
+   },
+   {
+    "id": 10521062,
+    "name": "卷无束腰",
+    "slot": 9
+   },
+   {
+    "id": 10522062,
+    "name": "卷无之魅",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 4,
+    "effects": {
+     "hp": 1050,
+     "crit_def": 4,
+     "ext_atk": 370,
+     "crit_rate": 4,
+     "ice_atk": 20,
+     "all_atk": 15
+    }
+   }
+  ]
+ },
+ {
+  "name": "真水",
+  "count": 3,
+  "members": [
+   {
+    "id": 10512063,
+    "name": "真水秦瑶手",
+    "slot": 11
+   },
+   {
+    "id": 10514063,
+    "name": "真水秦瑶腕",
+    "slot": 4
+   },
+   {
+    "id": 10522063,
+    "name": "真水指环",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 225
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 1425,
+     "precision": 120,
+     "avoidance": 65,
+     "ext_atk": 480
+    }
+   }
+  ]
+ },
+ {
+  "name": "八荒",
+  "count": 4,
+  "members": [
+   {
+    "id": 10511064,
+    "name": "八荒断云鞋",
+    "slot": 5
+   },
+   {
+    "id": 10513064,
+    "name": "八荒断云皮甲",
+    "slot": 2
+   },
+   {
+    "id": 10515064,
+    "name": "八荒断云肩",
+    "slot": 10
+   },
+   {
+    "id": 10521064,
+    "name": "八荒腰带",
+    "slot": 9
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 500
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "hp": 2000,
+     "ext_atk": 580,
+     "all_atk": 20,
+     "ice_def": 8
+    }
+   }
+  ]
+ },
+ {
+  "name": "北冥",
+  "count": 3,
+  "members": [
+   {
+    "id": 10513070,
+    "name": "北冥暮云之护",
+    "slot": 2
+   },
+   {
+    "id": 10514070,
+    "name": "北冥暮云腕",
+    "slot": 4
+   },
+   {
+    "id": 10515070,
+    "name": "北冥暮云肩",
+    "slot": 10
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 600,
+     "ext_def": 46,
+     "int_atk": 180
+    }
+   }
+  ]
+ },
+ {
+  "name": "凌波",
+  "count": 3,
+  "members": [
+   {
+    "id": 10520071,
+    "name": "凌波之翅",
+    "slot": 6
+   },
+   {
+    "id": 10521071,
+    "name": "凌波腰带",
+    "slot": 9
+   },
+   {
+    "id": 10522071,
+    "name": "凌波之环",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 250
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 450,
+     "int_def": 150,
+     "avoidance": 40,
+     "int_atk": 40
+    }
+   }
+  ]
+ },
+ {
+  "name": "苍竹",
+  "count": 4,
+  "members": [
+   {
+    "id": 10504012,
+    "name": "苍竹",
+    "slot": 1
+   },
+   {
+    "id": 10510072,
+    "name": "苍竹翠麟首",
+    "slot": 3
+   },
+   {
+    "id": 10511072,
+    "name": "苍竹翠麟鞋",
+    "slot": 5
+   },
+   {
+    "id": 10512072,
+    "name": "苍竹翠麟手",
+    "slot": 11
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 4,
+    "effects": {
+     "hp": 1200,
+     "crit_def": 4,
+     "fire_atk": 20,
+     "crit_rate": 4,
+     "int_atk": 400,
+     "all_atk": 15
+    }
+   }
+  ]
+ },
+ {
+  "name": "折梅",
+  "count": 3,
+  "members": [
+   {
+    "id": 10510073,
+    "name": "折梅云龙首",
+    "slot": 3
+   },
+   {
+    "id": 10520073,
+    "name": "折梅之慑",
+    "slot": 6
+   },
+   {
+    "id": 10523073,
+    "name": "折梅护符",
+    "slot": 8
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 1600,
+     "int_def": 220,
+     "int_atk": 560
+    }
+   }
+  ]
+ },
+ {
+  "name": "纯阳",
+  "count": 4,
+  "members": [
+   {
+    "id": 10511074,
+    "name": "纯阳散雪鞋",
+    "slot": 5
+   },
+   {
+    "id": 10513074,
+    "name": "纯阳散雪的护佑",
+    "slot": 2
+   },
+   {
+    "id": 10515074,
+    "name": "纯阳散雪肩",
+    "slot": 10
+   },
+   {
+    "id": 10521074,
+    "name": "纯阳腰带",
+    "slot": 9
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 500
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "hp": 2250,
+     "int_atk": 350,
+     "fire_def": 8,
+     "ext_def": 300,
+     "all_atk": 20
+    }
+   }
+  ]
+ },
+ {
+  "name": "正阳",
+  "count": 3,
+  "members": [
+   {
+    "id": 10520080,
+    "name": "正阳之烟",
+    "slot": 6
+   },
+   {
+    "id": 10521080,
+    "name": "正阳腰带",
+    "slot": 9
+   },
+   {
+    "id": 10522080,
+    "name": "正阳戒指",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 250
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 500,
+     "int_def": 46,
+     "ext_atk": 25,
+     "int_atk": 25
+    }
+   }
+  ]
+ },
+ {
+  "name": "一阳",
+  "count": 3,
+  "members": [
+   {
+    "id": 10510081,
+    "name": "一阳龙吟首",
+    "slot": 3
+   },
+   {
+    "id": 10511081,
+    "name": "一阳龙吟鞋",
+    "slot": 5
+   },
+   {
+    "id": 10512081,
+    "name": "一阳龙吟手",
+    "slot": 11
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 798
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 1298,
+     "int_atk": 50,
+     "ext_atk": 50
+    }
+   }
+  ]
+ },
+ {
+  "name": "中冲",
+  "count": 4,
+  "members": [
+   {
+    "id": 10505002,
+    "name": "中冲",
+    "slot": 1
+   },
+   {
+    "id": 10513082,
+    "name": "中冲断弦之护",
+    "slot": 2
+   },
+   {
+    "id": 10514082,
+    "name": "中冲断弦腕",
+    "slot": 4
+   },
+   {
+    "id": 10515082,
+    "name": "中冲断弦护肩",
+    "slot": 10
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 300
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "ext_atk": 135,
+     "precision": 120,
+     "crit_rate": 4,
+     "int_atk": 135,
+     "crit_def": 4,
+     "all_atk": 15,
+     "hp": 1650
+    }
+   }
+  ]
+ },
+ {
+  "name": "少商",
+  "count": 3,
+  "members": [
+   {
+    "id": 10510083,
+    "name": "少商暮落首",
+    "slot": 3
+   },
+   {
+    "id": 10512083,
+    "name": "少商幕落手",
+    "slot": 11
+   },
+   {
+    "id": 10522083,
+    "name": "少商指环",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 1530
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "hp": 1930,
+     "int_atk": 40,
+     "ext_atk": 40
+    }
+   }
+  ]
+ },
+ {
+  "name": "少阳",
+  "count": 4,
+  "members": [
+   {
+    "id": 10513084,
+    "name": "少阳月息之魂",
+    "slot": 2
+   },
+   {
+    "id": 10520084,
+    "name": "少阳之涯",
+    "slot": 6
+   },
+   {
+    "id": 10523084,
+    "name": "少阳护符",
+    "slot": 8
+   },
+   {
+    "id": 10552084,
+    "name": "少阳指环",
+    "slot": 7
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 500
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "hp": 2250,
+     "ext_atk": 175,
+     "int_def": 300,
+     "int_atk": 175,
+     "precision": 180,
+     "all_atk": 20
+    }
+   }
+  ]
+ },
+ {
+  "name": "御赐精纺套",
+  "count": 4,
+  "members": [
+   {
+    "id": 10410047,
+    "name": "御赐精纺帽",
+    "slot": 3
+   },
+   {
+    "id": 10411047,
+    "name": "御赐精纺鞋",
+    "slot": 5
+   },
+   {
+    "id": 10412047,
+    "name": "御赐精纺护手",
+    "slot": 11
+   },
+   {
+    "id": 10413047,
+    "name": "御赐精纺衣",
+    "slot": 2
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 650
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "all_atk": 3,
+     "crit_def": 2,
+     "hp": 650,
+     "ext_def": 60,
+     "crit_rate": 1,
+     "int_atk": 25,
+     "all_def": 1,
+     "precision": 50,
+     "avoidance": 15,
+     "mp": 75,
+     "ext_atk": 25,
+     "int_def": 40
+    }
+   }
+  ]
+ },
+ {
+  "name": "御赐熟铜套",
+  "count": 8,
+  "members": [
+   {
+    "id": 10411001,
+    "name": "御赐熟铜靴",
+    "slot": 5
+   },
+   {
+    "id": 10411007,
+    "name": "御赐蚕丝靴",
+    "slot": 5
+   },
+   {
+    "id": 10412001,
+    "name": "御赐熟铜手甲",
+    "slot": 11
+   },
+   {
+    "id": 10412007,
+    "name": "御赐蚕丝手套",
+    "slot": 11
+   },
+   {
+    "id": 10413001,
+    "name": "御赐熟铜铠",
+    "slot": 2
+   },
+   {
+    "id": 10413007,
+    "name": "御赐蚕丝衣",
+    "slot": 2
+   },
+   {
+    "id": 10421001,
+    "name": "御赐熟铜束带",
+    "slot": 9
+   },
+   {
+    "id": 10421007,
+    "name": "御赐蚕丝腰带",
+    "slot": 9
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 600
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "all_atk": 8,
+     "crit_def": 5,
+     "hp": 1000,
+     "ext_def": 80,
+     "crit_rate": 3,
+     "int_atk": 105,
+     "all_def": 2,
+     "precision": 180,
+     "avoidance": 50,
+     "mp": 150,
+     "ext_atk": 105,
+     "int_def": 80
+    }
+   }
+  ]
+ },
+ {
+  "name": "御赐精钢套",
+  "count": 8,
+  "members": [
+   {
+    "id": 10411002,
+    "name": "御赐精钢靴",
+    "slot": 5
+   },
+   {
+    "id": 10411008,
+    "name": "御赐绫罗靴",
+    "slot": 5
+   },
+   {
+    "id": 10412002,
+    "name": "御赐精钢手甲",
+    "slot": 11
+   },
+   {
+    "id": 10412008,
+    "name": "御赐绫罗手套",
+    "slot": 11
+   },
+   {
+    "id": 10413002,
+    "name": "御赐精钢甲",
+    "slot": 2
+   },
+   {
+    "id": 10413008,
+    "name": "御赐绫罗衣",
+    "slot": 2
+   },
+   {
+    "id": 10421002,
+    "name": "御赐精钢束带",
+    "slot": 9
+   },
+   {
+    "id": 10421008,
+    "name": "御赐绫罗腰带",
+    "slot": 9
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 900
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "all_atk": 10,
+     "crit_def": 6,
+     "hp": 1200,
+     "ext_def": 80,
+     "crit_rate": 4,
+     "int_atk": 165,
+     "all_def": 3,
+     "precision": 270,
+     "avoidance": 65,
+     "mp": 225,
+     "ext_atk": 165,
+     "int_def": 80
+    }
+   }
+  ]
+ },
+ {
+  "name": "御赐黄金套",
+  "count": 10,
+  "members": [
+   {
+    "id": 10411003,
+    "name": "御赐黄金战靴",
+    "slot": 5
+   },
+   {
+    "id": 10411009,
+    "name": "御赐蜀锦长靴",
+    "slot": 5
+   },
+   {
+    "id": 10412003,
+    "name": "御赐黄金手甲",
+    "slot": 11
+   },
+   {
+    "id": 10412009,
+    "name": "御赐蜀锦手套",
+    "slot": 11
+   },
+   {
+    "id": 10413003,
+    "name": "御赐黄金甲",
+    "slot": 2
+   },
+   {
+    "id": 10413009,
+    "name": "御赐蜀锦袍",
+    "slot": 2
+   },
+   {
+    "id": 10414020,
+    "name": "御赐黄金腕甲",
+    "slot": 4
+   },
+   {
+    "id": 10414024,
+    "name": "御赐蜀锦护腕",
+    "slot": 4
+   },
+   {
+    "id": 10421003,
+    "name": "御赐黄金带",
+    "slot": 9
+   },
+   {
+    "id": 10421009,
+    "name": "御赐蜀锦带",
+    "slot": 9
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 1150,
+     "ext_def": 25,
+     "int_def": 25
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "int_atk": 100,
+     "ext_atk": 100,
+     "precision": 171
+    }
+   },
+   {
+    "pieces": 5,
+    "effects": {
+     "all_atk": 16,
+     "crit_def": 10,
+     "hp": 1850,
+     "ext_def": 95,
+     "crit_rate": 6,
+     "int_atk": 140,
+     "all_def": 4,
+     "precision": 189,
+     "avoidance": 130,
+     "mp": 300,
+     "ext_atk": 140,
+     "int_def": 95
+    }
+   }
+  ]
+ },
+ {
+  "name": "御赐混沌套",
+  "count": 10,
+  "members": [
+   {
+    "id": 10411004,
+    "name": "御赐混沌护胫",
+    "slot": 5
+   },
+   {
+    "id": 10411010,
+    "name": "御赐玄冥朝靴",
+    "slot": 5
+   },
+   {
+    "id": 10412004,
+    "name": "御赐混沌护手",
+    "slot": 11
+   },
+   {
+    "id": 10412010,
+    "name": "御赐玄冥裹手",
+    "slot": 11
+   },
+   {
+    "id": 10413004,
+    "name": "御赐混沌护胸",
+    "slot": 2
+   },
+   {
+    "id": 10413010,
+    "name": "御赐玄冥仙衣",
+    "slot": 2
+   },
+   {
+    "id": 10414021,
+    "name": "御赐混沌护腕",
+    "slot": 4
+   },
+   {
+    "id": 10414025,
+    "name": "御赐玄冥护腕",
+    "slot": 4
+   },
+   {
+    "id": 10421004,
+    "name": "御赐混沌护腰",
+    "slot": 9
+   },
+   {
+    "id": 10421010,
+    "name": "御赐玄冥腰带",
+    "slot": 9
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 1500,
+     "ext_def": 35,
+     "int_def": 35
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "int_atk": 125,
+     "ext_atk": 125,
+     "precision": 213
+    }
+   },
+   {
+    "pieces": 5,
+    "effects": {
+     "all_atk": 20,
+     "crit_def": 13,
+     "hp": 2250,
+     "ext_def": 115,
+     "crit_rate": 8,
+     "int_atk": 175,
+     "all_def": 5,
+     "precision": 237,
+     "avoidance": 163,
+     "mp": 375,
+     "ext_atk": 175,
+     "int_def": 115
+    }
+   }
+  ]
+ },
+ {
+  "name": "蔡袅",
+  "count": 4,
+  "members": [
+   {
+    "id": 10411013,
+    "name": "蔡袅鞋",
+    "slot": 5
+   },
+   {
+    "id": 10412013,
+    "name": "蔡袅手套",
+    "slot": 11
+   },
+   {
+    "id": 10413013,
+    "name": "蔡袅衣",
+    "slot": 2
+   },
+   {
+    "id": 10421013,
+    "name": "蔡袅腰饰",
+    "slot": 9
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 600
+    }
+   },
+   {
+    "pieces": 4,
+    "effects": {
+     "hp": 600,
+     "crit_rate": 4,
+     "precision": 80
+    }
+   }
+  ]
+ },
+ {
+  "name": "燕侯",
+  "count": 8,
+  "members": [
+   {
+    "id": 10401002,
+    "name": "燕侯·戮",
+    "slot": 1
+   },
+   {
+    "id": 10403002,
+    "name": "燕侯·怒",
+    "slot": 1
+   },
+   {
+    "id": 10404002,
+    "name": "燕侯·悟",
+    "slot": 1
+   },
+   {
+    "id": 10405001,
+    "name": "燕侯·护",
+    "slot": 1
+   },
+   {
+    "id": 10410001,
+    "name": "燕侯尊冠",
+    "slot": 3
+   },
+   {
+    "id": 10420004,
+    "name": "燕侯华链",
+    "slot": 6
+   },
+   {
+    "id": 10422013,
+    "name": "燕侯权戒",
+    "slot": 7
+   },
+   {
+    "id": 10423021,
+    "name": "燕侯圣符",
+    "slot": 8
+   }
+  ],
+  "tiers": [
+   {
+    "pieces": 2,
+    "effects": {
+     "hp": 2055
+    }
+   },
+   {
+    "pieces": 3,
+    "effects": {
+     "all_atk": 20,
+     "crit_def": 5
+    }
+   },
+   {
+    "pieces": 5,
+    "effects": {
+     "hp": 2055,
+     "crit_rate": 10,
+     "all_atk": 20,
+     "crit_def": 5
+    }
+   }
+  ]
+ }
+]

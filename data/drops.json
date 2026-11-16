@@ -1,0 +1,7119 @@
+{
+ "无量山外围": {
+  "name": "无量山外围",
+  "region": "无量山",
+  "req": 1,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 2,
+    "item": "1-5级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 2,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 2,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 3,
+    "item": "1-5级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 3,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 3,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 12,
+    "item": "1-5级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 12,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 12,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 12,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 12,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 12,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 12,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 12,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 12,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 12,
+    "item": "万灵石1级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 12,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 13,
+    "item": "1-5级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 13,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 13,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 13,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 13,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 13,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 13,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 13,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 13,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 13,
+    "item": "万灵石1级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 13,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "无量山深处": {
+  "name": "无量山深处",
+  "region": "无量山",
+  "req": 3,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 4,
+    "item": "1-5级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 4,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 4,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 5,
+    "item": "6-10级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 5,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 5,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 14,
+    "item": "1-5级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 14,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 14,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 14,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 14,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 14,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 14,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 14,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 14,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 14,
+    "item": "万灵石1级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 14,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 15,
+    "item": "6-10级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 15,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 15,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 15,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 15,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 15,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 15,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 15,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 15,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 15,
+    "item": "万灵石1级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 15,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "无量山核心": {
+  "name": "无量山核心",
+  "region": "无量山",
+  "req": 5,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 6,
+    "item": "6-10级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 6,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 6,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "剑阁外围": {
+  "name": "剑阁外围",
+  "region": "剑阁",
+  "req": 1,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 7,
+    "item": "1-5级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 7,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 7,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 8,
+    "item": "1-5级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 8,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 8,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 20,
+    "item": "1-5级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 20,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 20,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 20,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 20,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 20,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 20,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 20,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 20,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 20,
+    "item": "万灵石1级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 20,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 21,
+    "item": "1-5级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 21,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 21,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 21,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 21,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 21,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 21,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 21,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 21,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 21,
+    "item": "万灵石1级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 21,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "剑阁深处": {
+  "name": "剑阁深处",
+  "region": "剑阁",
+  "req": 3,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 9,
+    "item": "1-5级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 9,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 9,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 10,
+    "item": "6-10级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 10,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 10,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 22,
+    "item": "1-5级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 22,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 22,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 22,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 22,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 22,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 22,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 22,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 22,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 22,
+    "item": "万灵石1级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 22,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 23,
+    "item": "6-10级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 23,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 23,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 23,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 23,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 23,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 23,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 23,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 23,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 23,
+    "item": "万灵石1级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 23,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "月牙泉": {
+  "name": "月牙泉",
+  "region": "敦煌",
+  "req": 9,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 11,
+    "item": "6-10级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 11,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 11,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 12,
+    "item": "11-15级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 12,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 12,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 24,
+    "item": "6-10级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 24,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 24,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 24,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 24,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 24,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 24,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 24,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 24,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 24,
+    "item": "万灵石1级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 24,
+    "item": "牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 25,
+    "item": "11-15级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 25,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 25,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 25,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 25,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 25,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 25,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 25,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 25,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 25,
+    "item": "万灵石2级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 25,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "折柳峡": {
+  "name": "折柳峡",
+  "region": "敦煌",
+  "req": 9,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 13,
+    "item": "11-15级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 13,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 13,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 14,
+    "item": "11-15级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 14,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 14,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 26,
+    "item": "11-15级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 26,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 26,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 26,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 26,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 26,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 26,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 26,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 26,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 26,
+    "item": "万灵石2级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 26,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 27,
+    "item": "11-15级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 27,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 27,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 27,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 27,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 27,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 27,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 27,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 27,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 27,
+    "item": "万灵石2级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 27,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "玉门关": {
+  "name": "玉门关",
+  "region": "敦煌",
+  "req": 11,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 15,
+    "item": "11-15级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 15,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 15,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 28,
+    "item": "11-15级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 28,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 28,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 28,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 28,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 28,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 28,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 28,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 28,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 28,
+    "item": "万灵石2级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 28,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "11-15级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "万灵石2级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "箕山山脚": {
+  "name": "箕山山脚",
+  "region": "嵩山",
+  "req": 13,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 15,
+    "item": "11-15级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 15,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 15,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "11-15级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "万灵石2级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 29,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "箕山山顶": {
+  "name": "箕山山顶",
+  "region": "嵩山",
+  "req": 14,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 21,
+    "item": "16-20级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 21,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 21,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 22,
+    "item": "16-20级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 22,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 22,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 3,
+    "item": "16-20级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 3,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 3,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 3,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 3,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 3,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 3,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 3,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 3,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 3,
+    "item": "万灵石2级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 3,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 4,
+    "item": "16-20级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 4,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 4,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 4,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 4,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 4,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 4,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 4,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 4,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 4,
+    "item": "万灵石2级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 4,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "颍水": {
+  "name": "颍水",
+  "region": "嵩山",
+  "req": 16,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 23,
+    "item": "16-20级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 23,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 23,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 24,
+    "item": "16-20级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 24,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 24,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 25,
+    "item": "16-20级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 25,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 25,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 5,
+    "item": "16-20级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 5,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 5,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 5,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 5,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 5,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 5,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 5,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 5,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 5,
+    "item": "万灵石2级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 5,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 6,
+    "item": "16-20级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 6,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 6,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 6,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 6,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 6,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 6,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 6,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 6,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 6,
+    "item": "万灵石2级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 6,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 7,
+    "item": "16-20级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 7,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 7,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 7,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 7,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 7,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 7,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 7,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 7,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 7,
+    "item": "万灵石2级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 7,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "香樟林": {
+  "name": "香樟林",
+  "region": "西湖",
+  "req": 17,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 31,
+    "item": "16-20级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 31,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 31,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 32,
+    "item": "21-25级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 32,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 32,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 103,
+    "item": "16-20级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 103,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 103,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 103,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 103,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 103,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 103,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 103,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 103,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 103,
+    "item": "万灵石2级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 103,
+    "item": "竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 104,
+    "item": "21-25级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 104,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 104,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 104,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 104,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 104,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 104,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 104,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 104,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 104,
+    "item": "万灵石3级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 104,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "断桥残雪": {
+  "name": "断桥残雪",
+  "region": "西湖",
+  "req": 19,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 33,
+    "item": "21-25级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 33,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 33,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 34,
+    "item": "21-25级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 34,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 34,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 105,
+    "item": "21-25级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 105,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 105,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 105,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 105,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 105,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 105,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 105,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 105,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 105,
+    "item": "万灵石3级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 105,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 106,
+    "item": "21-25级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 106,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 106,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 106,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 106,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 106,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 106,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 106,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 106,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 106,
+    "item": "万灵石3级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 106,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "三潭印月": {
+  "name": "三潭印月",
+  "region": "西湖",
+  "req": 20,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 36,
+    "item": "21-25级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 36,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 36,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 108,
+    "item": "21-25级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 108,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 108,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 108,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 108,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 108,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 108,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 108,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 108,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 108,
+    "item": "万灵石3级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 108,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "金梭": {
+  "name": "金梭",
+  "region": "洱海",
+  "req": 21,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 37,
+    "item": "21-25级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 37,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 37,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 38,
+    "item": "26-30级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 38,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 38,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 69,
+    "item": "21-25级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 69,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 69,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 69,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 69,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 69,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 69,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 69,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 69,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 69,
+    "item": "万灵石3级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 69,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 70,
+    "item": "26-30级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 70,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 70,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 70,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 70,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 70,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 70,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 70,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 70,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 70,
+    "item": "万灵石3级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 70,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "小普陀": {
+  "name": "小普陀",
+  "region": "洱海",
+  "req": 24,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 39,
+    "item": "26-30级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 39,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 39,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 40,
+    "item": "26-30级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 40,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 40,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 71,
+    "item": "26-30级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 71,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 71,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 71,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 71,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 71,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 71,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 71,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 71,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 71,
+    "item": "万灵石3级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 71,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 72,
+    "item": "26-30级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 72,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 72,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 72,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 72,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 72,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 72,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 72,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 72,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 72,
+    "item": "万灵石3级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 72,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "玉几岛": {
+  "name": "玉几岛",
+  "region": "洱海",
+  "req": 27,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 41,
+    "item": "26-30级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 41,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 41,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 42,
+    "item": "26-30级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 42,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 42,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 73,
+    "item": "26-30级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 73,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 73,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 73,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 73,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 73,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 73,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 73,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 73,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 73,
+    "item": "万灵石3级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 73,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 74,
+    "item": "26-30级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 74,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 74,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 74,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 74,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 74,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 74,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 74,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 74,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 74,
+    "item": "万灵石3级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 74,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "狼山": {
+  "name": "狼山",
+  "region": "雁南",
+  "req": 28,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 43,
+    "item": "26-30级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 43,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 43,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 44,
+    "item": "31-35级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 44,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 44,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 45,
+    "item": "31-35级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 45,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 45,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 35,
+    "item": "26-30级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 35,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 35,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 35,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 35,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 35,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 35,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 35,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 35,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 35,
+    "item": "万灵石3级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 35,
+    "item": "牦牛角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 36,
+    "item": "31-35级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 36,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 36,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 36,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 36,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 36,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 36,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 36,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 36,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 36,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 36,
+    "item": "万灵石4级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 37,
+    "item": "31-35级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 37,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 37,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 37,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 37,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 37,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 37,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 37,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 37,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 37,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 37,
+    "item": "万灵石4级",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "秦家寨前哨": {
+  "name": "秦家寨前哨",
+  "region": "雁南",
+  "req": 31,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 46,
+    "item": "31-35级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 46,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 46,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 47,
+    "item": "31-35级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 47,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 47,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 48,
+    "item": "31-35级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 48,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 48,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 38,
+    "item": "31-35级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 38,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 38,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 38,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 38,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 38,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 38,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 38,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 38,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 38,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 38,
+    "item": "万灵石4级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 39,
+    "item": "31-35级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 39,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 39,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 39,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 39,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 39,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 39,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 39,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 39,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 39,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 39,
+    "item": "万灵石4级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 40,
+    "item": "31-35级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 40,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 40,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 40,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 40,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 40,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 40,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 40,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 40,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 40,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 40,
+    "item": "万灵石4级",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "谷荡湾": {
+  "name": "谷荡湾",
+  "region": "龙泉",
+  "req": 33,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 49,
+    "item": "31-35级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 49,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 49,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 50,
+    "item": "36-40级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 50,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 50,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 51,
+    "item": "36-40级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 51,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 51,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 109,
+    "item": "31-35级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 109,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 109,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 109,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 109,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 109,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 109,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 109,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 109,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 109,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 109,
+    "item": "万灵石4级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 110,
+    "item": "36-40级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 110,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 110,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 110,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 110,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 110,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 110,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 110,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 110,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 110,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 110,
+    "item": "万灵石4级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 111,
+    "item": "36-40级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 111,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 111,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 111,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 111,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 111,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 111,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 111,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 111,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 111,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 111,
+    "item": "万灵石4级",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "龙井村": {
+  "name": "龙井村",
+  "region": "龙泉",
+  "req": 36,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 52,
+    "item": "36-40级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 52,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 52,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 53,
+    "item": "36-40级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 53,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 53,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 54,
+    "item": "36-40级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 54,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 54,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "36-40级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "万灵石4级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "36-40级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "万灵石4级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "36-40级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "万灵石4级",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "野人口": {
+  "name": "野人口",
+  "region": "苍山",
+  "req": 39,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 55,
+    "item": "41-45级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 55,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 55,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 56,
+    "item": "41-45级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 56,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 56,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "36-40级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 112,
+    "item": "万灵石4级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "36-40级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 113,
+    "item": "万灵石4级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "36-40级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 114,
+    "item": "万灵石4级",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "狼人谷": {
+  "name": "狼人谷",
+  "region": "苍山",
+  "req": 38,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 57,
+    "item": "36-40级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 57,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 57,
+    "item": "紫竹箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 58,
+    "item": "41-45级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 58,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 58,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 59,
+    "item": "41-45级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 59,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 59,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 78,
+    "item": "41-45级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 78,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 78,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 78,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 78,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 78,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 78,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 78,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 78,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 78,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 78,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 78,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 79,
+    "item": "41-45级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 79,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 79,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 79,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 79,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 79,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 79,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 79,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 79,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 79,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 79,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 79,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 80,
+    "item": "41-45级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 80,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 80,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 80,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 80,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 80,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 80,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 80,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 80,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 80,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 80,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 80,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "红枫林": {
+  "name": "红枫林",
+  "region": "雁北",
+  "req": 43,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 61,
+    "item": "41-45级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 61,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 61,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 62,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 62,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 62,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 41,
+    "item": "41-45级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 41,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 41,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 41,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 41,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 41,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 41,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 41,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 41,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 41,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 41,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 41,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 42,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 42,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 42,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 42,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 42,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 42,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 42,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 42,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 42,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 42,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 42,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 42,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "金沙滩": {
+  "name": "金沙滩",
+  "region": "雁北",
+  "req": 44,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 63,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 63,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 63,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 64,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 64,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 64,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 65,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 65,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 65,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 43,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 43,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 43,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 43,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 43,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 43,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 43,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 43,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 43,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 43,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 43,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 43,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 44,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 44,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 44,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 44,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 44,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 44,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 44,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 44,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 44,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 44,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 44,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 44,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 45,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 45,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 45,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 45,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 45,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 45,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 45,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 45,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 45,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 45,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 45,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 45,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "辽军前哨": {
+  "name": "辽军前哨",
+  "region": "雁北",
+  "req": 48,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 66,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 66,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 66,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 46,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 46,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 46,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 46,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 46,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 46,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 46,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 46,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 46,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 46,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 46,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 46,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "芳草岸": {
+  "name": "芳草岸",
+  "region": "武夷",
+  "req": 49,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 67,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 67,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 67,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 68,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 68,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 68,
+    "item": "湘妃箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 115,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 115,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 115,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 115,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 115,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 115,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 115,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 115,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 115,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 115,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 115,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 115,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 116,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 116,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 116,
+    "item": "湘妃箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 116,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 116,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 116,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 116,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 116,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 116,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 116,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 116,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 116,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "丹霞岭": {
+  "name": "丹霞岭",
+  "region": "武夷",
+  "req": 50,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 69,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 69,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 69,
+    "item": "湘妃箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 70,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 70,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 70,
+    "item": "湘妃箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 71,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 71,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 71,
+    "item": "湘妃箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 72,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 72,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 72,
+    "item": "湘妃箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 117,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 117,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 117,
+    "item": "湘妃箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 117,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 117,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 117,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 117,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 117,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 117,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 117,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 117,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 117,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 118,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 118,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 118,
+    "item": "湘妃箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 118,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 118,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 118,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 118,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 118,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 118,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 118,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 118,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 118,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 119,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 119,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 119,
+    "item": "湘妃箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 119,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 119,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 119,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 119,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 119,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 119,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 119,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 119,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 119,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "思元江": {
+  "name": "思元江",
+  "region": "石林",
+  "req": 48,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 73,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 73,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 73,
+    "item": "湘妃箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 74,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 74,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 74,
+    "item": "湘妃箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 81,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 81,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 81,
+    "item": "湘妃箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 81,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 81,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 81,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 81,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 81,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 81,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 81,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 81,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 81,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 82,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 82,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 82,
+    "item": "湘妃箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 82,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 82,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 82,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 82,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 82,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 82,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 82,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 82,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 82,
+    "item": "万灵石5级",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "燕王古墓一层": {
+  "name": "燕王古墓一层",
+  "region": "燕王古墓",
+  "req": 50,
+  "drops": [
+   {
+    "cat": "BOSS",
+    "monsterId": 11000,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11000,
+    "item": "2级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11000,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11000,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11000,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11000,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11000,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11000,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11000,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11000,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11000,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11000,
+    "item": "新莽神符1级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11000,
+    "item": "燕弦玉",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "燕王古墓二层": {
+  "name": "燕王古墓二层",
+  "region": "燕王古墓",
+  "req": 55,
+  "drops": [
+   {
+    "cat": "BOSS",
+    "monsterId": 11010,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11010,
+    "item": "2级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11010,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11010,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11010,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11010,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11010,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11010,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11010,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11010,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11010,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11010,
+    "item": "新莽神符1级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11010,
+    "item": "燕弦玉",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "燕王古墓三层": {
+  "name": "燕王古墓三层",
+  "region": "燕王古墓",
+  "req": 60,
+  "drops": [
+   {
+    "cat": "BOSS",
+    "monsterId": 11020,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11020,
+    "item": "2级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11020,
+    "item": "湘妃箭",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11020,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11020,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11020,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11020,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11020,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11020,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11020,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11020,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11020,
+    "item": "新莽神符1级",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 11020,
+    "item": "燕弦玉",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "珍珑棋局": {
+  "name": "珍珑棋局",
+  "region": "秘境",
+  "req": 15,
+  "drops": [
+   {
+    "cat": "BOSS",
+    "monsterId": 90002,
+    "item": "41-45级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90002,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90002,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90002,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90002,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90002,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90002,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90002,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90002,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90002,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90002,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90002,
+    "item": "1级棉布",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90002,
+    "item": "1级秘银",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "伪宋军领地": {
+  "name": "伪宋军领地",
+  "region": "秘境",
+  "req": 30,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 90101,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 90101,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 90102,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 90102,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 90102,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 90102,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 90102,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 90102,
+    "item": "低级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 90102,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 90102,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "LEADER",
+    "monsterId": 90102,
+    "item": "宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "除熊害令牌",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "1级棉布",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "1级秘银",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90103,
+    "item": "新莽神符1级",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "熊林": {
+  "name": "熊林",
+  "region": "秘境",
+  "req": 30,
+  "drops": [
+   {
+    "cat": "MONSTER",
+    "monsterId": 90201,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "MONSTER",
+    "monsterId": 90201,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90202,
+    "item": "46-56级装备",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90202,
+    "item": "1级宝石",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90202,
+    "item": "玉犀角",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90202,
+    "item": "低级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90202,
+    "item": "高级强化精华",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90202,
+    "item": "低级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90202,
+    "item": "高级宝石镶嵌符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90202,
+    "item": "高级宝石摘除符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90202,
+    "item": "宝石雕琢符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90202,
+    "item": "极率之珠",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90202,
+    "item": "高级宝石合成符",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90202,
+    "item": "1级棉布",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90202,
+    "item": "1级秘银",
+    "rate": null,
+    "count": null
+   },
+   {
+    "cat": "BOSS",
+    "monsterId": 90202,
+    "item": "新莽神符1级",
+    "rate": null,
+    "count": null
+   }
+  ]
+ },
+ "演武场 - 单木桩": {
+  "name": "演武场 - 单木桩",
+  "region": "秘境",
+  "req": 1,
+  "drops": []
+ },
+ "演武场 - 多木桩": {
+  "name": "演武场 - 多木桩",
+  "region": "秘境",
+  "req": 1,
+  "drops": []
+ }
+}
