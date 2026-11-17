@@ -17,12 +17,15 @@
 //   TL_AUTOPILOT    off = 只跑循环不自动日常
 
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import path from 'node:path';
 import { createSession } from '../core/lib-ws.mjs';
 import { initStore } from '../src/state-store.mjs';
 import { CombatDaemon, isHalted } from '../src/combat-daemon.mjs';
 import { createLogistics } from '../src/logistics.mjs';
 import { createActivities } from '../src/activities.mjs';
+import { createStrategy } from '../src/strategy.mjs';
+import { createPerformance } from '../src/performance.mjs';
 import { decideActions, loadState as loadSched, saveState as saveSched, dateKey } from '../src/scheduler.mjs';
 import { scanAllSlots, bestInSlot, clearCache as clearEvalCache } from '../src/evaluate.mjs';
 import * as gamedata from './gamedata.mjs';
@@ -32,7 +35,8 @@ const ROOT = path.resolve(import.meta.dirname, '..');
 // data 目录：子模块（activities/logistics）通过 TL_DATA_DIR 找落盘位置，
 // 不设置的话它们会各自按 process.cwd() 猜，容易散在不同地方。
 if (!process.env.TL_DATA_DIR) process.env.TL_DATA_DIR = path.join(ROOT, 'data');
-export const HALT_FILE = path.join(ROOT, '.halt');
+const INSTANCE = process.env.TL_INSTANCE || 'main';
+export const HALT_FILE = process.env.TL_HALT_FILE || (INSTANCE === 'main' ? path.join(ROOT, '.halt') : path.join(ROOT, `.halt-${INSTANCE}`));
 
 const STAGE = Number(process.env.TL_STAGE ?? 2);
 const AUTOPILOT = String(process.env.TL_AUTOPILOT ?? 'on').toLowerCase() !== 'off';
@@ -41,7 +45,7 @@ const MAINT_MS = Number(process.env.TL_MAINT_MS || 30 * 60_000);
 const DAILY_HOUR = Number(process.env.TL_DAILY_HOUR ?? 0);
 const DAILY_MINUTE = Number(process.env.TL_DAILY_MINUTE ?? 5);
 
-const LOG_FILE = path.join(ROOT, 'logs', 'engine.log');
+const LOG_FILE = process.env.TL_LOG_FILE || path.join(ROOT, 'logs', INSTANCE === 'main' ? 'engine.log' : `engine-${INSTANCE}.log`);
 fs.mkdirSync(path.dirname(LOG_FILE), { recursive: true });
 
 function log(...a) {
@@ -59,16 +63,23 @@ const state = {
   ws: null, store: null, daemon: null, logistics: null, activities: null,
   schedState: loadSched(),
   schedBusy: false,
-  lastMaintainAt: 0,
+  lastMaintainAt: Date.now(),
   lastDailyKey: '',
   pausedBySystem: false,
   lastAliveAt: Date.now(),
+  perf: createPerformance(),
 };
+
+// 重启不立刻补 maintain（否则每次重启都停战 2-3 分钟）；到下一个周期再跑
+state.schedState.lastMaintainAt = Math.max(Number(state.schedState.lastMaintainAt) || 0, Date.now());
+try { saveSched(state.schedState); } catch { }
 
 // ── 连接管理 ───────────────────────────────────────────────
 async function connect() {
   const ws = createSession({ trace: false });
   let g = null;
+  let loginData = null;
+  ws.on('LOGIN_RESPONSE', d => { if (d && d.data) loginData = d.data; });
   await ws.open();
 
   // ENTER_GAME 首帧经常没有 role（会话还在服务端注册），重试几次
@@ -83,6 +94,7 @@ async function connect() {
     }
   }
   if (!g?.role) throw new Error('ENTER_GAME 始终无 role');
+  if (loginData) state.loginMeta = loginData;
 
   const store = initStore(ws);
   store.ingest(g);
@@ -135,7 +147,19 @@ async function rebuild() {
     log, stage: STAGE, allowWrite: STAGE >= 2,
   });
 
+  state.strategy = createStrategy(ws, store, {
+    log, stage: STAGE, allowWrite: STAGE >= 2,
+    defaultMapId: Number(process.env.TL_MAP || 10027),
+  });
+
   state.game = game;
+
+  // 启动即修正自动喝药设置（红/蓝药 id + 首槽），不等 30 分钟 maintain
+  try {
+    const ps = await state.logistics.applyPotionSettings();
+    if (ps?.ok) log(`喝药设置：红${ps.redId}/蓝${ps.blueId}${ps.unchanged ? '（未变）' : ''}`);
+  } catch (e) { log('喝药设置失败: ' + (e?.message || e)); }
+
   return game;
 }
 
@@ -170,7 +194,7 @@ async function reconnect(reason = 'manual') {
 
 // ── 后勤 / 日常（纯 JS，零 token）──────────────────────────
 async function runMaintain() {
-  if (state.schedBusy || isHalted() || !state.logistics) return null;
+  if (state.schedBusy || state.levelBusy || isHalted() || !state.logistics) return null;
   state.schedBusy = true;
   const wasRunning = state.daemon?.running;
   try {
@@ -191,7 +215,7 @@ async function runMaintain() {
 }
 
 async function runDaily() {
-  if (state.schedBusy || isHalted() || !state.activities) return null;
+  if (state.schedBusy || state.levelBusy || isHalted() || !state.activities) return null;
   state.schedBusy = true;
   const wasRunning = state.daemon?.running;
   try {
@@ -241,6 +265,206 @@ setInterval(async () => {
   } catch (e) { log(`[sched] 异常: ${e?.message || e}`); }
 }, 60_000).unref?.();
 
+// ── 繁殖到点自动领取（System1 定时动作，零 token）──────────
+setInterval(async () => {
+  try {
+    if (STAGE < 2 || !AUTOPILOT || isHalted()) return;
+    const st = state.strategy?.state;
+    if (!st?.depositAt) return;
+    if (Date.now() - st.depositAt < 55 * 60_000) return;
+    if (state.schedBusy || state.strategyBusy) return;
+    if (state.ws?.state?.closed) return;
+    state.strategyBusy = true;
+    const was = !!state.daemon?.running;
+    log('[strategy] 繁殖已到点，自动领取');
+    try {
+      if (was) state.daemon.pause('breed');
+      await sleep(1200);
+      const r = await state.strategy.breedClaim();
+      log(`[strategy] 领取完成 ${JSON.stringify(r?.summary || r?.pets || r || {}).slice(0, 400)}`);
+    } finally {
+      try {
+        if (was) {
+          state.daemon.configure({ mapId: Number(process.env.TL_MAP || 10027) });
+          state.daemon.resume();
+        }
+      } catch { }
+      state.strategyBusy = false;
+    }
+  } catch (e) {
+    state.strategyBusy = false;
+    log(`[strategy] 自动领取异常 ${e?.message || e}`);
+  }
+}, 60_000).unref?.();
+
+// ── 挂单 5 折挂满 3 小时未售 → 自动 3 折重挂（只做一次）──
+setInterval(async () => {
+  try {
+    if (STAGE < 2 || !AUTOPILOT || isHalted()) return;
+    const c = state.strategy?.state?.clearance;
+    if (!c || c.repricedAt) return;
+    if (Date.now() - Number(c.at || 0) < 3 * 60 * 60_000) return;
+    if (state.schedBusy || state.strategyBusy || state.ws?.state?.closed) return;
+    state.strategyBusy = true;
+    const was = !!state.daemon?.running;
+    log('[listing] 挂单 3 小时未售，自动 3 折重挂');
+    try {
+      if (was) state.daemon.pause('listing');
+      await sleep(1000);
+      const r = await state.strategy.clearanceFollowup();
+      log(`[listing] 重挂完成 ${JSON.stringify(r).slice(0, 300)}`);
+    } finally {
+      try {
+        if (was) {
+          state.daemon.configure({ mapId: Number(process.env.TL_MAP || 10027) });
+          state.daemon.resume();
+        }
+      } catch { }
+      state.strategyBusy = false;
+    }
+  } catch (e) {
+    state.strategyBusy = false;
+    log(`[listing] 自动重挂异常 ${e?.message || e}`);
+  }
+}, 10 * 60_000).unref?.();
+
+// ── 飞蝗石经验喂养（NPC 直接升级，当前经验最优去处）────────
+async function runAnqiFeed() {
+  try {
+    if (STAGE < 2 || !AUTOPILOT || isHalted()) return;
+    if (state.schedBusy || state.strategyBusy) return;
+    if (state.ws?.state?.closed) return;
+    const rid = () => crypto.randomUUID();
+    const r0 = await state.ws.req('TRIAL_COMMAND', { action: 'status', requestId: rid() }, { ms: 9000 });
+    const t0 = r0?.data?.trial;
+    if (!t0?.weapon) return;
+    const need = Math.max(0, Number(t0.nextLevelExp || 0) - Number(t0.weapon.experience || 0));
+    if (!need || need > 200_000_000) return;
+    const role = state.store?.st?.role || state.game?.role || {};
+    const expNow = Number(role.currentExp ?? role.exp ?? 0);
+    if (expNow < need + 2_000_000) return;
+    const map0 = Number(role.mapId || process.env.TL_MAP || 10027);
+    state.strategyBusy = true;
+    const was = !!state.daemon?.running;
+    log(`[anqi] 经验 ${(expNow/1e6).toFixed(1)}M ≥ ${(need/1e6).toFixed(1)}M+2M → 自动喂飞蝗石 Lv${t0.level}`);
+    try {
+      if (was) state.daemon.pause('anqi');
+      await sleep(800);
+      // 先刷新窗口（与 /anqi/feed 端点完全同序），再进洛阳，否则 revision 失效
+      await engine.refresh();
+      await state.ws.req('ENTER_MAP', { mapId: 4 }, { ms: 8000 });
+      await sleep(700);
+      const r1 = await state.ws.req('TRIAL_COMMAND', { action: 'status', requestId: rid() }, { ms: 9000 });
+      const t1 = r1?.data?.trial || t0;
+      const before = Number(state.store?.getSnapshot?.()?.me?.power || 0);
+      const res = await state.ws.req('TRIAL_COMMAND', { action: 'feed', targetLevel: Number(t1.level) + 1, revision: t1.revision, requestId: rid() }, { ms: 12000 });
+      const fed = res?.success ? 'OK' : (res?.message || 'fail');
+      await sleep(500);
+      await engine.refresh();
+      const r2 = await state.ws.req('TRIAL_COMMAND', { action: 'status', requestId: rid() }, { ms: 9000 }).catch(() => null);
+      const t2 = r2?.data?.trial || t1;
+      const after = Number(state.store?.getSnapshot?.()?.me?.power || 0);
+      log(`[anqi] feed ${fed} Lv${t1.level}→${t1.level + 1} 战力 ${before}→${after} (+${after - before})`);
+    } finally {
+      try {
+        if (was) { state.daemon.configure({ mapId: map0 }); state.daemon.resume(); }
+      } catch { }
+      state.strategyBusy = false;
+    }
+  } catch (e) {
+    state.strategyBusy = false;
+    log(`[anqi] 自动喂养异常 ${e?.message || e}`);
+  }
+}
+setInterval(runAnqiFeed, 5 * 60_000).unref?.();
+setTimeout(runAnqiFeed, 20_000);
+
+// ── 自动升级（LEVEL_UP，经验够就升；小号关键）──────────────
+let levelBusy = false;
+async function autoLevelUp(max = 20) {
+  if (levelBusy) return;
+  if (STAGE < 1 || isHalted()) return;
+  if (state.schedBusy || state.strategyBusy || state.ws?.state?.closed) return;
+  const me = state.store?.getSnapshot?.()?.me;
+  if (!me) return;
+  const tmplOf = (lv) => (state.gamedata?.levelTmpls || []).find((t) => Number(t.level) === Number(lv));
+  let lv = Number(me.level), exp = Number(me.exp || 0);
+  const first = tmplOf(lv);
+  if (!first || exp < Number(first.upgradeExp || 0)) return;
+  levelBusy = true;
+  state.levelBusy = true;
+  const was = !!state.daemon?.running;
+  try {
+    if (was) state.daemon.pause('level');
+    await sleep(600);
+    for (let i = 0; i < max; i++) {
+      const t = tmplOf(lv);
+      if (!t || exp < Number(t.upgradeExp || 0)) break;
+      const r = await state.ws.req('LEVEL_UP', {}, { ms: 8000 });
+      if (!r?.success) { log(`[level] 升级被拒：${r?.message || 'unknown'}`); break; }
+      const role = r.data?.role || {};
+      const nlv = Number(role.level || lv + 1);
+      const nexp = Number(role.currentExp ?? role.exp ?? (exp - Number(t.upgradeExp)));
+      log(`[level] ⭐ Lv.${lv} → Lv.${nlv}，战力 ${role.combatPower ?? '?'}，剩余经验 ${nexp.toLocaleString()}`);
+      lv = nlv; exp = nexp;
+      if (Array.isArray(r.data?.levelTmpls) && r.data.levelTmpls.length) {
+        state.gamedata = { ...(state.gamedata || {}), levelTmpls: r.data.levelTmpls };
+      }
+      await sleep(300);
+    }
+    try { await autoMap(); } catch { }
+    // 升完再刷新一次状态树，避免 store 里还是旧等级
+    try { const snap = state.store?.getSnapshot?.(); if (snap?.me) snap.me.level = lv, snap.me.exp = exp; } catch { }
+  } finally {
+    try { if (was) state.daemon.resume(); } catch { }
+    levelBusy = false;
+    state.levelBusy = false;
+  }
+}
+setInterval(autoLevelUp, 20_000).unref?.();
+setTimeout(autoLevelUp, 10_000);
+
+// ── 自动换地图（按等级选最高安全图；req <= 等级-3，升级后触发）──
+let mapBusy = false, lastMapSwitchAt = 0, mapDeathBase = 0, mapDeathBaseId = 0;
+async function autoMap() {
+  if (mapBusy) return;
+  if (process.env.TL_AUTO_MAP === '0') return;
+  if (STAGE < 1 || isHalted()) return;
+  if (state.schedBusy || state.strategyBusy || state.levelBusy || state.ws?.state?.closed) return;
+  const me = state.store?.getSnapshot?.()?.me;
+  const d = state.daemon?.status?.();
+  if (!me || !d?.running) return;
+  const curId = Number(d.mapId || process.env.TL_MAP || 0);
+  const maps = (state.gamedata?.maps || []).filter((m) => Number(m.id) < 20000 && (m.monsters || []).length > 0);
+  const cur = maps.find((m) => Number(m.id) === curId);
+  const safeLevel = Number(me.level) - 3;
+  // 死亡兜底：当前图累计死亡 >=3，自动退一档
+  const deaths = Number(d.deaths || 0);
+  if (cur && mapDeathBaseId === curId && deaths - mapDeathBase >= 3) {
+    const lower = maps.filter((m) => Number(m.reqLevel) < Number(cur.reqLevel)).sort((a, b) => Number(b.reqLevel) - Number(a.reqLevel))[0];
+    if (lower && Number(lower.id) !== curId) {
+      log(`[map] 死亡兜底 ${curId} → ${lower.id} ${lower.name}（死亡 ${deaths - mapDeathBase} 次）`);
+      state.daemon.configure({ mapId: Number(lower.id) });
+      mapDeathBase = deaths; mapDeathBaseId = Number(lower.id); lastMapSwitchAt = Date.now();
+      return;
+    }
+  }
+  const best = maps.filter((m) => Number(m.reqLevel) <= safeLevel).sort((a, b) => Number(b.reqLevel) - Number(a.reqLevel))[0];
+  if (!best || Number(best.id) === curId) return;
+  if (cur && Number(best.reqLevel) <= Number(cur.reqLevel)) return; // 只向上换，不自动降级
+  if (Date.now() - lastMapSwitchAt < 10 * 60_000) return;
+  mapBusy = true;
+  try {
+    log(`[map] 自动换图 ${curId || '?'} → ${best.id} ${best.name}（Lv${me.level}，req${best.reqLevel}）`);
+    state.daemon.configure({ mapId: Number(best.id) });
+    lastMapSwitchAt = Date.now();
+    mapDeathBase = Number(d.deaths || 0); mapDeathBaseId = Number(best.id);
+  } catch (e) { log(`[map] 换图失败 ${e?.message || e}`); }
+  finally { mapBusy = false; }
+}
+setInterval(autoMap, 5 * 60_000).unref?.();
+setTimeout(autoMap, 15_000);
+
 // ── .halt 监听（5 秒内安静）────────────────────────────────
 let haltLatched = false;
 setInterval(() => {
@@ -261,6 +485,8 @@ setInterval(() => {
 setInterval(() => {
   try {
     if (STAGE < 1 || isHalted()) return;
+    if (state.schedBusy || state.strategyBusy) return;
+    if (state.daemon?.status?.()?.paused) return;
     const c = state.store?.getSnapshot?.()?.combat || {};
     const fresh = c.lastStateAt && (Date.now() - Date.parse(c.lastStateAt) < 90_000);
     const progressing = c.stage === 'running' || c.stage === 'preparing';
@@ -284,7 +510,10 @@ setInterval(() => {
 }, 60_000).unref?.();
 
 // ── 状态落盘 ───────────────────────────────────────────────
-const STATUS_FILE = path.join(ROOT, 'tl_status.json');
+const PERF_FILE = path.join(ROOT, 'data', 'performance.json');
+setInterval(() => { try { state.perf.sample(state.store?.getSnapshot?.(), state.game); state.perf.save(PERF_FILE); } catch { } }, 15_000);
+
+const STATUS_FILE = process.env.TL_STATUS_FILE || path.join(ROOT, INSTANCE === 'main' ? 'tl_status.json' : `tl_status-${INSTANCE}.json`);
 setInterval(() => {
   try {
     if (!state.store) return;
@@ -331,6 +560,7 @@ export const engine = {
   audit,
   maintain: runMaintain,
   daily: runDaily,
+  get strategy() { return state.strategy; },
   reconnect,
   evaluate: { scanAllSlots, bestInSlot, clearCache: clearEvalCache },
 };

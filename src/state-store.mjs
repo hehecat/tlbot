@@ -23,6 +23,8 @@ const DATA = process.env.TL_DATA_DIR ? path.resolve(process.env.TL_DATA_DIR) : p
 const UNKNOWN_F = path.join(DATA, 'unknown_packets.jsonl');
 const DROPS_F = path.join(DATA, 'live_drops.json');
 const MAPS_F = path.join(DATA, 'maps.json');
+const CHAT_F = path.join(DATA, 'chat-log.jsonl');
+const MAPSTATS_F = path.join(DATA, 'map-stats.json');
 
 const MAX_UNKNOWN_PER_CMD = 5;
 const RATE_WINDOW = 40;           // 保留最近 40 个采样点
@@ -33,7 +35,7 @@ const KNOWN = new Set([
   'LOGIN', 'LOGIN_RESPONSE', 'ENTER_GAME', 'ENTER_GAME_RESPONSE',
   'ENTER_MAP', 'ENTER_MAP_RESPONSE', 'CHANGE_MAP',
   'COMBAT_START', 'COMBAT_SYNC', 'COMBAT_STOP', 'COMBAT_STATE', 'COMBAT_REWARD', 'COMBAT_ERROR',
-  'ERROR', 'NOTICE', 'CHAT', 'CHAT_MESSAGE', 'PLAYER_ONLINE', 'PLAYER_OFFLINE',
+  'ERROR', 'NOTICE', 'CHAT', 'CHAT_MESSAGE', 'CHAT_BROADCAST', 'PLAYER_ONLINE', 'PLAYER_OFFLINE',
   'GET_LEADERBOARD', 'GET_LEADERBOARD_RESPONSE', 'LEADERBOARD_DATA',
   'PET_COMMAND', 'PET_RESPONSE',
   'TRIAL_COMMAND', 'TRIAL_RESPONSE',
@@ -78,6 +80,7 @@ const isKnown = t => {
 };
 
 const ensureData = () => { try { fs.mkdirSync(DATA, { recursive: true }); } catch { } };
+const loadMapStats = () => { try { return JSON.parse(fs.readFileSync(MAPSTATS_F, 'utf8')) || {}; } catch { return {}; } };
 
 function loadDrops() {
   try { return JSON.parse(fs.readFileSync(DROPS_F, 'utf8')); } catch { return { updatedAt: null, byMap: {} }; }
@@ -96,13 +99,16 @@ export function initStore(ws, opts = {}) {
     role: null,
     equipments: [],
     bagItems: [],
+    warehouse: [],
     equipSets: [],
     maps: [],            // ENTER_GAME.maps
     pets: null,          // { count, capacity, activePetId, list }
     combat: { stage: null, mapId: null, progress: null, defeated: null, total: null, lastDefeated: null, hp: null, lastStateAt: null, lastProgressAt: null, lastRewardAt: null },
     errors: [],          // 最近 20 条错误
     samples: [],         // [{t, exp, money, level, power}]
+    chat: [],            // 最近世界/门派聊天 [{at,channel,sender,sect,content,item}]
     drops: loadDrops(),
+    mapStats: loadMapStats(), // 每图经验累计：{[mapId]:{exp,samples,firstAt,lastAt}}
   };
 
   const subs = new Map();   // type -> Set<fn>
@@ -130,7 +136,7 @@ export function initStore(ws, opts = {}) {
   // 掉落累积：{ byMap: { [mapId]: { [itemName]: {count, firstAt, lastAt, itemId} } } }
   const recordDrops = (drops, mapId) => {
     if (!Array.isArray(drops) || !drops.length) return;
-    const m = String(mapId ?? st.combat.mapId ?? 'unknown');
+    const m = String(mapId ?? st.role?.mapId ?? st.combat.mapId ?? 'unknown');
     st.drops.byMap[m] ||= {};
     const bucket = st.drops.byMap[m];
     for (const x of drops) {
@@ -143,8 +149,10 @@ export function initStore(ws, opts = {}) {
     try { fs.writeFileSync(DROPS_F, JSON.stringify(st.drops, null, 1)); } catch { }
   };
 
+  let lastMapSave = 0;
   const sample = role => {
     if (!role) return;
+    const prev = st.samples[st.samples.length - 1];
     st.samples.push({
       t: Date.now(),
       exp: role.currentExp ?? null,
@@ -153,6 +161,15 @@ export function initStore(ws, opts = {}) {
       power: role.combatPower ?? null,
     });
     if (st.samples.length > RATE_WINDOW) st.samples.shift();
+    // 按地图累计经验（用于 /maps/ev：哪张图 XP/金币收益高）
+    const mapId = String(st.role?.mapId ?? st.combat.mapId ?? 'unknown');
+    const dExp = prev && prev.exp != null && role.currentExp != null ? role.currentExp - prev.exp : 0;
+    if (dExp > 0 && mapId !== 'unknown') {
+      const m = (st.mapStats[mapId] ||= { exp: 0, samples: 0, firstAt: new Date().toISOString(), lastAt: null });
+      m.exp += dExp; m.samples += 1; m.lastAt = new Date().toISOString();
+      const now = Date.now();
+      if (now - lastMapSave > 30_000) { lastMapSave = now; try { fs.writeFileSync(MAPSTATS_F, JSON.stringify(st.mapStats, null, 1)); } catch { } }
+    }
   };
 
   const handle = d => {
@@ -166,9 +183,25 @@ export function initStore(ws, opts = {}) {
 
     const data = d.data || {};
     const role = data.role || data.roleInfo?.role;
-    if (role) { st.role = role; sample(role); }
+    if (role) {
+      st.role = role; sample(role);
+      try {
+        const w = JSON.parse(role.settings || '{}').warehouse;
+        if (w) {
+          st.warehouseEquips = Array.isArray(w.equips) ? w.equips : [];
+          st.warehouseItems = Array.isArray(w.items) ? w.items : [];
+          st.warehouse = [...st.warehouseEquips, ...st.warehouseItems];
+        }
+      } catch {}
+    }
     if (Array.isArray(data.equipments)) st.equipments = data.equipments;
     if (Array.isArray(data.bagItems)) st.bagItems = data.bagItems;
+    if (Array.isArray(data.warehouse)) st.warehouse = data.warehouse;
+    else if (data.warehouse && typeof data.warehouse === 'object') {
+      st.warehouseEquips = Array.isArray(data.warehouse.warehouseEquips) ? data.warehouse.warehouseEquips : [];
+      st.warehouseItems = Array.isArray(data.warehouse.warehouseItems) ? data.warehouse.warehouseItems : [];
+      st.warehouse = [...st.warehouseEquips, ...st.warehouseItems];
+    }
     if (Array.isArray(data.equipSets)) st.equipSets = data.equipSets;
     if (Array.isArray(data.maps) && data.maps.length) {
       st.maps = data.maps;
@@ -191,6 +224,24 @@ export function initStore(ws, opts = {}) {
           cp: p.combatPower, active: s.activePetId === p.pet?.id,
         })),
       };
+    }
+
+    // 聊天广播：世界/门派/阵营频道，落盘给 System2 做情报（物价、活动、繁殖经验）
+    if (t === 'CHAT_BROADCAST') {
+      const m = data.data || data;
+      const content = String(m.content || '');
+      const ch = m.channel || 'world';
+      if (content) {
+        const rec = {
+          at: new Date().toISOString(), channel: ch,
+          sender: m.senderName || '', level: m.senderLevel ?? null, sect: m.senderSect || '',
+          content: content.slice(0, 500), time: m.time || '',
+          item: m.itemData ? { name: m.itemData.name || m.itemData.itemName || null, id: m.itemData.id || m.itemData.itemId || null } : null,
+        };
+        st.chat.push(rec);
+        if (st.chat.length > 300) st.chat.shift();
+        try { fs.appendFileSync(CHAT_F, JSON.stringify(rec) + '\n'); } catch { }
+      }
     }
 
     if (t === 'COMBAT_STATE') {
@@ -263,6 +314,7 @@ export function initStore(ws, opts = {}) {
         power: r.combatPower ?? null,
         equips: eqs.length,
         bagCount: (st.bagItems || []).length,
+        warehouseCount: (st.warehouse || []).length,
       },
       pets: st.pets ? {
         count: st.pets.count, capacity: st.pets.capacity,
@@ -299,6 +351,7 @@ export function initStore(ws, opts = {}) {
     st,
     ingest,
     getSnapshot,
+    get mapStats() { return st.mapStats; },
     rates,
     on: (type, fn) => {
       if (!subs.has(type)) subs.set(type, new Set());

@@ -1,218 +1,47 @@
-# tlbot
+# tlbot v2 — 天龙八部全自动托管引擎
 
-A WebSocket automation engine for a browser MMORPG. Reverse-engineered protocol, modular design, built for 24/7 unattended operation.
+独立 Node 引擎（System 1，零 LLM）+ DSH Agent 决策层（System 2）。引擎独占一条 WebSocket，通过 HTTP `127.0.0.1:9527` 暴露状态与控制面；战斗、喝药、拾取、维护、繁殖、升级、换装、挂售全部由确定性代码完成，Agent 只在关键节点做规划与破局。
 
-No browser automation — it talks to the game server directly.
+## 架构
 
 ```
-                   ┌─────────────────────────────────┐
-                   │  engine/runtime.mjs             │
-                   │    sole WebSocket holder        │
-  ┌────────────────┤    combat / logistics / daily   │
-  │  agent layer   └──────────────┬──────────────────┘
-  │                               │
-  │  HTTP :9527                   │  ENTER_GAME returns
-  │  ├ /status                    │  the entire game
-  │  ├ /gear      ────────────────┤  definition:
-  │  ├ /gamedata                  │   · 42 maps
-  │  └ /maintain                  │   · 5078 equipment templates
-  │                               │   · 52 sets, 76 shop items
-  pi · Alma · Claude · curl       │   · skill costs, constants
-  └───────────────────────────────┘
+engine/runtime.mjs      唯一 WS 持有者：手机登录/战斗守护/维护/日常/自动升级/自动换图/繁殖领取
+  ├─ src/state-store.mjs  协议白名单 → 内存状态树（role/bag/warehouse/combat/rates/chat/stats）
+  ├─ src/combat-daemon.mjs批次战斗（回血/死亡统计/契约停止条件）
+  ├─ src/logistics.mjs    喝药/换装/整理/出售/商店/珍兽/技能
+  ├─ src/activities.mjs   日常/塔/伪宋军/合成/强化/熔炼
+  ├─ src/strategy.mjs     繁殖/孵化/喂宠/挂售/清仓/召唤
+  ├─ src/planner.mjs      Max ΔCP/h 规划器（多资源背包贪心）
+  ├─ src/evaluate.mjs     官方 EQUIPMENT_EVALUATE 换装评分
+  └─ src/performance.mjs  按 loadout 采样 XP/h、金币/h、击杀/min
+engine/http.mjs         控制面（status/plan/gear/pets/auction/tower/chat/inventory/consignment…）
+engine/watchdog.mjs     DNS→HTTPS→WS 三探，引擎死了自动拉起
+enginectl.sh            main/alt1/alt2 多实例启停（9527/9528/9529，独立 data/log/pid/.halt）
 ```
 
-## What makes it different
-
-**The engine is standalone.** It runs as a plain Node process with zero agent dependencies. Any LLM — or no LLM at all — can drive it over a small HTTP API. If your agent dies, the bot keeps farming.
-
-**Game data is self-discovering.** `ENTER_GAME` returns the full game definition, so there are no hardcoded map tables to maintain. Every reconnect diffs the metadata and logs what changed — map added, drop table changed, shop restocked, constants shifted. Game updates are detected, not manually patched.
-
-**Equipment decisions come from the server.** The game exposes `EQUIPMENT_EVALUATE`, which returns the exact damage/hit/dodge/critical delta for swapping a piece. We tried building our own stat-weight model first; across three swaps it was wrong twice. Now the server decides, and our model is demoted to pre-filtering and pricing.
-
-**Red lines are assertions, not documentation.** Selling, releasing pets, spending premium currency — every write goes through `core/redlines.mjs`. Violations throw before the packet is sent.
-
-## Quick start
+## 多实例
 
 ```bash
-# credentials
-cp creds.example.json creds.json     # or: TL_USER=... TL_PASS=...
-
-# run
-./enginectl.sh start
-
-# watch
-./enginectl.sh status
-./enginectl.sh logs
-./enginectl.sh wlogs
+./enginectl.sh start 2                 # 主号 9527, data/
+TL_INSTANCE=alt1 ./enginectl.sh start 2  # 小号 9528, data-alt1/, creds.hehecat2.json
+TL_INSTANCE=alt2 ./enginectl.sh start 2  # 小号 9529, data-alt2/, creds.hehecat3.json
+./enginectl.sh status|logs|stop
 ```
 
-The engine exposes its state at `http://127.0.0.1:9527/status/brief`.
+凭据放 `creds.json` / `creds.<name>.json`（`{"username","password"}`，权限 600），**已被 .gitignore 排除**。
 
-## Layout
+## 安全红线
 
-```
-engine/
-  runtime.mjs      WebSocket + combat loop + scheduler (standalone)
-  http.mjs         HTTP control surface — any agent can drive
-  gamedata.mjs     auto-discovery and diffing of game metadata
-  watchdog.mjs     probe DNS/HTTP/WS; start engine when server returns
+- 默认零元宝支出；单次金币支出超过总额 30% 会被红线拦截。
+- 同进程只允许一条 WS；停进程先 `touch .halt`。
+- 换装以服务端官方评分（伤害% + 综合战力%）为准，`itemValue` 只做候选排序。
+- 所有写操作落 `data/audit/*.jsonl`，决策落 `data/decisions.jsonl`。
 
-core/
-  lib-ws.mjs       session wrapper (persistenceRevision optimistic lock)
-  lib-value.mjs    item valuation, set analysis, loadout search
-  lib-power.mjs    combat power formula
-  redlines.mjs     assertions guarding irreversible operations
-  audit.mjs        append-only operation log (reason / cost / gain)
-  sets.json        52 set definitions
-
-src/
-  state-store.mjs    in-memory state tree + unknown-packet capture
-  combat-daemon.mjs  battle loop (pause/resume hard boundary)
-  logistics.mjs      potions → cleanup → equip → shop → gems → appraise → pets → skills
-  activities.mjs     daily tasks / dungeons / tower / pet eggs
-  evaluate.mjs       official equipment scoring
-  probe-benchmark.mjs state capture + leaderboard gap
-  verifier.mjs       predicted vs measured deviation log
-
-.pi/                 optional Pi coding-agent adapter
-```
-
-## Design notes
-
-### One account, one session
-
-The server allows exactly one WebSocket per account. A second connection kicks the first with `4001 Session replaced`. This single constraint shapes everything:
-
-- Only one process may hold the socket
-- Starting a new system requires stopping the old one first
-- Start scripts check for stale pidfiles before connecting
-
-Debugging story: we once ran two engines against the same account for hours. Each reconnect kicked the other, and both kept "recovering," producing 4,355 `Session replaced` events before anyone noticed.
-
-### Batch completion is judged by state, not by clock
-
-A naive "if no progress in 60 seconds, restart the batch" check looks reasonable and is catastrophic. One batch of 80 monsters takes 2–3 minutes; a slow wave trips the timer, the batch aborts, and the full maintenance sequence runs again — buying 600 potions, feeding 5M exp to a pet, re-evaluating gear. We measured 286 spurious aborts: gold drained from 8.34M to 1.88M and deaths accumulated from 4 to 830.
-
-The correct signal is the state stream itself:
-
-1. Must observe `defeated < total` first (proves the batch actually started — the first frame after connecting often carries the previous batch's leftover count)
-2. Then `defeated >= total` means the batch is done
-3. Three consecutive `idle` frames also means done
-4. Stall detection counts *state packets without progress*, with the tolerance window derived from this batch's own observed kill rate
-
-`preparing` retry has a matching trap: `Date.now() - start > 25s` is true forever once it becomes true, so re-sending `COMBAT_START` on every subsequent frame means the bot keeps interrupting its own fight.
-
-### Combat power is not the whole story
-
-The formula the server reports is incomplete — it omits set `all_atk%` bonuses and the defense mitigation curve `def/(def+5000)`. Our own model filled those gaps but drifted: three recorded swap predictions had errors of +1416, −55, and −408 against measured power.
-
-Then we found `EQUIPMENT_EVALUATE`. It returns four separate percentages (damage, hit, dodge, critical) relative to the current loadout. That is exactly the "actual offense and defense effect" a single power number hides — and it revealed that swapping for a +3.16% damage item cost 732 total power, because the item traded defense for attack. On a bot whose throughput depends on not dying, that is a losing trade.
-
-Gear changes therefore require all three: damage not negative, official equipment power not down more than 2%, and combined score meaningfully better.
-
-### Pets
-
-- `form` is `BABY` (91–119% aptitude) or `MUTANT` (164–197%)
-- Breeding needs both parents ≥30, never bred, deposited in Suzhou; each parent yields one offspring after an hour
-- Feeding 40M exp at once changed neither level nor combat power — feeding is capped at 5M per cycle and auto-disabled after two consecutive cycles with no level gain
-
-### Enhance and smelt
-
-- Enhancement multiplies `baseStats` only; multipliers `{1:10, 2:20, 3:30, 4:45, 5:65, 6:90, 7:120, 8:155, 9:195}%`
-- Appraisal is weapon-only, `req ≥ 50`
-- Smelting requires both `extScore` and `intScore` above 1500
-- An appraised weapon can be re-rolled for a different aptitude at the cost of one diamond sand
-
-## Configuration
-
-Environment variables:
-
-| Variable | Meaning | Default |
-|---|---|---|
-| `TL_USER` / `TL_PASS` | credentials | — |
-| `TL_WS_URL` | game endpoint | see `core/lib-ws.mjs` |
-| `TL_MAP` | farming map id | 10027 |
-| `TL_STAGE` | 0 read-only / 1 combat / 2 full | 2 |
-| `TL_PORT` | HTTP control port (0 disables) | 9527 |
-| `TL_MAINT_MS` | maintenance interval | 30 min |
-| `TL_AUTOPILOT` | `off` = loop only, no dailies | `on` |
-
-## HTTP API
-
-```
-GET  /status              full snapshot
-GET  /status/brief        one-line summary (cheapest for agents)
-GET  /gear                loadout + official scoring suggestions
-GET  /drops?map=&limit=   drop statistics
-GET  /audit?date=&cat=&action=&limit=  operation log
-GET  /audit/summary?date=  daily aggregate of cost and gain
-GET  /gamedata            metadata summary + recent changes
-GET  /gamedata/maps       map list (?type=normal|dungeon)
-GET  /gamedata/best-map   highest-tier map for current level
-GET  /gamedata/skills     skill upgrade plan with exp requirements
-POST /maintain            run maintenance now
-POST /daily               run dailies now
-POST /combat/{start|pause|resume}
-POST /config              { mapId, potionThreshold }
-POST /reconnect           force a new session
-POST /halt | /unhalt      emergency stop
-```
-
-## Audit log
-
-Every operation that changes game state writes one line to `data/audit/YYYY-MM-DD.jsonl`. A line answers four questions: what happened, why it was decided, what it cost, what it produced.
-
-```json
-{"ts":"2026-11-16T11:59:39Z","cat":"craft","action":"smelt_invest","ok":true,
- "reason":"progress not full, investing spare exp",
- "cost":[{"item":"character exp","n":365018}],
- "extra":{"progress":"173094984/880000000"}}
-```
-
-Fourteen operations are instrumented: gear deposit/swap/appraise, shop sell/consign, pet release/feed, gem synthesis, cloth synthesis, mithril synthesis, enhancement, smelting investment, lottery draw, skill upgrade.
-
-Query through the API:
-
-```
-GET /audit?date=2026-11-16&cat=craft&limit=50
-GET /audit/summary?date=2026-11-16
-```
-
-The summary aggregates by action and totals every cost and gain for the day — useful for answering "what did the bot actually consume today".
-
-## Safety
-
-`core/redlines.mjs` enforces six rules before any write packet:
-
-1. Top-2 gear per slot — never sold, never dismantled, never released
-2. Highest-aptitude pet — never released
-3. Any premium-currency spend — dry-run first
-4. Gold spend above 30% of balance — refused
-5. Removing worn gear — snapshot item ids first
-6. Irreversible operations (smelt / re-roll / sell) — dry-run first
-
-These are assertion functions. They throw; the packet is not sent.
-
-## Emergency stop
+## 运行
 
 ```bash
-touch .halt
+./enginectl.sh start 2
+node -e 'fetch("http://127.0.0.1:9527/status/brief").then(r=>r.json()).then(console.log)'
 ```
 
-All outbound packets stop within five seconds. Works regardless of what state the engine is in.
-
-## Known ceilings
-
-- Enhancement essence does not drop in open-field maps — only dungeon bosses
-- Socket materials are premium-currency shop only
-- Smelting needs double aptitude > 1500; best observed is 1469
-- Set pieces rarely appear in the shop, so completing a set is luck-bound
-- Ancient Tomb maps have real drop tables but the monsters there out-damage a mid-gear character; they are the only open-field source of set drops
-
-## Disclaimer
-
-For learning WebSocket protocol work and automation techniques. Use at your own risk and respect the game's terms of service.
-
-## License
-
-MIT
+详见 `docs/RUNBOOK.md`、`docs/PLAN-MAX-CP.md`。

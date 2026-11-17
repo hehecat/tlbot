@@ -1,23 +1,44 @@
-# 依赖与运行时数据
+# deps / runtime
 node_modules/
-
-# 凭据（绝不提交）
-creds.json
-core/creds.json
-
-# 运行时产物
 logs/
 *.log
+data-alt1/
+data-alt2/
+data/equip-snapshots/
 data/live_drops.json
 data/scheduler.json
-data/autoloop.json
+data/strategy.json
+data/performance.json
+data/map-stats.json
 data/calibration.json
-data/equip-snapshots/
+data/decisions.jsonl
+data/roi-calibration.jsonl
+data/chat-log.jsonl
 data/unknown_packets.jsonl
+data/audit/
+tl_status*.json
 status5.json
 goal_state.json
 
-# 系统
+# secrets (never commit)
+creds.json
+creds.*.json
+creds.example.json
+
+# one-off private probes
+t3.mjs
+probe_login.mjs
+probe_login2.mjs
+getauth.mjs
+scripts/login-test.mjs
+
+# system
 .DS_Store
 *.swp
 .halt
+.halt-alt1
+.halt-alt2
+_archive/
+
+# account sessions
+data/alt-accounts.json

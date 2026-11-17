@@ -203,4 +203,5 @@ log(`=== 服务器恢复守护启动 ===`);
 log(`探测目标 ${PROBE_URL}`);
 log(`间隔 ${Math.round(PROBE_MS / 60_000)} 分钟`);
 tick();
-setInterval(tick, PROBE_MS).unref();
+// 注意：不能 unref，否则引擎在跑时事件循环没有其它句柄，守护会静默退出
+setInterval(tick, PROBE_MS);

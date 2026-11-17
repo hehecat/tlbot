@@ -1,0 +1,4566 @@
+{
+ "at": "2026-11-17T06:39:56.407Z",
+ "maps": [
+  {
+   "id": 4,
+   "name": "洛阳",
+   "reqLevel": 1,
+   "mapType": 1,
+   "region": "城镇",
+   "description": "城市-洛阳",
+   "monsters": [],
+   "drops": [],
+   "costs": [],
+   "npcs": [
+    {
+     "id": "npc_gem_merchant",
+     "name": "宝石工坊"
+    },
+    {
+     "id": "npc_smithy",
+     "name": "铁匠铺"
+    },
+    {
+     "id": "npc_tailor",
+     "name": "裁缝铺"
+    },
+    {
+     "id": "npc_zenlong",
+     "name": "珍珑棋局使者"
+    },
+    {
+     "id": "npc_yuci_exchange",
+     "name": "御赐兑换官"
+    },
+    {
+     "id": "npc_xiaowei",
+     "name": "边军校尉"
+    },
+    {
+     "id": "npc_wushuang",
+     "name": "吴双 - 双倍经验"
+    },
+    {
+     "id": "npc_yanhou",
+     "name": "燕侯"
+    },
+    {
+     "id": "npc_yanwu",
+     "name": "演武校尉 - 打桩"
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "name": "苏州",
+   "reqLevel": 1,
+   "mapType": 1,
+   "region": "城镇",
+   "description": "城市-苏州",
+   "monsters": [],
+   "drops": [],
+   "costs": [],
+   "npcs": [
+    {
+     "id": "npc_pet_keeper",
+     "name": "云飘飘"
+    },
+    {
+     "id": "npc_kuaihuosan",
+     "name": "快活叁 · 在线抽奖"
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "name": "大理",
+   "reqLevel": 1,
+   "mapType": 1,
+   "region": "城镇",
+   "description": "城市-大理",
+   "monsters": [],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10000,
+   "name": "无量山外围",
+   "reqLevel": 1,
+   "mapType": 0,
+   "region": "无量山",
+   "description": "怪物等级1-3",
+   "monsters": [
+    {
+     "count": 10,
+     "monsterId": 2
+    },
+    {
+     "count": 10,
+     "monsterId": 3
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10001,
+   "name": "无量山深处",
+   "reqLevel": 3,
+   "mapType": 0,
+   "region": "无量山",
+   "description": "怪物等级5-7",
+   "monsters": [
+    {
+     "count": 10,
+     "monsterId": 4
+    },
+    {
+     "count": 10,
+     "monsterId": 5
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10002,
+   "name": "无量山核心",
+   "reqLevel": 5,
+   "mapType": 0,
+   "region": "无量山",
+   "description": "怪物等级9-10",
+   "monsters": [
+    {
+     "count": 10,
+     "monsterId": 6
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10003,
+   "name": "剑阁外围",
+   "reqLevel": 1,
+   "mapType": 0,
+   "region": "剑阁",
+   "description": "怪物等级1-3",
+   "monsters": [
+    {
+     "count": 10,
+     "monsterId": 7
+    },
+    {
+     "count": 10,
+     "monsterId": 8
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10004,
+   "name": "剑阁深处",
+   "reqLevel": 3,
+   "mapType": 0,
+   "region": "剑阁",
+   "description": "怪物等级5-7",
+   "monsters": [
+    {
+     "count": 10,
+     "monsterId": 9
+    },
+    {
+     "count": 10,
+     "monsterId": 10
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10005,
+   "name": "月牙泉",
+   "reqLevel": 9,
+   "mapType": 0,
+   "region": "敦煌",
+   "description": "怪物等级9-11",
+   "monsters": [
+    {
+     "count": 10,
+     "monsterId": 11
+    },
+    {
+     "count": 10,
+     "monsterId": 12
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10006,
+   "name": "折柳峡",
+   "reqLevel": 9,
+   "mapType": 0,
+   "region": "敦煌",
+   "description": "怪物等级12-13",
+   "monsters": [
+    {
+     "count": 10,
+     "monsterId": 13
+    },
+    {
+     "count": 10,
+     "monsterId": 14
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10007,
+   "name": "玉门关",
+   "reqLevel": 11,
+   "mapType": 0,
+   "region": "敦煌",
+   "description": "怪物等级15",
+   "monsters": [
+    {
+     "count": 15,
+     "monsterId": 15
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10008,
+   "name": "箕山山脚",
+   "reqLevel": 13,
+   "mapType": 0,
+   "region": "嵩山",
+   "description": "怪物等级15",
+   "monsters": [
+    {
+     "count": 15,
+     "monsterId": 15
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10009,
+   "name": "箕山山顶",
+   "reqLevel": 14,
+   "mapType": 0,
+   "region": "嵩山",
+   "description": "怪物等级16-17",
+   "monsters": [
+    {
+     "count": 10,
+     "monsterId": 21
+    },
+    {
+     "count": 10,
+     "monsterId": 22
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10010,
+   "name": "颍水",
+   "reqLevel": 16,
+   "mapType": 0,
+   "region": "嵩山",
+   "description": "怪物等级19-20",
+   "monsters": [
+    {
+     "count": 8,
+     "monsterId": 23
+    },
+    {
+     "count": 8,
+     "monsterId": 24
+    },
+    {
+     "count": 8,
+     "monsterId": 25
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10011,
+   "name": "香樟林",
+   "reqLevel": 17,
+   "mapType": 0,
+   "region": "西湖",
+   "description": "怪物等级20-22",
+   "monsters": [
+    {
+     "count": 12,
+     "monsterId": 31
+    },
+    {
+     "count": 12,
+     "monsterId": 32
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10012,
+   "name": "断桥残雪",
+   "reqLevel": 19,
+   "mapType": 0,
+   "region": "西湖",
+   "description": "怪物等级22-23",
+   "monsters": [
+    {
+     "count": 12,
+     "monsterId": 33
+    },
+    {
+     "count": 12,
+     "monsterId": 34
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10013,
+   "name": "三潭印月",
+   "reqLevel": 20,
+   "mapType": 0,
+   "region": "西湖",
+   "description": "怪物等级25",
+   "monsters": [
+    {
+     "count": 20,
+     "monsterId": 36
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10014,
+   "name": "金梭",
+   "reqLevel": 21,
+   "mapType": 0,
+   "region": "洱海",
+   "description": "怪物等级25-26",
+   "monsters": [
+    {
+     "count": 15,
+     "monsterId": 37
+    },
+    {
+     "count": 15,
+     "monsterId": 38
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10015,
+   "name": "小普陀",
+   "reqLevel": 24,
+   "mapType": 0,
+   "region": "洱海",
+   "description": "怪物等级27-28",
+   "monsters": [
+    {
+     "count": 15,
+     "monsterId": 39
+    },
+    {
+     "count": 15,
+     "monsterId": 40
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10016,
+   "name": "玉几岛",
+   "reqLevel": 27,
+   "mapType": 0,
+   "region": "洱海",
+   "description": "怪物等级29-30",
+   "monsters": [
+    {
+     "count": 15,
+     "monsterId": 41
+    },
+    {
+     "count": 15,
+     "monsterId": 42
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10017,
+   "name": "狼山",
+   "reqLevel": 28,
+   "mapType": 0,
+   "region": "雁南",
+   "description": "怪物等级30-31",
+   "monsters": [
+    {
+     "count": 12,
+     "monsterId": 43
+    },
+    {
+     "count": 12,
+     "monsterId": 44
+    },
+    {
+     "count": 12,
+     "monsterId": 45
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10018,
+   "name": "秦家寨前哨",
+   "reqLevel": 31,
+   "mapType": 0,
+   "region": "雁南",
+   "description": "怪物等级33-35",
+   "monsters": [
+    {
+     "count": 12,
+     "monsterId": 46
+    },
+    {
+     "count": 12,
+     "monsterId": 47
+    },
+    {
+     "count": 12,
+     "monsterId": 48
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10019,
+   "name": "谷荡湾",
+   "reqLevel": 33,
+   "mapType": 0,
+   "region": "龙泉",
+   "description": "怪物等级35-36",
+   "monsters": [
+    {
+     "count": 12,
+     "monsterId": 49
+    },
+    {
+     "count": 12,
+     "monsterId": 50
+    },
+    {
+     "count": 12,
+     "monsterId": 51
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10020,
+   "name": "龙井村",
+   "reqLevel": 36,
+   "mapType": 0,
+   "region": "龙泉",
+   "description": "怪物等级38-40",
+   "monsters": [
+    {
+     "count": 12,
+     "monsterId": 52
+    },
+    {
+     "count": 12,
+     "monsterId": 53
+    },
+    {
+     "count": 12,
+     "monsterId": 54
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10021,
+   "name": "野人口",
+   "reqLevel": 39,
+   "mapType": 0,
+   "region": "苍山",
+   "description": "怪物等级41-42",
+   "monsters": [
+    {
+     "count": 15,
+     "monsterId": 55
+    },
+    {
+     "count": 15,
+     "monsterId": 56
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10022,
+   "name": "狼人谷",
+   "reqLevel": 38,
+   "mapType": 0,
+   "region": "苍山",
+   "description": "怪物等级40-44",
+   "monsters": [
+    {
+     "count": 15,
+     "monsterId": 57
+    },
+    {
+     "count": 15,
+     "monsterId": 58
+    },
+    {
+     "count": 15,
+     "monsterId": 59
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10023,
+   "name": "红枫林",
+   "reqLevel": 43,
+   "mapType": 0,
+   "region": "雁北",
+   "description": "怪物等级45-46",
+   "monsters": [
+    {
+     "count": 15,
+     "monsterId": 61
+    },
+    {
+     "count": 15,
+     "monsterId": 62
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10024,
+   "name": "金沙滩",
+   "reqLevel": 44,
+   "mapType": 0,
+   "region": "雁北",
+   "description": "怪物等级46-49",
+   "monsters": [
+    {
+     "count": 15,
+     "monsterId": 63
+    },
+    {
+     "count": 15,
+     "monsterId": 64
+    },
+    {
+     "count": 15,
+     "monsterId": 65
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10025,
+   "name": "辽军前哨",
+   "reqLevel": 48,
+   "mapType": 0,
+   "region": "雁北",
+   "description": "怪物等级50",
+   "monsters": [
+    {
+     "count": 50,
+     "monsterId": 66
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10026,
+   "name": "芳草岸",
+   "reqLevel": 49,
+   "mapType": 0,
+   "region": "武夷",
+   "description": "怪物等级50-51",
+   "monsters": [
+    {
+     "count": 20,
+     "monsterId": 67
+    },
+    {
+     "count": 20,
+     "monsterId": 68
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10027,
+   "name": "丹霞岭",
+   "reqLevel": 50,
+   "mapType": 0,
+   "region": "武夷",
+   "description": "怪物等级52-55",
+   "monsters": [
+    {
+     "count": 20,
+     "monsterId": 69
+    },
+    {
+     "count": 20,
+     "monsterId": 70
+    },
+    {
+     "count": 20,
+     "monsterId": 71
+    },
+    {
+     "count": 20,
+     "monsterId": 72
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10028,
+   "name": "思元江",
+   "reqLevel": 48,
+   "mapType": 0,
+   "region": "石林",
+   "description": "怪物等级55-56",
+   "monsters": [
+    {
+     "count": 25,
+     "monsterId": 73
+    },
+    {
+     "count": 25,
+     "monsterId": 74
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10029,
+   "name": "燕王古墓一层",
+   "reqLevel": 50,
+   "mapType": 0,
+   "region": "燕王古墓",
+   "description": "燕王古墓一层，危机四伏，机关重重。",
+   "monsters": [
+    {
+     "count": 3,
+     "monsterId": 11001
+    },
+    {
+     "count": 3,
+     "monsterId": 11002
+    },
+    {
+     "count": 4,
+     "monsterId": 11003
+    }
+   ],
+   "drops": [
+    {
+     "prob": 0.005,
+     "count": 1,
+     "groupId": 7401
+    }
+   ],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10030,
+   "name": "燕王古墓二层",
+   "reqLevel": 55,
+   "mapType": 0,
+   "region": "燕王古墓",
+   "description": "燕王古墓二层，石人傀儡，阴暗凶险。",
+   "monsters": [
+    {
+     "count": 3,
+     "monsterId": 11011
+    },
+    {
+     "count": 3,
+     "monsterId": 11012
+    },
+    {
+     "count": 4,
+     "monsterId": 11013
+    }
+   ],
+   "drops": [
+    {
+     "prob": 0.0075,
+     "count": 1,
+     "groupId": 7401
+    }
+   ],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 10031,
+   "name": "燕王古墓三层",
+   "reqLevel": 60,
+   "mapType": 0,
+   "region": "燕王古墓",
+   "description": "燕王古墓三层，剧毒蛛群，杀机暗涌。",
+   "monsters": [
+    {
+     "count": 3,
+     "monsterId": 11021
+    },
+    {
+     "count": 3,
+     "monsterId": 11022
+    },
+    {
+     "count": 4,
+     "monsterId": 11023
+    }
+   ],
+   "drops": [
+    {
+     "prob": 0.01,
+     "count": 1,
+     "groupId": 7401
+    }
+   ],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 20050,
+   "name": "珍珑棋局",
+   "reqLevel": 15,
+   "mapType": 0,
+   "region": "秘境",
+   "description": "珍珑秘境",
+   "monsters": [
+    {
+     "count": 200,
+     "monsterId": 90001
+    }
+   ],
+   "drops": [],
+   "costs": [
+    {
+     "count": 1,
+     "itemId": 51001
+    }
+   ],
+   "npcs": []
+  },
+  {
+   "id": 20051,
+   "name": "伪宋军领地",
+   "reqLevel": 30,
+   "mapType": 0,
+   "region": "秘境",
+   "description": "伪宋叛军前哨大营，军纪森严，杀机四伏。每日最多挑战5次。",
+   "monsters": [
+    {
+     "count": 50,
+     "monsterId": 90101
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 20052,
+   "name": "熊林",
+   "reqLevel": 30,
+   "mapType": 0,
+   "region": "秘境",
+   "description": "深山密林，凶暴棕熊出没伤人，更有一只凶残至极的千年熊王统领群兽。凭除熊害令牌方可进入。",
+   "monsters": [
+    {
+     "count": 50,
+     "monsterId": 90201
+    }
+   ],
+   "drops": [],
+   "costs": [
+    {
+     "count": 1,
+     "itemId": 51002
+    }
+   ],
+   "npcs": []
+  },
+  {
+   "id": 20060,
+   "name": "演武场 - 单木桩",
+   "reqLevel": 1,
+   "mapType": 0,
+   "region": "秘境",
+   "description": "演武测试场地（单木桩），用于测试单体爆发与技能循环输出。",
+   "monsters": [
+    {
+     "count": 1,
+     "monsterId": 90301
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": [
+    {
+     "id": "npc_yanwu_exit",
+     "name": "演武执事"
+    }
+   ]
+  },
+  {
+   "id": 20061,
+   "name": "演武场 - 多木桩",
+   "reqLevel": 1,
+   "mapType": 0,
+   "region": "秘境",
+   "description": "演武测试场地（6只木桩），用于测试群体攻击与多目标伤害输出。",
+   "monsters": [
+    {
+     "count": 6,
+     "monsterId": 90301
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": [
+    {
+     "id": "npc_yanwu_exit",
+     "name": "演武执事"
+    }
+   ]
+  },
+  {
+   "id": 20070,
+   "name": "无相浮屠",
+   "reqLevel": 50,
+   "mapType": 0,
+   "region": "试炼秘境",
+   "description": "薛飞主持的无尽试炼。死亡或认负返城时统一结算奖励。",
+   "monsters": [],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  },
+  {
+   "id": 20080,
+   "name": "玄武岛·外滩",
+   "reqLevel": 1,
+   "mapType": 0,
+   "region": "玄武岛",
+   "description": "成年珍兽随你的等级成长，每轮结束有1%概率出现幼年护岛神兽。",
+   "monsters": [
+    {
+     "monsterId": 980001,
+     "count": 10
+    },
+    {
+     "monsterId": 980002,
+     "count": 10
+    },
+    {
+     "monsterId": 980003,
+     "count": 10
+    }
+   ],
+   "drops": [],
+   "costs": [],
+   "npcs": []
+  }
+ ],
+ "equipSets": [
+  {
+   "id": 157,
+   "name": "摩柯",
+   "equipTmplIds": "[10510000, 10511000, 10512000]",
+   "effects": "{\"hp\":740.0,\"ext_def\":54.0,\"ext_atk\":40.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10510000
+    ],
+    [
+     10511000
+    ],
+    [
+     10512000
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 270
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 40,
+      "hp": 470,
+      "ext_def": 54
+     }
+    }
+   ]
+  },
+  {
+   "id": 158,
+   "name": "无相",
+   "equipTmplIds": "[10513001, 10514001, 10515001]",
+   "effects": "{\"hp\":1466.0,\"ext_atk\":200.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10513001
+    ],
+    [
+     10514001
+    ],
+    [
+     10515001
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 483
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 200,
+      "hp": 983
+     }
+    }
+   ]
+  },
+  {
+   "id": 159,
+   "name": "韦陀",
+   "equipTmplIds": "[10500002, 10520002, 10521002, 10522002]",
+   "effects": "{\"hp\":2100.0,\"ext_atk\":210.0,\"all_atk\":15.0,\"crit_rate\":4.0,\"crit_def\":4.0,\"ext_def\":120.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10500002
+    ],
+    [
+     10520002
+    ],
+    [
+     10521002
+    ],
+    [
+     10522002
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 525
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 63,
+      "hp": 472
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "ext_atk": 147,
+      "crit_rate": 4,
+      "all_atk": 15,
+      "crit_def": 4,
+      "hp": 1103,
+      "ext_def": 120
+     }
+    }
+   ]
+  },
+  {
+   "id": 160,
+   "name": "金刚",
+   "equipTmplIds": "[10512003, 10514003, 10522003]",
+   "effects": "{\"hp\":2200.0,\"ext_atk\":320.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10512003
+    ],
+    [
+     10514003
+    ],
+    [
+     10522003
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 900
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 320,
+      "hp": 1300
+     }
+    }
+   ]
+  },
+  {
+   "id": 161,
+   "name": "般若",
+   "equipTmplIds": "[10511004, 10513004, 10515004, 10521004]",
+   "effects": "{\"hp\":4250.0,\"ext_atk\":650.0,\"all_atk\":20.0,\"ext_def\":300.0,\"holy_def\":8.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10511004
+    ],
+    [
+     10513004
+    ],
+    [
+     10515004
+    ],
+    [
+     10521004
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 500
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 195,
+      "hp": 1125
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "hp": 2625,
+      "holy_def": 8,
+      "ext_def": 300,
+      "all_atk": 20,
+      "ext_atk": 455
+     }
+    }
+   ]
+  },
+  {
+   "id": 162,
+   "name": "摩尼",
+   "equipTmplIds": "[10513010, 10514010, 10515010]",
+   "effects": "{\"hp\":400.0,\"ext_atk\":138.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10513010
+    ],
+    [
+     10514010
+    ],
+    [
+     10515010
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 125
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 138,
+      "hp": 275
+     }
+    }
+   ]
+  },
+  {
+   "id": 163,
+   "name": "揭谛",
+   "equipTmplIds": "[10520011, 10521011, 10522011]",
+   "effects": "{\"hp\":500.0,\"avoidance\":30.0,\"precision\":141.0,\"ext_atk\":100.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10520011
+    ],
+    [
+     10521011
+    ],
+    [
+     10522011
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 100
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "precision": 141,
+      "avoidance": 30,
+      "ext_atk": 100,
+      "hp": 400
+     }
+    }
+   ]
+  },
+  {
+   "id": 164,
+   "name": "烈焰",
+   "equipTmplIds": "[10500012, 10510012, 10511012, 10512012]",
+   "effects": "{\"hp\":1350.0,\"ext_atk\":430.0,\"all_atk\":15.0,\"crit_rate\":4.0,\"crit_def\":4.0,\"fire_atk\":20.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10500012
+    ],
+    [
+     10510012
+    ],
+    [
+     10511012
+    ],
+    [
+     10512012
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 270
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 129,
+      "hp": 324
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "ext_atk": 301,
+      "crit_rate": 4,
+      "all_atk": 15,
+      "hp": 756,
+      "crit_def": 4,
+      "fire_atk": 20
+     }
+    }
+   ]
+  },
+  {
+   "id": 165,
+   "name": "怒焰",
+   "equipTmplIds": "[10510013, 10520013, 10523013]",
+   "effects": "{\"hp\":1800.0,\"ext_atk\":600.0,\"avoidance\":65.0,\"precision\":120.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10510013
+    ],
+    [
+     10520013
+    ],
+    [
+     10523013
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 360
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "precision": 120,
+      "avoidance": 65,
+      "ext_atk": 600,
+      "hp": 1440
+     }
+    }
+   ]
+  },
+  {
+   "id": 166,
+   "name": "地火",
+   "equipTmplIds": "[10511014, 10513014, 10515014, 10521014]",
+   "effects": "{\"hp\":2000.0,\"ext_atk\":480.0,\"all_atk\":20.0,\"fire_def\":8.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10511014
+    ],
+    [
+     10513014
+    ],
+    [
+     10515014
+    ],
+    [
+     10521014
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 500
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 144,
+      "hp": 450
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "fire_def": 8,
+      "ext_atk": 336,
+      "all_atk": 20,
+      "hp": 1050
+     }
+    }
+   ]
+  },
+  {
+   "id": 167,
+   "name": "降龙",
+   "equipTmplIds": "[10520020, 10521020, 10522020]",
+   "effects": "{\"hp\":100.0,\"ext_atk\":68.0,\"avoidance\":18.0,\"precision\":30.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10520020
+    ],
+    [
+     10521020
+    ],
+    [
+     10522020
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 20
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "precision": 30,
+      "avoidance": 18,
+      "ext_atk": 68,
+      "hp": 80
+     }
+    }
+   ]
+  },
+  {
+   "id": 168,
+   "name": "潜龙",
+   "equipTmplIds": "[10510021, 10511021, 10512021]",
+   "effects": "{\"hp\":1430.0,\"avoidance\":31.0,\"ext_atk\":160.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10510021
+    ],
+    [
+     10511021
+    ],
+    [
+     10512021
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 315
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 160,
+      "avoidance": 31,
+      "hp": 1115
+     }
+    }
+   ]
+  },
+  {
+   "id": 169,
+   "name": "见龙",
+   "equipTmplIds": "[10501002, 10513022, 10514022, 10515022]",
+   "effects": "{\"hp\":1800.0,\"ext_atk\":240.0,\"all_atk\":15.0,\"crit_rate\":4.0,\"crit_def\":4.0,\"poison_atk\":20.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10501002
+    ],
+    [
+     10513022
+    ],
+    [
+     10514022
+    ],
+    [
+     10515022
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 300
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 72,
+      "hp": 450
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "ext_atk": 168,
+      "crit_rate": 4,
+      "poison_atk": 20,
+      "all_atk": 15,
+      "crit_def": 4,
+      "hp": 1050
+     }
+    }
+   ]
+  },
+  {
+   "id": 170,
+   "name": "龙战",
+   "equipTmplIds": "[10510023, 10512023, 10522023]",
+   "effects": "{\"hp\":2250.0,\"avoidance\":65.0,\"precision\":120.0,\"ext_atk\":80.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10510023
+    ],
+    [
+     10512023
+    ],
+    [
+     10522023
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 925
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "precision": 120,
+      "avoidance": 65,
+      "ext_atk": 80,
+      "hp": 1325
+     }
+    }
+   ]
+  },
+  {
+   "id": 171,
+   "name": "神龙",
+   "equipTmplIds": "[10513024, 10520024, 10523024, 10552024]",
+   "effects": "{\"hp\":2750.0,\"ext_atk\":630.0,\"all_atk\":20.0,\"poison_def\":8.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10513024
+    ],
+    [
+     10520024
+    ],
+    [
+     10523024
+    ],
+    [
+     10552024
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 500
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 189,
+      "hp": 675
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "poison_def": 8,
+      "ext_atk": 441,
+      "all_atk": 20,
+      "hp": 1575
+     }
+    }
+   ]
+  },
+  {
+   "id": 172,
+   "name": "无极",
+   "equipTmplIds": "[10510030, 10511030, 10512030]",
+   "effects": "{\"hp\":350.0,\"int_atk\":170.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10510030
+    ],
+    [
+     10511030
+    ],
+    [
+     10512030
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 70
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "hp": 280,
+      "int_atk": 170
+     }
+    }
+   ]
+  },
+  {
+   "id": 173,
+   "name": "两仪",
+   "equipTmplIds": "[10513031, 10514031, 10515031]",
+   "effects": "{\"hp\":900.0,\"avoidance\":40.0,\"precision\":120.0,\"int_atk\":80.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10513031
+    ],
+    [
+     10514031
+    ],
+    [
+     10515031
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 250
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "precision": 120,
+      "avoidance": 40,
+      "int_atk": 80,
+      "hp": 650
+     }
+    }
+   ]
+  },
+  {
+   "id": 174,
+   "name": "四象",
+   "equipTmplIds": "[10502002, 10520032, 10521032, 10522032]",
+   "effects": "{\"hp\":900.0,\"int_atk\":340.0,\"all_atk\":15.0,\"crit_rate\":4.0,\"crit_def\":4.0,\"holy_atk\":20.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10502002
+    ],
+    [
+     10520032
+    ],
+    [
+     10521032
+    ],
+    [
+     10522032
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 180
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "hp": 216,
+      "int_atk": 102
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "crit_rate": 4,
+      "int_atk": 238,
+      "hp": 504,
+      "all_atk": 15,
+      "holy_atk": 20,
+      "crit_def": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": 175,
+   "name": "六合",
+   "equipTmplIds": "[10512033, 10514033, 10522033]",
+   "effects": "{\"hp\":1200.0,\"int_atk\":480.0,\"avoidance\":65.0,\"precision\":120.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10512033
+    ],
+    [
+     10514033
+    ],
+    [
+     10522033
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 240
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "precision": 120,
+      "avoidance": 65,
+      "hp": 960,
+      "int_atk": 480
+     }
+    }
+   ]
+  },
+  {
+   "id": 176,
+   "name": "八卦",
+   "equipTmplIds": "[10511034, 10513034, 10515034, 10521034]",
+   "effects": "{\"hp\":1750.0,\"int_atk\":430.0,\"all_atk\":20.0,\"holy_def\":8.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10511034
+    ],
+    [
+     10513034
+    ],
+    [
+     10515034
+    ],
+    [
+     10521034
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 500
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "int_atk": 129,
+      "hp": 375
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "holy_def": 8,
+      "all_atk": 20,
+      "int_atk": 301,
+      "hp": 875
+     }
+    }
+   ]
+  },
+  {
+   "id": 177,
+   "name": "九阴",
+   "equipTmplIds": "[10513040, 10514040, 10515040]",
+   "effects": "{\"hp\":900.0,\"int_def\":46.0,\"int_atk\":60.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10513040
+    ],
+    [
+     10514040
+    ],
+    [
+     10515040
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 300
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "int_atk": 60,
+      "hp": 600,
+      "int_def": 46
+     }
+    }
+   ]
+  },
+  {
+   "id": 178,
+   "name": "守心",
+   "equipTmplIds": "[10520041, 10521041, 10522041]",
+   "effects": "{\"hp\":1066.0,\"int_def\":90.0,\"int_atk\":20.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10520041
+    ],
+    [
+     10521041
+    ],
+    [
+     10522041
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 483
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "int_atk": 20,
+      "hp": 583,
+      "int_def": 90
+     }
+    }
+   ]
+  },
+  {
+   "id": 179,
+   "name": "九影",
+   "equipTmplIds": "[10503002, 10510042, 10511042, 10512042]",
+   "effects": "{\"hp\":950.0,\"int_atk\":30.0,\"all_atk\":15.0,\"crit_rate\":4.0,\"crit_def\":4.0,\"int_def\":120.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10503002
+    ],
+    [
+     10510042
+    ],
+    [
+     10511042
+    ],
+    [
+     10512042
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 400
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "int_atk": 9,
+      "hp": 165
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "crit_rate": 4,
+      "int_def": 120,
+      "int_atk": 21,
+      "all_atk": 15,
+      "crit_def": 4,
+      "hp": 385
+     }
+    }
+   ]
+  },
+  {
+   "id": 180,
+   "name": "摄魂",
+   "equipTmplIds": "[10510043, 10520043, 10523043]",
+   "effects": "{\"hp\":2800.0,\"int_def\":220.0,\"int_atk\":200.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10510043
+    ],
+    [
+     10520043
+    ],
+    [
+     10523043
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 900
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "int_atk": 200,
+      "hp": 1900,
+      "int_def": 220
+     }
+    }
+   ]
+  },
+  {
+   "id": 181,
+   "name": "控鹤",
+   "equipTmplIds": "[10511044, 10513044, 10515044, 10521044]",
+   "effects": "{\"hp\":3350.0,\"int_atk\":400.0,\"all_atk\":20.0,\"ice_def\":8.0,\"int_def\":300.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10511044
+    ],
+    [
+     10513044
+    ],
+    [
+     10515044
+    ],
+    [
+     10521044
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 675
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "int_atk": 120,
+      "hp": 802
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "int_def": 300,
+      "hp": 1873,
+      "int_atk": 280,
+      "all_atk": 20,
+      "ice_def": 8
+     }
+    }
+   ]
+  },
+  {
+   "id": 182,
+   "name": "摘星",
+   "equipTmplIds": "[10520050, 10521050, 10522050]",
+   "effects": "{\"hp\":300.0,\"int_atk\":108.0,\"avoidance\":18.0,\"precision\":30.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10520050
+    ],
+    [
+     10521050
+    ],
+    [
+     10522050
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 60
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "precision": 30,
+      "avoidance": 18,
+      "hp": 240,
+      "int_atk": 108
+     }
+    }
+   ]
+  },
+  {
+   "id": 183,
+   "name": "三阴",
+   "equipTmplIds": "[10510051, 10511051, 10512051]",
+   "effects": "{\"hp\":1500.0,\"int_atk\":160.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10510051
+    ],
+    [
+     10511051
+    ],
+    [
+     10512051
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 600
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "int_atk": 160,
+      "hp": 900
+     }
+    }
+   ]
+  },
+  {
+   "id": 184,
+   "name": "抽髓",
+   "equipTmplIds": "[10503012, 10513052, 10514052, 10515052]",
+   "effects": "{\"hp\":1800.0,\"int_atk\":520.0,\"all_atk\":15.0,\"crit_rate\":4.0,\"crit_def\":4.0,\"poison_atk\":20.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10503012
+    ],
+    [
+     10513052
+    ],
+    [
+     10514052
+    ],
+    [
+     10515052
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 360
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "hp": 432,
+      "int_atk": 156
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "crit_rate": 4,
+      "poison_atk": 20,
+      "int_atk": 364,
+      "all_atk": 15,
+      "hp": 1008,
+      "crit_def": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": 185,
+   "name": "缠魂",
+   "equipTmplIds": "[10510053, 10512053, 10522053]",
+   "effects": "{\"hp\":2800.0,\"avoidance\":65.0,\"precision\":120.0,\"int_atk\":200.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10510053
+    ],
+    [
+     10512053
+    ],
+    [
+     10522053
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 900
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "precision": 120,
+      "avoidance": 65,
+      "int_atk": 200,
+      "hp": 1900
+     }
+    }
+   ]
+  },
+  {
+   "id": 186,
+   "name": "锁魂",
+   "equipTmplIds": "[10513054, 10520054, 10523054, 10552054]",
+   "effects": "{\"hp\":3000.0,\"int_atk\":680.0,\"all_atk\":20.0,\"poison_def\":8.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10513054
+    ],
+    [
+     10520054
+    ],
+    [
+     10523054
+    ],
+    [
+     10552054
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 500
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "int_atk": 204,
+      "hp": 750
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "poison_def": 8,
+      "all_atk": 20,
+      "int_atk": 476,
+      "hp": 1750
+     }
+    }
+   ]
+  },
+  {
+   "id": 187,
+   "name": "踏雪",
+   "equipTmplIds": "[10510060, 10511060, 10512060]",
+   "effects": "{\"hp\":450.0,\"ext_atk\":78.0,\"avoidance\":18.0,\"precision\":30.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10510060
+    ],
+    [
+     10511060
+    ],
+    [
+     10512060
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 150
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "precision": 30,
+      "avoidance": 18,
+      "ext_atk": 78,
+      "hp": 300
+     }
+    }
+   ]
+  },
+  {
+   "id": 188,
+   "name": "葬花",
+   "equipTmplIds": "[10513061, 10514061, 10515061]",
+   "effects": "{\"hp\":1000.0,\"ext_atk\":240.0,\"precision\":91.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10513061
+    ],
+    [
+     10514061
+    ],
+    [
+     10515061
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 150
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 240,
+      "precision": 91,
+      "hp": 850
+     }
+    }
+   ]
+  },
+  {
+   "id": 189,
+   "name": "卷无",
+   "equipTmplIds": "[10504002, 10520062, 10521062, 10522062]",
+   "effects": "{\"hp\":1050.0,\"ext_atk\":370.0,\"all_atk\":15.0,\"crit_rate\":4.0,\"crit_def\":4.0,\"ice_atk\":20.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10504002
+    ],
+    [
+     10520062
+    ],
+    [
+     10521062
+    ],
+    [
+     10522062
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 210
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 111,
+      "hp": 252
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "ext_atk": 259,
+      "crit_rate": 4,
+      "ice_atk": 20,
+      "all_atk": 15,
+      "hp": 588,
+      "crit_def": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": 190,
+   "name": "真水",
+   "equipTmplIds": "[10512063, 10514063, 10522063]",
+   "effects": "{\"hp\":1650.0,\"ext_atk\":480.0,\"avoidance\":65.0,\"precision\":120.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10512063
+    ],
+    [
+     10514063
+    ],
+    [
+     10522063
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 225
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "precision": 120,
+      "avoidance": 65,
+      "ext_atk": 480,
+      "hp": 1425
+     }
+    }
+   ]
+  },
+  {
+   "id": 191,
+   "name": "八荒",
+   "equipTmplIds": "[10511064, 10513064, 10515064, 10521064]",
+   "effects": "{\"hp\":2500.0,\"ext_atk\":580.0,\"all_atk\":20.0,\"ice_def\":8.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10511064
+    ],
+    [
+     10513064
+    ],
+    [
+     10515064
+    ],
+    [
+     10521064
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 500
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 174,
+      "hp": 600
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "ext_atk": 406,
+      "all_atk": 20,
+      "ice_def": 8,
+      "hp": 1400
+     }
+    }
+   ]
+  },
+  {
+   "id": 192,
+   "name": "北冥",
+   "equipTmplIds": "[10513070, 10514070, 10515070]",
+   "effects": "{\"hp\":600.0,\"ext_def\":46.0,\"int_atk\":180.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10513070
+    ],
+    [
+     10514070
+    ],
+    [
+     10515070
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 120
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "int_atk": 180,
+      "hp": 480,
+      "ext_def": 46
+     }
+    }
+   ]
+  },
+  {
+   "id": 193,
+   "name": "凌波",
+   "equipTmplIds": "[10520071, 10521071, 10522071]",
+   "effects": "{\"hp\":700.0,\"int_def\":150.0,\"avoidance\":40.0,\"int_atk\":40.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10520071
+    ],
+    [
+     10521071
+    ],
+    [
+     10522071
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 250
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "int_def": 150,
+      "avoidance": 40,
+      "int_atk": 40,
+      "hp": 450
+     }
+    }
+   ]
+  },
+  {
+   "id": 194,
+   "name": "苍竹",
+   "equipTmplIds": "[10504012, 10510072, 10511072, 10512072]",
+   "effects": "{\"hp\":1200.0,\"int_atk\":400.0,\"all_atk\":15.0,\"crit_rate\":4.0,\"crit_def\":4.0,\"fire_atk\":20.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10504012
+    ],
+    [
+     10510072
+    ],
+    [
+     10511072
+    ],
+    [
+     10512072
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 240
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "hp": 288,
+      "int_atk": 120
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "crit_rate": 4,
+      "int_atk": 280,
+      "all_atk": 15,
+      "hp": 672,
+      "crit_def": 4,
+      "fire_atk": 20
+     }
+    }
+   ]
+  },
+  {
+   "id": 195,
+   "name": "折梅",
+   "equipTmplIds": "[10510073, 10520073, 10523073]",
+   "effects": "{\"hp\":1600.0,\"int_atk\":560.0,\"int_def\":220.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10510073
+    ],
+    [
+     10520073
+    ],
+    [
+     10523073
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 320
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "int_atk": 560,
+      "hp": 1280,
+      "int_def": 220
+     }
+    }
+   ]
+  },
+  {
+   "id": 196,
+   "name": "纯阳",
+   "equipTmplIds": "[10511074, 10513074, 10515074, 10521074]",
+   "effects": "{\"hp\":2750.0,\"int_atk\":350.0,\"all_atk\":20.0,\"ext_def\":300.0,\"fire_def\":8.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10511074
+    ],
+    [
+     10513074
+    ],
+    [
+     10515074
+    ],
+    [
+     10521074
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 500
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "int_atk": 105,
+      "hp": 675
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "hp": 1575,
+      "int_atk": 245,
+      "fire_def": 8,
+      "ext_def": 300,
+      "all_atk": 20
+     }
+    }
+   ]
+  },
+  {
+   "id": 197,
+   "name": "正阳",
+   "equipTmplIds": "[10520080, 10521080, 10522080]",
+   "effects": "{\"hp\":750.0,\"int_def\":46.0,\"ext_atk\":25.0,\"int_atk\":25.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10520080
+    ],
+    [
+     10521080
+    ],
+    [
+     10522080
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 250
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "int_def": 46,
+      "ext_atk": 25,
+      "int_atk": 25,
+      "hp": 500
+     }
+    }
+   ]
+  },
+  {
+   "id": 198,
+   "name": "一阳",
+   "equipTmplIds": "[10510081, 10511081, 10512081]",
+   "effects": "{\"hp\":2096.0,\"ext_atk\":50.0,\"int_atk\":50.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10510081
+    ],
+    [
+     10511081
+    ],
+    [
+     10512081
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 798
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 50,
+      "hp": 1298,
+      "int_atk": 50
+     }
+    }
+   ]
+  },
+  {
+   "id": 199,
+   "name": "中冲",
+   "equipTmplIds": "[10505002, 10513082, 10514082, 10515082]",
+   "effects": "{\"hp\":1950.0,\"ext_atk\":135.0,\"int_atk\":135.0,\"all_atk\":15.0,\"crit_rate\":4.0,\"crit_def\":4.0,\"precision\":120.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10505002
+    ],
+    [
+     10513082
+    ],
+    [
+     10514082
+    ],
+    [
+     10515082
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 300
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 40,
+      "hp": 495,
+      "int_atk": 40
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "int_atk": 95,
+      "crit_def": 4,
+      "all_atk": 15,
+      "hp": 1155,
+      "ext_atk": 95,
+      "precision": 120,
+      "crit_rate": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": 200,
+   "name": "少商",
+   "equipTmplIds": "[10510083, 10512083, 10522083]",
+   "effects": "{\"hp\":3460.0,\"ext_atk\":40.0,\"int_atk\":40.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10510083
+    ],
+    [
+     10512083
+    ],
+    [
+     10522083
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 1530
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 40,
+      "hp": 1930,
+      "int_atk": 40
+     }
+    }
+   ]
+  },
+  {
+   "id": 201,
+   "name": "少阳",
+   "equipTmplIds": "[10513084, 10520084, 10523084, 10552084]",
+   "effects": "{\"hp\":2750.0,\"ext_atk\":175.0,\"int_atk\":175.0,\"all_atk\":20.0,\"int_def\":300.0,\"precision\":180.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10513084
+    ],
+    [
+     10520084
+    ],
+    [
+     10523084
+    ],
+    [
+     10552084
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 500
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 52,
+      "hp": 675,
+      "int_atk": 52
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "ext_atk": 123,
+      "int_def": 300,
+      "int_atk": 123,
+      "precision": 180,
+      "all_atk": 20,
+      "hp": 1575
+     }
+    }
+   ]
+  },
+  {
+   "id": 202,
+   "name": "御赐精纺套",
+   "equipTmplIds": "[10410047, 10411047, 10412047, 10413047]",
+   "effects": "{\"hp\":1300.0,\"mp\":75.0,\"ext_atk\":25.0,\"int_atk\":25.0,\"ext_def\":60.0,\"int_def\":40.0,\"precision\":50.0,\"avoidance\":15.0,\"crit_rate\":1.0,\"crit_def\":2.0,\"all_atk\":3.0,\"all_def\":1.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10410047
+    ],
+    [
+     10411047
+    ],
+    [
+     10412047
+    ],
+    [
+     10413047
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 650
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "crit_rate": 1,
+      "int_atk": 25,
+      "all_def": 1,
+      "precision": 50,
+      "avoidance": 15,
+      "mp": 75,
+      "ext_atk": 25,
+      "int_def": 40,
+      "all_atk": 3,
+      "crit_def": 2,
+      "hp": 650,
+      "ext_def": 60
+     }
+    }
+   ]
+  },
+  {
+   "id": 203,
+   "name": "御赐熟铜套",
+   "equipTmplIds": "[10411001, 10411007, 10412001, 10412007, 10413001, 10413007, 10421001, 10421007]",
+   "effects": "{\"hp\":1600.0,\"mp\":150.0,\"ext_atk\":105.0,\"int_atk\":105.0,\"ext_def\":80.0,\"int_def\":80.0,\"precision\":180.0,\"avoidance\":50.0,\"crit_rate\":3.0,\"crit_def\":5.0,\"all_atk\":8.0,\"all_def\":2.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10411001,
+     10411007
+    ],
+    [
+     10412001,
+     10412007
+    ],
+    [
+     10413001,
+     10413007
+    ],
+    [
+     10421001,
+     10421007
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 600
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "crit_rate": 3,
+      "int_atk": 105,
+      "all_def": 2,
+      "precision": 180,
+      "avoidance": 50,
+      "mp": 150,
+      "ext_atk": 105,
+      "int_def": 80,
+      "all_atk": 8,
+      "crit_def": 5,
+      "hp": 1000,
+      "ext_def": 80
+     }
+    }
+   ]
+  },
+  {
+   "id": 204,
+   "name": "御赐精钢套",
+   "equipTmplIds": "[10411002, 10411008, 10412002, 10412008, 10413002, 10413008, 10421002, 10421008]",
+   "effects": "{\"hp\":2100.0,\"mp\":225.0,\"ext_atk\":165.0,\"int_atk\":165.0,\"ext_def\":80.0,\"int_def\":80.0,\"precision\":270.0,\"avoidance\":65.0,\"crit_rate\":4.0,\"crit_def\":6.0,\"all_atk\":10.0,\"all_def\":3.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10411002,
+     10411008
+    ],
+    [
+     10412002,
+     10412008
+    ],
+    [
+     10413002,
+     10413008
+    ],
+    [
+     10421002,
+     10421008
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 900
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "crit_rate": 4,
+      "int_atk": 165,
+      "all_def": 3,
+      "precision": 270,
+      "avoidance": 65,
+      "mp": 225,
+      "ext_atk": 165,
+      "int_def": 80,
+      "all_atk": 10,
+      "crit_def": 6,
+      "hp": 1200,
+      "ext_def": 80
+     }
+    }
+   ]
+  },
+  {
+   "id": 205,
+   "name": "御赐黄金套",
+   "equipTmplIds": "[10411003, 10411009, 10412003, 10412009, 10413003, 10413009, 10414020, 10414024, 10421003, 10421009]",
+   "effects": "{\"hp\":3000.0,\"ext_def\":120.0,\"int_def\":120.0,\"ext_atk\":240.0,\"int_atk\":240.0,\"precision\":360.0,\"mp\":300.0,\"avoidance\":130.0,\"crit_rate\":6.0,\"crit_def\":10.0,\"all_atk\":16.0,\"all_def\":4.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10411003,
+     10411009
+    ],
+    [
+     10412003,
+     10412009
+    ],
+    [
+     10413003,
+     10413009
+    ],
+    [
+     10414020,
+     10414024
+    ],
+    [
+     10421003,
+     10421009
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "int_def": 25,
+      "hp": 1150,
+      "ext_def": 25
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 100,
+      "precision": 171,
+      "int_atk": 100
+     }
+    },
+    {
+     "pieces": 5,
+     "effects": {
+      "crit_rate": 6,
+      "int_atk": 140,
+      "all_def": 4,
+      "precision": 189,
+      "avoidance": 130,
+      "mp": 300,
+      "ext_atk": 140,
+      "int_def": 95,
+      "all_atk": 16,
+      "crit_def": 10,
+      "hp": 1850,
+      "ext_def": 95
+     }
+    }
+   ]
+  },
+  {
+   "id": 206,
+   "name": "御赐混沌套",
+   "equipTmplIds": "[10411004, 10411010, 10412004, 10412010, 10413004, 10413010, 10414021, 10414025, 10421004, 10421010]",
+   "effects": "{\"hp\":3750.0,\"ext_def\":150.0,\"int_def\":150.0,\"ext_atk\":300.0,\"int_atk\":300.0,\"precision\":450.0,\"mp\":375.0,\"avoidance\":163.0,\"crit_rate\":8.0,\"crit_def\":13.0,\"all_atk\":20.0,\"all_def\":5.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10411004,
+     10411010
+    ],
+    [
+     10412004,
+     10412010
+    ],
+    [
+     10413004,
+     10413010
+    ],
+    [
+     10414021,
+     10414025
+    ],
+    [
+     10421004,
+     10421010
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "int_def": 35,
+      "hp": 1500,
+      "ext_def": 35
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "ext_atk": 125,
+      "precision": 213,
+      "int_atk": 125
+     }
+    },
+    {
+     "pieces": 5,
+     "effects": {
+      "crit_rate": 8,
+      "int_atk": 175,
+      "all_def": 5,
+      "precision": 237,
+      "avoidance": 163,
+      "mp": 375,
+      "ext_atk": 175,
+      "int_def": 115,
+      "all_atk": 20,
+      "crit_def": 13,
+      "hp": 2250,
+      "ext_def": 115
+     }
+    }
+   ]
+  },
+  {
+   "id": 207,
+   "name": "蔡袅",
+   "equipTmplIds": "[10411013, 10412013, 10413013, 10421013]",
+   "effects": "{\"hp\":1200.0,\"crit_rate\":4.0,\"precision\":80.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10411013
+    ],
+    [
+     10412013
+    ],
+    [
+     10413013
+    ],
+    [
+     10421013
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 600
+     }
+    },
+    {
+     "pieces": 4,
+     "effects": {
+      "crit_rate": 4,
+      "precision": 80,
+      "hp": 600
+     }
+    }
+   ]
+  },
+  {
+   "id": 208,
+   "name": "燕侯",
+   "equipTmplIds": "[10401002, 10403002, 10404002, 10405001, 10410001, 10420004, 10422013, 10423021]",
+   "effects": "{\"hp\":4110.0,\"all_atk\":40.0,\"crit_def\":10.0,\"crit_rate\":10.0}",
+   "balanceVersion": 1,
+   "memberGroups": [
+    [
+     10401002,
+     10403002,
+     10404002,
+     10405001
+    ],
+    [
+     10410001
+    ],
+    [
+     10420004
+    ],
+    [
+     10422013
+    ],
+    [
+     10423021
+    ]
+   ],
+   "bonusTiers": [
+    {
+     "pieces": 2,
+     "effects": {
+      "hp": 2055
+     }
+    },
+    {
+     "pieces": 3,
+     "effects": {
+      "all_atk": 20,
+      "crit_def": 5
+     }
+    },
+    {
+     "pieces": 5,
+     "effects": {
+      "crit_rate": 10,
+      "all_atk": 20,
+      "crit_def": 5,
+      "hp": 2055
+     }
+    }
+   ]
+  }
+ ],
+ "shopItems": [
+  {
+   "id": 1,
+   "itemId": 1,
+   "price": 60,
+   "currencyType": 1,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "金钱店",
+   "category2": "医馆",
+   "name": "行血散",
+   "icon": "/src/assets/items/medicine/hp_heal_1.jpg",
+   "descTpl": "立即回复血量450点（右键点击使用）",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 2,
+   "itemId": 2,
+   "price": 150,
+   "currencyType": 1,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "金钱店",
+   "category2": "医馆",
+   "name": "活血散",
+   "icon": "/src/assets/items/medicine/hp_heal_1.jpg",
+   "descTpl": "立即回复血量964点（右键点击使用）",
+   "type": 2,
+   "reqLevel": 10
+  },
+  {
+   "id": 3,
+   "itemId": 3,
+   "price": 200,
+   "currencyType": 1,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "金钱店",
+   "category2": "医馆",
+   "name": "金疮药",
+   "icon": "/src/assets/items/medicine/hp_heal_1.jpg",
+   "descTpl": "立即回复血量1478点（右键点击使用）",
+   "type": 2,
+   "reqLevel": 20
+  },
+  {
+   "id": 4,
+   "itemId": 4,
+   "price": 300,
+   "currencyType": 1,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "金钱店",
+   "category2": "医馆",
+   "name": "鹿茸丹",
+   "icon": "/src/assets/items/medicine/hp_heal_2.jpg",
+   "descTpl": "立即回复血量1992点（右键点击使用）",
+   "type": 2,
+   "reqLevel": 30
+  },
+  {
+   "id": 5,
+   "itemId": 5,
+   "price": 400,
+   "currencyType": 1,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "金钱店",
+   "category2": "医馆",
+   "name": "参心丹",
+   "icon": "/src/assets/items/medicine/hp_heal_2.jpg",
+   "descTpl": "立即回复血量2506点（右键点击使用）",
+   "type": 2,
+   "reqLevel": 40
+  },
+  {
+   "id": 6,
+   "itemId": 6,
+   "price": 500,
+   "currencyType": 1,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "金钱店",
+   "category2": "医馆",
+   "name": "首乌丹",
+   "icon": "/src/assets/items/medicine/hp_heal_2.jpg",
+   "descTpl": "立即回复血量3020点（右键点击使用）",
+   "type": 2,
+   "reqLevel": 50
+  },
+  {
+   "id": 7,
+   "itemId": 7,
+   "price": 60,
+   "currencyType": 1,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "金钱店",
+   "category2": "医馆",
+   "name": "行气散",
+   "icon": "/src/assets/items/medicine/mp_heal_1.jpg",
+   "descTpl": "立即回复气184点（右键点击使用）",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 8,
+   "itemId": 8,
+   "price": 150,
+   "currencyType": 1,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "金钱店",
+   "category2": "医馆",
+   "name": "还灵丹",
+   "icon": "/src/assets/items/medicine/mp_heal_2.jpg",
+   "descTpl": "立即回复气376点（右键点击使用）",
+   "type": 2,
+   "reqLevel": 10
+  },
+  {
+   "id": 9,
+   "itemId": 9,
+   "price": 200,
+   "currencyType": 1,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "金钱店",
+   "category2": "医馆",
+   "name": "归灵丸",
+   "icon": "/src/assets/items/medicine/mp_heal_2.jpg",
+   "descTpl": "立即回复气568点（右键点击使用）",
+   "type": 2,
+   "reqLevel": 20
+  },
+  {
+   "id": 10,
+   "itemId": 10,
+   "price": 300,
+   "currencyType": 1,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "金钱店",
+   "category2": "医馆",
+   "name": "采香丸",
+   "icon": "/src/assets/items/medicine/mp_heal_2.jpg",
+   "descTpl": "立即回复气760点（右键点击使用）",
+   "type": 2,
+   "reqLevel": 30
+  },
+  {
+   "id": 11,
+   "itemId": 11,
+   "price": 400,
+   "currencyType": 1,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "金钱店",
+   "category2": "医馆",
+   "name": "甘露丹",
+   "icon": "/src/assets/items/medicine/mp_heal_2.jpg",
+   "descTpl": "立即回复气952点（右键点击使用）",
+   "type": 2,
+   "reqLevel": 40
+  },
+  {
+   "id": 12,
+   "itemId": 12,
+   "price": 500,
+   "currencyType": 1,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "金钱店",
+   "category2": "医馆",
+   "name": "琼丹",
+   "icon": "/src/assets/items/medicine/mp_heal_2.jpg",
+   "descTpl": "立即回复气1144点（右键点击使用）",
+   "type": 2,
+   "reqLevel": 50
+  },
+  {
+   "id": 226,
+   "itemId": 4000,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "猫眼石(1级)",
+   "icon": "/src/assets/items/gem/Gem1_2_4.jpg",
+   "descTpl": "内攻攻击+127",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 227,
+   "itemId": 4001,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "虎眼石(1级)",
+   "icon": "/src/assets/items/gem/Gem1_1_1.jpg",
+   "descTpl": "外攻攻击+127",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 228,
+   "itemId": 4002,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "黄晶石(1级)",
+   "icon": "/src/assets/items/gem/Gem1_1_3.jpg",
+   "descTpl": "玄攻击+10",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 229,
+   "itemId": 4003,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "蓝晶石(1级)",
+   "icon": "/src/assets/items/gem/Gem1_1_4.jpg",
+   "descTpl": "冰攻击+10",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 230,
+   "itemId": 4004,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "红晶石(1级)",
+   "icon": "/src/assets/items/gem/Gem1_1_5.jpg",
+   "descTpl": "火攻击+10",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 231,
+   "itemId": 4005,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "绿晶石(1级)",
+   "icon": "/src/assets/items/gem/Gem1_1_6.jpg",
+   "descTpl": "毒攻击+10",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 232,
+   "itemId": 4010,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "紫玉(1级)",
+   "icon": "/src/assets/items/gem/Gem1_1_2.jpg",
+   "descTpl": "命中+142",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 233,
+   "itemId": 4011,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "变石(1级)",
+   "icon": "/src/assets/items/gem/Gem1_1_8.jpg",
+   "descTpl": "会心攻击+1",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 234,
+   "itemId": 4012,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "石榴石(1级)",
+   "icon": "/src/assets/items/gem/Gem1_1_9.jpg",
+   "descTpl": "内功防御+127",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 235,
+   "itemId": 4013,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "尖晶石(1级)",
+   "icon": "/src/assets/items/gem/Gem1_1_12.jpg",
+   "descTpl": "外功防御+127",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 236,
+   "itemId": 4014,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "黄玉(1级)",
+   "icon": "/src/assets/items/gem/Gem1_1_11.jpg",
+   "descTpl": "玄抵抗+4",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 237,
+   "itemId": 4015,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "皓石(1级)",
+   "icon": "/src/assets/items/gem/Gem1_1_10.jpg",
+   "descTpl": "冰抵抗+4",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 238,
+   "itemId": 4016,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "月光石(1级)",
+   "icon": "/src/assets/items/gem/Gem1_1_13.jpg",
+   "descTpl": "火抵抗+4",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 239,
+   "itemId": 4017,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "碧玺(1级)",
+   "icon": "/src/assets/items/gem/Gem1_2_1.jpg",
+   "descTpl": "毒抵抗+4",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 240,
+   "itemId": 4022,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "血精石(1级)",
+   "icon": "/src/assets/items/gem/Gem1_2_7.jpg",
+   "descTpl": "HP上限+723",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 241,
+   "itemId": 4023,
+   "price": 16,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "祖母绿(1级)",
+   "icon": "/src/assets/items/gem/Gem1_1_14.jpg",
+   "descTpl": "闪避+47",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 242,
+   "itemId": 4024,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "猫眼石(2级)",
+   "icon": "/src/assets/items/gem/Gem1_2_4.jpg",
+   "descTpl": "内攻攻击+249",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 243,
+   "itemId": 4025,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "虎眼石(2级)",
+   "icon": "/src/assets/items/gem/Gem1_1_1.jpg",
+   "descTpl": "外攻攻击+249",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 244,
+   "itemId": 4026,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "黄晶石(2级)",
+   "icon": "/src/assets/items/gem/Gem1_1_3.jpg",
+   "descTpl": "玄攻击+15",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 245,
+   "itemId": 4027,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "蓝晶石(2级)",
+   "icon": "/src/assets/items/gem/Gem1_1_4.jpg",
+   "descTpl": "冰攻击+15",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 246,
+   "itemId": 4028,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "红晶石(2级)",
+   "icon": "/src/assets/items/gem/Gem1_1_5.jpg",
+   "descTpl": "火攻击+15",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 247,
+   "itemId": 4029,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "绿晶石(2级)",
+   "icon": "/src/assets/items/gem/Gem1_1_6.jpg",
+   "descTpl": "毒攻击+15",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 248,
+   "itemId": 4034,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "紫玉(2级)",
+   "icon": "/src/assets/items/gem/Gem1_1_2.jpg",
+   "descTpl": "命中+277",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 249,
+   "itemId": 4035,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "变石(2级)",
+   "icon": "/src/assets/items/gem/Gem1_1_8.jpg",
+   "descTpl": "会心一击+2",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 250,
+   "itemId": 4036,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "石榴石(2级)",
+   "icon": "/src/assets/items/gem/Gem1_1_9.jpg",
+   "descTpl": "内功防御+247",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 251,
+   "itemId": 4037,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "尖晶石(2级)",
+   "icon": "/src/assets/items/gem/Gem1_1_12.jpg",
+   "descTpl": "外功防御+247",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 252,
+   "itemId": 4038,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "黄玉(2级)",
+   "icon": "/src/assets/items/gem/Gem1_1_11.jpg",
+   "descTpl": "玄抵抗+6",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 253,
+   "itemId": 4039,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "皓石(2级)",
+   "icon": "/src/assets/items/gem/Gem1_1_10.jpg",
+   "descTpl": "冰抵抗+6",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 254,
+   "itemId": 4040,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "月光石(2级)",
+   "icon": "/src/assets/items/gem/Gem1_1_13.jpg",
+   "descTpl": "火抵抗+6",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 255,
+   "itemId": 4041,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "碧玺(2级)",
+   "icon": "/src/assets/items/gem/Gem1_2_1.jpg",
+   "descTpl": "毒抵抗+6",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 256,
+   "itemId": 4046,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "血精石(2级)",
+   "icon": "/src/assets/items/gem/Gem1_2_7.jpg",
+   "descTpl": "HP上限+1410",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 257,
+   "itemId": 4047,
+   "price": 100,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "祖母绿(2级)",
+   "icon": "/src/assets/items/gem/Gem1_1_14.jpg",
+   "descTpl": "闪避+92",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 258,
+   "itemId": 4048,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "猫眼石(3级)",
+   "icon": "/src/assets/items/gem/Gem3_2_4.jpg",
+   "descTpl": "内攻攻击+364",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 259,
+   "itemId": 4049,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "虎眼石(3级)",
+   "icon": "/src/assets/items/gem/Gem3_1_1.jpg",
+   "descTpl": "外攻攻击+364",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 260,
+   "itemId": 4050,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "黄晶石(3级)",
+   "icon": "/src/assets/items/gem/Gem3_1_3.jpg",
+   "descTpl": "玄攻击+20",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 261,
+   "itemId": 4051,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "蓝晶石(3级)",
+   "icon": "/src/assets/items/gem/Gem3_1_4.jpg",
+   "descTpl": "冰攻击+20",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 262,
+   "itemId": 4052,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "红晶石(3级)",
+   "icon": "/src/assets/items/gem/Gem3_1_5.jpg",
+   "descTpl": "火攻击+20",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 263,
+   "itemId": 4053,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "绿晶石(3级)",
+   "icon": "/src/assets/items/gem/Gem3_1_6.jpg",
+   "descTpl": "毒攻击+20",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 264,
+   "itemId": 4058,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "紫玉(3级)",
+   "icon": "/src/assets/items/gem/Gem3_1_2.jpg",
+   "descTpl": "命中+406",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 265,
+   "itemId": 4059,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "变石(3级)",
+   "icon": "/src/assets/items/gem/Gem3_1_8.jpg",
+   "descTpl": "会心一击+3",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 266,
+   "itemId": 4060,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "石榴石(3级)",
+   "icon": "/src/assets/items/gem/Gem3_1_9.jpg",
+   "descTpl": "内功防御+363",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 267,
+   "itemId": 4061,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "尖晶石(3级)",
+   "icon": "/src/assets/items/gem/Gem3_1_12.jpg",
+   "descTpl": "外功防御+363",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 268,
+   "itemId": 4062,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "黄玉(3级)",
+   "icon": "/src/assets/items/gem/Gem3_1_11.jpg",
+   "descTpl": "玄抵抗+8",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 269,
+   "itemId": 4063,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "皓石(3级)",
+   "icon": "/src/assets/items/gem/Gem3_1_10.jpg",
+   "descTpl": "冰抵抗+8",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 270,
+   "itemId": 4064,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "月光石(3级)",
+   "icon": "/src/assets/items/gem/Gem3_1_13.jpg",
+   "descTpl": "火抵抗+8",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 271,
+   "itemId": 4065,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "碧玺(3级)",
+   "icon": "/src/assets/items/gem/Gem3_2_1.jpg",
+   "descTpl": "毒抵抗+8",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 272,
+   "itemId": 4070,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "血精石(3级)",
+   "icon": "/src/assets/items/gem/Gem3_2_7.jpg",
+   "descTpl": "HP上限+2066",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 273,
+   "itemId": 4071,
+   "price": 420,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "宝石斋",
+   "name": "祖母绿(3级)",
+   "icon": "/src/assets/items/gem/Gem3_1_14.jpg",
+   "descTpl": "闪避+135",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 274,
+   "itemId": 5052,
+   "price": 125,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "天工坊",
+   "name": "低级宝石镶嵌符",
+   "icon": "/src/assets/items/material/Cloth3_5.jpg",
+   "descTpl": "宝石镶嵌时候使用可以提高镶嵌的成功率。镶嵌成功率提高至50%",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 275,
+   "itemId": 5053,
+   "price": 398,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "天工坊",
+   "name": "高级宝石镶嵌符",
+   "icon": "/src/assets/items/material/Cloth3_6.jpg",
+   "descTpl": "宝石镶嵌时候使用可以大幅提高镶嵌的成功率。镶嵌成功率提高至100%",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 276,
+   "itemId": 5054,
+   "price": 200,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "天工坊",
+   "name": "极率之珠",
+   "icon": "/src/assets/items/material/Cloth2_15.jpg",
+   "descTpl": "极率之珠，防止镶嵌时用力过大导致宝石碎裂。注：如不使用极率之珠镶嵌失败会导致宝石降级而且不使用极率之珠还会导致宝石破裂哦！",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 277,
+   "itemId": 5055,
+   "price": 125,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "天工坊",
+   "name": "低级宝石摘除符",
+   "icon": "/src/assets/items/material/Cloth2_16.jpg",
+   "descTpl": "摘除2级及以上宝石，返还同种低1级的绑定宝石。1级宝石请使用高级摘除符。",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 278,
+   "itemId": 5069,
+   "price": 270,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "天工坊",
+   "name": "高级宝石摘除符",
+   "icon": "/src/assets/items/material/Charm3_4.jpg",
+   "descTpl": "高级符咒，摘除宝石时，摘除的宝石等级不变，但是会绑定在玩家身上。",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 279,
+   "itemId": 5058,
+   "price": 180,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "天工坊",
+   "name": "低级宝石合成符",
+   "icon": "/src/assets/items/material/Cloth3_7.jpg",
+   "descTpl": "增加合成4级（包括4级）以下宝石的成功率。合成成功率提高25%",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 280,
+   "itemId": 5059,
+   "price": 350,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "天工坊",
+   "name": "高级宝石合成符",
+   "icon": "/src/assets/items/material/Cloth3_8.jpg",
+   "descTpl": "增加合成5级（包括5级）以上宝石的成功率。合成成功率提高25%",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 281,
+   "itemId": 5060,
+   "price": 600,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "天工坊",
+   "name": "宝石雕琢符",
+   "icon": "/src/assets/items/material/Scroll_7.jpg",
+   "descTpl": "璞玉本天成，精雕细琢之。可将级智慧类宝石、魅力类宝石雕琢为高级宝石。",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 282,
+   "itemId": 5050,
+   "price": 125,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "天工坊",
+   "name": "低级强化精华",
+   "icon": "/src/assets/items/material/Cloth3_4.jpg",
+   "descTpl": "地煞强化精华，低级强化精华，可以强化40级以下的装备。",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 283,
+   "itemId": 5051,
+   "price": 260,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "天工坊",
+   "name": "高级强化精华",
+   "icon": "/src/assets/items/material/Cloth3_3.jpg",
+   "descTpl": "天罡强化精华，高级强化精华，可以强化40级以上的装备。",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 284,
+   "itemId": 5079,
+   "price": 1500,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "天工坊",
+   "name": "天罡强化露",
+   "icon": "/src/assets/items/material/Treasure_16.jpg",
+   "descTpl": "天罡强化露，可多次强化40级以上装备。（最多可使用11次）",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 285,
+   "itemId": 5056,
+   "price": 240,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "天工坊",
+   "name": "低级刻铭符",
+   "icon": "/src/assets/items/material/Charm3_1.jpg",
+   "descTpl": "可以刻铭级（不包括50级）以下的装备，使装备增加基础属性值的10%。",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 286,
+   "itemId": 5057,
+   "price": 400,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "天工坊",
+   "name": "高级刻铭符",
+   "icon": "/src/assets/items/material/Charm3_2.jpg",
+   "descTpl": "可以刻铭级（包括50级）以上的装备，使装备增加基础属性值的10%。",
+   "type": 2,
+   "reqLevel": 1
+  },
+  {
+   "id": 95007,
+   "itemId": 5007,
+   "price": 2,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "手工店",
+   "name": "棉布碎片",
+   "icon": "/src/assets/items/material/Ore_14.jpg",
+   "descTpl": "棉布的碎片。",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 970101,
+   "itemId": 970101,
+   "price": 300,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "天工坊",
+   "name": "金刚砂",
+   "icon": "/src/assets/materials/jingang-sand.png",
+   "descTpl": "在铁匠铺对50级及以上武器或暗器重新鉴定资质，每次消耗1个。重新随机生成内外功资质，并替换原结果，可能变高或变低。",
+   "type": 3,
+   "reqLevel": 1
+  },
+  {
+   "id": 95016,
+   "itemId": 5016,
+   "price": 2,
+   "currencyType": 2,
+   "currencyItemId": 0,
+   "bindStatus": 0,
+   "category1": "元宝商城",
+   "category2": "手工店",
+   "name": "秘银碎片",
+   "icon": "/src/assets/items/material/Merchandise5_1.jpg",
+   "descTpl": "秘银的碎片,可用于合成秘银。",
+   "type": 3,
+   "reqLevel": 1
+  }
+ ],
+ "defConstants": [
+  {
+   "id": 1,
+   "level": 1,
+   "defConstant": 10
+  },
+  {
+   "id": 2,
+   "level": 2,
+   "defConstant": 20
+  },
+  {
+   "id": 3,
+   "level": 3,
+   "defConstant": 30
+  },
+  {
+   "id": 4,
+   "level": 4,
+   "defConstant": 40
+  },
+  {
+   "id": 5,
+   "level": 5,
+   "defConstant": 50
+  },
+  {
+   "id": 6,
+   "level": 6,
+   "defConstant": 80
+  },
+  {
+   "id": 7,
+   "level": 7,
+   "defConstant": 110
+  },
+  {
+   "id": 8,
+   "level": 8,
+   "defConstant": 150
+  },
+  {
+   "id": 9,
+   "level": 9,
+   "defConstant": 220
+  },
+  {
+   "id": 10,
+   "level": 10,
+   "defConstant": 260
+  },
+  {
+   "id": 11,
+   "level": 11,
+   "defConstant": 300
+  },
+  {
+   "id": 12,
+   "level": 12,
+   "defConstant": 350
+  },
+  {
+   "id": 13,
+   "level": 13,
+   "defConstant": 450
+  },
+  {
+   "id": 14,
+   "level": 14,
+   "defConstant": 500
+  },
+  {
+   "id": 15,
+   "level": 15,
+   "defConstant": 550
+  },
+  {
+   "id": 16,
+   "level": 16,
+   "defConstant": 600
+  },
+  {
+   "id": 17,
+   "level": 17,
+   "defConstant": 650
+  },
+  {
+   "id": 18,
+   "level": 18,
+   "defConstant": 700
+  },
+  {
+   "id": 19,
+   "level": 19,
+   "defConstant": 750
+  },
+  {
+   "id": 20,
+   "level": 20,
+   "defConstant": 800
+  },
+  {
+   "id": 21,
+   "level": 21,
+   "defConstant": 1050
+  },
+  {
+   "id": 22,
+   "level": 22,
+   "defConstant": 1100
+  },
+  {
+   "id": 23,
+   "level": 23,
+   "defConstant": 1150
+  },
+  {
+   "id": 24,
+   "level": 24,
+   "defConstant": 1200
+  },
+  {
+   "id": 25,
+   "level": 25,
+   "defConstant": 1250
+  },
+  {
+   "id": 26,
+   "level": 26,
+   "defConstant": 1300
+  },
+  {
+   "id": 27,
+   "level": 27,
+   "defConstant": 1350
+  },
+  {
+   "id": 28,
+   "level": 28,
+   "defConstant": 1400
+  },
+  {
+   "id": 29,
+   "level": 29,
+   "defConstant": 1450
+  },
+  {
+   "id": 30,
+   "level": 30,
+   "defConstant": 1500
+  },
+  {
+   "id": 31,
+   "level": 31,
+   "defConstant": 1550
+  },
+  {
+   "id": 32,
+   "level": 32,
+   "defConstant": 1600
+  },
+  {
+   "id": 33,
+   "level": 33,
+   "defConstant": 1650
+  },
+  {
+   "id": 34,
+   "level": 34,
+   "defConstant": 1700
+  },
+  {
+   "id": 35,
+   "level": 35,
+   "defConstant": 1750
+  },
+  {
+   "id": 36,
+   "level": 36,
+   "defConstant": 1800
+  },
+  {
+   "id": 37,
+   "level": 37,
+   "defConstant": 1850
+  },
+  {
+   "id": 38,
+   "level": 38,
+   "defConstant": 1900
+  },
+  {
+   "id": 39,
+   "level": 39,
+   "defConstant": 1950
+  },
+  {
+   "id": 40,
+   "level": 40,
+   "defConstant": 2000
+  },
+  {
+   "id": 41,
+   "level": 41,
+   "defConstant": 2050
+  },
+  {
+   "id": 42,
+   "level": 42,
+   "defConstant": 2100
+  },
+  {
+   "id": 43,
+   "level": 43,
+   "defConstant": 2150
+  },
+  {
+   "id": 44,
+   "level": 44,
+   "defConstant": 2200
+  },
+  {
+   "id": 45,
+   "level": 45,
+   "defConstant": 2250
+  },
+  {
+   "id": 46,
+   "level": 46,
+   "defConstant": 2300
+  },
+  {
+   "id": 47,
+   "level": 47,
+   "defConstant": 2350
+  },
+  {
+   "id": 48,
+   "level": 48,
+   "defConstant": 2400
+  },
+  {
+   "id": 49,
+   "level": 49,
+   "defConstant": 2450
+  },
+  {
+   "id": 50,
+   "level": 50,
+   "defConstant": 2500
+  },
+  {
+   "id": 51,
+   "level": 51,
+   "defConstant": 2550
+  },
+  {
+   "id": 52,
+   "level": 52,
+   "defConstant": 2600
+  },
+  {
+   "id": 53,
+   "level": 53,
+   "defConstant": 2650
+  },
+  {
+   "id": 54,
+   "level": 54,
+   "defConstant": 2700
+  },
+  {
+   "id": 55,
+   "level": 55,
+   "defConstant": 2750
+  },
+  {
+   "id": 56,
+   "level": 56,
+   "defConstant": 2800
+  }
+ ],
+ "levelTmpls": [
+  {
+   "id": 56,
+   "level": 56,
+   "upgradeExp": 162829440,
+   "hp": 6525,
+   "mp": 2875,
+   "extAtk": 630,
+   "intAtk": 630,
+   "extDef": 400,
+   "intDef": 400,
+   "critRate": 10,
+   "critDef": 10,
+   "avoidance": 130,
+   "precision": 130,
+   "iceAtk": 0,
+   "fireAtk": 0,
+   "poisonAtk": 0,
+   "holyAtk": 0,
+   "iceDef": 0,
+   "fireDef": 0,
+   "poisonDef": 0,
+   "holyDef": 0
+  }
+ ],
+ "templateCount": 5078,
+ "skills": [
+  {
+   "id": 794364806231284,
+   "name": "溪山行旅",
+   "level": 18,
+   "maxLevel": 20,
+   "nextExp": 255286079
+  },
+  {
+   "id": 794364806231312,
+   "name": "落英式",
+   "level": 46,
+   "maxLevel": 50,
+   "nextExp": 245760479
+  },
+  {
+   "id": 794364806231406,
+   "name": "墨守成规",
+   "level": 22,
+   "maxLevel": 25,
+   "nextExp": 236416319
+  },
+  {
+   "id": 794364806231798,
+   "name": "洛神图",
+   "level": 1,
+   "maxLevel": 1,
+   "nextExp": null
+  },
+  {
+   "id": 794364806231955,
+   "name": "桃花阵",
+   "level": 22,
+   "maxLevel": 25,
+   "nextExp": 236416319
+  },
+  {
+   "id": 794364806231998,
+   "name": "八卦阵",
+   "level": 18,
+   "maxLevel": 20,
+   "nextExp": 255286079
+  }
+ ]
+}

@@ -16,6 +16,7 @@ import { goMap, isHalted, sleep } from './combat-daemon.mjs';
 import { recordSample, predictEquipDelta } from './verifier.mjs';
 import { resolveTarget as resolveTargetImpl } from './resolver.mjs';
 import { bestInSlot, clearCache as clearEvalCache } from './evaluate.mjs';
+import { buildInventoryPlan } from './inventory-plan.mjs';
 import { audit } from '../core/audit.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
@@ -35,9 +36,6 @@ export function resolveTarget(target, game, opts = {}) {
 
 export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWrite = false } = {}) {
   const canWrite = () => allowWrite && stage >= 2 && !isHalted();
-  // 珍兽投喂熔断：投喂被证明不涨级后，不再每轮烧 5M 经验（经验优先给技能升级）
-  let petFeedNoGain = 0;
-  let petFeedDisabled = false;
   // 官方评分本轮判过的槽位（供 equipBest 跳过，避免两套模型互相推翻）
   let evalHandledSlots = new Set();
   const report = { at: new Date().toISOString(), stage, dryRun: !canWrite(), actions: [], blocked: [], errors: [], before: null, after: null };
@@ -89,6 +87,16 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
     throw lastErr || new Error('ENTER_GAME 失败');
   };
 
+  const warehouseList = (g) => {
+    let wh = g?.warehouse;
+    if (!wh) { try { wh = JSON.parse(g?.role?.settings || '{}')?.warehouse; } catch {} }
+    const gear = wh?.warehouseEquips || wh?.equips || [];
+    const stack = wh?.warehouseItems || wh?.items || [];
+    const tplById = new Map((g?.allEquipTemplates || []).map(t => [t.id, t]));
+    const gear2 = gear.map(x => x.equipTmpl ? x : { ...x, equipTmpl: tplById.get(x.tmplId) }).filter(x => x.equipTmpl);
+    return [...gear2, ...stack];
+  };
+
   const snapshotEquipped = (g, tag) => {
     const snap = safeSnapshot({ ...g, role: g?.role, equipments: g?.equipments || [] });
     try {
@@ -98,44 +106,59 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
     return snap;
   };
 
+  // 药水 id：红药 1-6（desc 含「血量」），蓝药 7-12（desc「气」）。
+  // 历史 bug：把红药 5/6 当成蓝药，导致自动回蓝吃红药、真蓝药 11/12 没设。
+  const POTION_IDS = { hp: [6, 5, 4, 3, 2, 1], mp: [12, 11, 10, 9, 8, 7] };
+  function bestPotion(g, kind) {
+    const bag = g?.bagItems || [];
+    return POTION_IDS[kind].find(id => qty(bag, id) > 0) || POTION_IDS[kind][0];
+  }
+  async function applyPotionSettings(g0) {
+    const g = g0 || await refresh();
+    if (!g) return { ok: false, error: '无状态' };
+    const cur = JSON.parse(g.role?.settings || '{}');
+    const redId = bestPotion(g, 'hp');
+    const blueId = bestPotion(g, 'mp');
+    const want = {
+      ...cur,
+      hp: { enabled: true, threshold: 70, priority: [redId, 0, 0, 0, 0, 0] },
+      mp: { enabled: true, threshold: 60, priority: [blueId, 0, 0, 0, 0, 0] },
+    };
+    if (JSON.stringify(want) === JSON.stringify(cur)) return { ok: true, unchanged: true, redId, blueId };
+    const r = await guarded(
+      { action: 'UPDATE_SETTINGS', op: 'UPDATE_SETTINGS' },
+      () => ws.req('UPDATE_SETTINGS', { settings: JSON.stringify(want) }, { ms: 6000 }),
+    );
+    if (r?.success) note(`喝药设置已更新（红${redId}/蓝${blueId}，首槽）`);
+    return { ok: !!r?.success, message: r?.message, redId, blueId };
+  }
+
   // ── 1. 补药 + 喝药设置 ─────────────────────────────────────
   async function potions(g) {
     const bag = g.bagItems || [];
-    const hpN = qty(bag, 6), mpN = qty(bag, 12);
+    // 红药 1-6，蓝药 7-12。参心丹(5) 是红药，不能补到蓝药位。
+    const hpId = bestPotion(g, 'hp'), mpId = bestPotion(g, 'mp');
+    const hpN = qty(bag, hpId), mpN = qty(bag, mpId);
     const money = g.role?.money || 0;
     if (hpN < 300) {
       const r = await guarded(
         { action: 'SHOP_BUY', op: 'SHOP_BUY', goldCost: 0, money, currency: 'gold' },
-        () => ws.req('SHOP_BUY', { shopItemId: 6, count: 600 }, { ms: 6000 }),
+        () => ws.req('SHOP_BUY', { shopItemId: hpId, count: 600 }, { ms: 6000 }),
       );
-      if (r?.success) note(`补红药 首乌丹 600（原 ${hpN}）`);
+      if (r?.success) note(`补红药 #${hpId} 600（原 ${hpN}）`);
       else if (!r?.skipped && !r?.blocked) report.errors.push('SHOP_BUY 红药失败: ' + (r?.message || ''));
     }
     if (mpN < 200) {
       const r = await guarded(
         { action: 'SHOP_BUY', op: 'SHOP_BUY', goldCost: 0, money, currency: 'gold' },
-        () => ws.req('SHOP_BUY', { shopItemId: 5, count: 600 }, { ms: 6000 }),
+        () => ws.req('SHOP_BUY', { shopItemId: mpId, count: 300 }, { ms: 6000 }),
       );
-      if (r?.success) note(`补蓝药 参心丹 600（原 ${mpN}）`);
+      if (r?.success) note(`补蓝药 #${mpId} 300（原 ${mpN}）`);
       else if (!r?.skipped && !r?.blocked) report.errors.push('SHOP_BUY 蓝药失败: ' + (r?.message || ''));
     }
 
-    // 自动喝药（priority 必须是 6 元素数组）
-    try {
-      const cur = JSON.parse(g.role?.settings || '{}');
-      const want = {
-        ...cur,
-        hp: { enabled: true, threshold: 70, priority: [0, 0, 0, 0, 0, 6] },
-        mp: { enabled: true, threshold: 60, priority: [0, 0, 0, 0, 0, 12] },
-      };
-      if (JSON.stringify(want) !== JSON.stringify(cur)) {
-        const r = await guarded(
-          { action: 'UPDATE_SETTINGS', op: 'UPDATE_SETTINGS' },
-          () => ws.req('UPDATE_SETTINGS', { settings: JSON.stringify(want) }, { ms: 6000 }),
-        );
-        if (r?.success) note('喝药设置已更新（首乌丹/琼丹）');
-      }
-    } catch { }
+    // 自动喝药设置（单独函数，启动时也会调一次）
+    try { await applyPotionSettings(g); } catch { }
   }
 
   // ── 2. 清仓：存仓 → 挂售 → 直卖（每槽前 2 强永不卖）─────────
@@ -184,14 +207,16 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
       return sl && bestBySlot[sl] && iv(x) >= bestBySlot[sl] * 0.7;
     }).sort((a, b) => iv(b) - iv(a)).slice(0, 6);
 
-    for (const x of keepStrong) {
+    if ((g.warehouse?.length || 0) >= 190) {
+      if (keepStrong.length) note(`仓库已满（${g.warehouse.length}），跳过存仓 ${keepStrong.length} 件`);
+    } else for (const x of keepStrong) {
       const r = await guarded(
         { action: 'WAREHOUSE_DEPOSIT', op: 'WAREHOUSE_DEPOSIT', itemId: x.id, item: x, owned: eqs },
         () => ws.req('WAREHOUSE_DEPOSIT', { roleEquipId: x.id, count: 1 }, { ms: 5000 }),
       );
       if (r?.success) {
         note(`存仓 ${x.equipTmpl?.name}（价值 ${Math.round(iv(x))}）`);
-        audit.log('deposit_equip', { cat: 'gear', reason: whyKeep, gain: [], extra: { item: x.equipTmpl?.name, iv: Math.round(iv(x)) } });
+        audit.log('deposit_equip', { cat: 'gear', reason: '强件存仓', gain: [], extra: { item: x.equipTmpl?.name, iv: Math.round(iv(x)) } });
       }
       await sleep(200);
     }
@@ -220,6 +245,8 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
       if (eqFlag(x)) return false;
       if (topIds.has(x.id)) return false;
       if (powerTopIds.has(x.id)) return false;   // 真实战力前 2 强也不卖
+      if (x.equipTmpl?.slotType === 1) return false; // 武器一律不自动卖：可能是未鉴定/熔炼胚子
+      if (setIds.has(x.tmplId)) return false;        // 套装件不自动卖
       const q = Number(x.quality ?? 1);
       if (q <= 2) return true;
       const bestSame = bestOfTmpl.get(x.tmplId);
@@ -233,6 +260,12 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
       return qa !== qb ? qa - qb : iv(a) - iv(b);
     });
 
+    // 自动出售/挂售默认关闭：装备价值模型（itemValue）与官方战力有偏差，
+    // 且直卖收益为 0；只保留「存仓」不会丢东西。需要时设 TL_AUTOSELL=1。
+    if (Number(process.env.TL_AUTOSELL || 0) <= 0) {
+      note(`自动出售已关闭（装备库 ${eqs.length}，存仓 ${keepStrong.length}）`);
+      return;
+    }
     const mine = await ws.req('CONSIGNMENT_RECORD_LIST', { page: 1, size: 50, type: 'SELL' }, { ms: 5000 });
     const onSale = (mine?.data?.items || mine?.data?.records || []).length;
     const need = Math.max(0, eqs.length - 50);
@@ -371,7 +404,7 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
 
   // ── 3. 配装：装备价值 + 真实战力双模型（实际战力只增不减）────
   async function equipBest(g, skipSlots = new Set()) {
-    const plan = bestLoadout(g.equipments || [], g.equipSets || [], false, { minGain: 400, maxSteps: 4, gemInfo: g.gemInfo });
+    const plan = bestLoadout(g.equipments || [], g.equipSets || [], false, { minGain: Number(process.env.TL_EQUIP_MIN_GAIN || 400), maxSteps: 4, gemInfo: g.gemInfo });
     let changed = 0;
     const rejected = new Set();   // 本次维护内已证明「换上去战力反而降」的候选
 
@@ -548,12 +581,17 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
 
   // ── 5. 鉴定（只对 req>=50 武器；不可逆 → dry-run 语义）───────
   async function appraise(g) {
+    // 鉴定只揭示双资质、不加即时战力（computePower 不含 appraisalStats），
+    // 每次 5 万金币；默认关闭，避免每轮 maintain 烧掉 20% 金币收入。
+    // 需要时设 TL_APPRAISE_BUDGET=<次数>（例如 2）。
+    const appraiseBudget = Number(process.env.TL_APPRAISE_BUDGET || 0);
+    if (appraiseBudget <= 0) return;
     const iv = x => itemValue(x, { gemInfo: g.gemInfo });
     const pending = (g.equipments || []).filter(x =>
       !x.isAppraisal && x.equipTmpl?.slotType === 1 && (x.equipTmpl?.reqLevel || 0) >= 50);
     const worn = pending.filter(eqFlag).sort((a, b) => iv(b) - iv(a));
     const spare = pending.filter(x => !eqFlag(x)).sort((a, b) => iv(b) - iv(a));
-    for (const x of [...worn, ...spare].slice(0, 2)) {
+    for (const x of [...worn, ...spare].slice(0, appraiseBudget)) {
       const r = await guarded(
         { action: 'SMITHY_APPRAISAL', op: 'SMITHY_APPRAISAL', itemId: x.id, item: x, owned: g.equipments || [] },
         () => ws.req('SMITHY_APPRAISAL', { roleEquipId: x.id }, { ms: 6000 }),
@@ -639,7 +677,8 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
     } catch { }
 
     // 孵蛋（USE_ITEM，不是 PET_COMMAND hatch）
-    for (const egg of byName(g.bagItems, /珍兽蛋/)) {
+    // 默认关闭：蛋只出 BABY（25 样本验证），空栏位优先留给繁殖预留；需要时 TL_HATCH=1 开启。
+    if (process.env.TL_HATCH === '1') for (const egg of byName(g.bagItems, /珍兽蛋/)) {
       for (let i = 0; i < (egg.count || 1); i++) {
         const r = await guarded(
           { action: 'USE_ITEM', op: 'USE_ITEM', itemId: egg.id, item: egg, owned: g.equipments || [] },
@@ -672,7 +711,7 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
     if (petsArr.length >= cap - reserved) {
       const bestAvg = Math.max(...petsArr.map(p => p.average || 0));
       const junk = petsArr.filter(p =>
-        p.pet.form !== 'MUTANT' && p.pet.status === 'OWNED' && p.pet.id !== activeId &&
+        p.pet.form !== 'MUTANT' && p.pet.form !== 'SECOND' && p.pet.status === 'OWNED' && p.pet.id !== activeId &&
         (p.average || 0) < Math.max(100, bestAvg - 2))
         .sort((a, b) => (a.average || 0) - (b.average || 0));
       if (junk.length) {
@@ -704,50 +743,42 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
       if (r?.success) note(`换出战珍兽 ${topPet.speciesName} Lv.${topPet.pet.level} 战力${topPet.combatPower}`);
     }
 
-    // 喂经验：只喂「出战」珍兽（战力只认出战那只）
-    // 繁殖用的非出战珍兽不自动喂 —— 想练繁殖对请用 upgrade_pet({petId}) 显式指定。
+    // 喂经验：优先培养「更高成长」的二代/变异珍兽。
+    // 2026-11-16 实测：SECOND 松鼠 2M exp → Lv1→11，宠 CP +2,489（≈1,244 CP/M）；
+    // 而 Lv51 乌龟一整级 160.8M 只 +~250（1.55 CP/M）。低等级边际收益高两个数量级。
+    // 旧逻辑「只喂出战 + 整级投喂」会把 160M 经验浪费在满级宠的最后一格。
     const expNow = g.role?.currentExp || 0;
     if (expNow > 3_000_000) {
       const activePet = petsArr.find(p => p.pet.id === activeId) || null;
-      const cand = activePet || topPet || null;
-
-      // 只做提示，不消耗经验去练非出战珍兽
-      const ready30 = petsArr.filter(p => p.pet.level >= 30 && !p.pet.breedingUsed);
-      const hasPair = ready30.some(p => p.pet.sex === 'MALE') && ready30.some(p => p.pet.sex === 'FEMALE');
-      if (hasPair) note('繁殖条件已满足（一公一母均 30 级）→ 可去苏州云飘飘 deposit；经验仍喂出战珍兽');
-
-      if (cand && !petFeedDisabled) {
-        // 实测 2026-11-15：一次性喂 40.77M 经验给 Lv.45 出战乌龟，
-        // 角色经验清零但珍兽等级/战力(cp 13552)完全没变 → 大额一次性投喂无效或溢出丢失。
-        // 改为单轮最多 5M，喂完立刻复核等级/战力，没涨就不再自动喂。
-        //
-        // 2026-11-16：投喂一旦被证明无效就熔断，别每轮继续烧 5M 经验。
-        // 经验对技能升级是实打实的战斗力，喂给不涨级的珍兽等于白扔。
-        const amount = Math.min(expNow - 500_000, 5_000_000);
-        const r = await guarded(
-          { action: 'PET_COMMAND', op: 'PET_FEED', petId: cand.pet.id, pet: cand, pets: petsArr },
-          () => ws.req('PET_COMMAND', { action: 'feed', petId: cand.pet.id, amount, requestId: crypto.randomUUID() }, { ms: 9000 }),
-        );
-        if (r?.success) {
-          const after = (g.pets || []).find(p => p.id === cand.pet.id) || null;
-          const gained = after ? (after.level - cand.pet.level) : 0;
-          note(`喂出战珍兽 ${cand.speciesName} ${amount.toLocaleString()} 经验（原 Lv.${cand.pet.level} 资质${cand.average}%）→ Lv.${after ? after.level : '?'}（+${gained}）`);
-          audit.log('pet_feed', { cat: 'pet', reason: '出战珍兽吃经验升战力',
-            cost: [{ item: '角色经验', n: amount }],
-            gain: gained > 0 ? [{ item: `${cand.speciesName} Lv.${cand.pet.level}→${after?.level}`, n: gained }] : [],
-            extra: { species: cand.speciesName, gainLevels: gained } });
-          if (after && gained <= 0) {
-            // 连续两次喂食都不涨级 → 熔断，后面的轮次不再烧经验
-            petFeedNoGain++;
-            note(`⚠️ 喂食后珍兽等级未变（第 ${petFeedNoGain} 次）`);
-            if (petFeedNoGain >= 2) {
-              petFeedDisabled = true;
-              note('🛑 珍兽投喂已熔断：连续两次不涨级，经验改用于升技能');
-            }
-          } else if (after && gained > 0) {
-            petFeedNoGain = 0;
+      const growth = petsArr
+        .filter(p => p.pet.id !== activeId && p.pet.status === 'OWNED' &&
+          (p.pet.form === 'SECOND' || p.pet.form === 'MUTANT'))
+        .sort((a, b) => (b.average || 0) - (a.average || 0))[0];
+      const invest = growth && (growth.average || 0) > (activePet?.average || 0) + 1 ? growth : null;
+      if (invest) {
+        const amount = Math.max(0, Math.min(expNow - 6_000_000, 300_000_000));
+        if (amount > 1_000_000) {
+          const fromLevel = invest.pet.level;
+          const powerBefore = g.role?.combatPower ?? null;
+          const r = await guarded(
+            { action: 'PET_COMMAND', op: 'PET_FEED', petId: invest.pet.id, pet: invest, pets: petsArr },
+            () => ws.req('PET_COMMAND', { action: 'feed', petId: invest.pet.id, amount, requestId: crypto.randomUUID() }, { ms: 15000 }),
+          );
+          if (r?.success) {
+            note(`培养 ${invest.speciesName}(${invest.pet.form} 资质${invest.average}%) 投入 ${amount.toLocaleString()} 经验（Lv.${fromLevel}）`);
+            audit.log('pet_feed', {
+              cat: 'pet', reason: '培养高成长二代/变异珍兽（低等级 CP/exp 远高于满级宠）',
+              cost: [{ item: '角色经验', n: amount }],
+              extra: { species: invest.speciesName, petId: invest.pet.id, amount, fromLevel,
+                form: invest.pet.form, average: invest.average, powerBefore },
+            });
           }
         }
+      } else {
+        // 没有更高成长的宠：不喂出战宠。
+        // 实测 Lv42 珍兽下一级需 ~204M 经验仅 +250 CP（≈1.2 CP/M），
+        // 而角色 56→57 还差 ~118M（≈1.5 CP/M）且升级自动结算，经验留存更优。
+        note(`无高成长宠可投喂；经验留存给角色升级（当前 ${expNow.toLocaleString()}，距 57 级还需约 ${Math.max(0, 162_829_440 - expNow).toLocaleString()}）`);
       }
     }
   }
@@ -765,11 +796,11 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
       // 把所有便宜技能都挡死了（普通技能升级只要几百到几千万），实战里从没升过一次，
       // 而珍兽每轮吃掉 500 万经验。技能直接决定伤害 → 打怪慢一倍（277s vs 136s 一批）。
       // 改为：留一笔经验做珍兽口粮后，剩下的优先升最便宜的那一级，先吃到即时收益。
-      const feedReserve = Number(process.env.TL_FEED_RESERVE || 6_000_000); // 珍兽口粮预留
+      const feedReserve = Number(process.env.TL_FEED_RESERVE || (Number(g.role?.level || 56) < 30 ? 50_000 : 6_000_000)); // 珍兽口粮预留；低等级号阈值低
       if (nx.exp > (g.role?.currentExp || 0) - feedReserve) continue;
       if (!best || nx.exp < best.cost) best = { id: sk.id, cost: nx.exp, name: sk.skillDetail?.name, lv: `${sk.currentLevel}→${sk.currentLevel + 1}` };
     }
-    if (!best) return;
+    if (!best) { try { log(`[skill] 无可升级：skills=${(g.skills||[]).length} exp=${g.role?.currentExp} reserve=${Number(process.env.TL_FEED_RESERVE || 0)}`); } catch {} return; }
     const r = await guarded(
       { action: 'UPGRADE_SKILL', op: 'UPGRADE_SKILL' },
       () => ws.req('UPGRADE_SKILL', { roleSkillId: best.id }, { ms: 6000 }),
@@ -798,8 +829,14 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
     // 所有后勤动作串行，任何一步失败不影响后续
     for (const [name, fn] of [
       ['potions', () => potions(g)],
-      ['cleanup', () => cleanup(g)],
-      // 先官方评分换装（权威），再走 lib-value 兜底。
+      // 先整理：卖 q1/q2、执行数量上限、把仓库更好件取出并经官方评分换装。
+      // 必须在 equipEval 之前，否则仓库件永远进不了官方评分。
+      ['tidy', async () => {
+        const r = await tidyInventory(g, { upgrades: true });
+        g = await refresh();
+        if (r?.upgrades?.length) note(`整理换装 ${r.upgrades.filter(u => u.ok).length}/${r.upgrades.length}`);
+      }],
+      // 官方评分换装（权威），再走 lib-value 兜底。
       // 关键：官方判过的槽位要传给 equipBest 跳过，否则两套模型会互相推翻
       // （实测出现过：官方换上去，lib-value 立刻换回来）。
       ['equipEval', async () => {
@@ -809,6 +846,7 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
         if (r.game) g = r.game;
       }],
       ['equip', () => equipBest(g, evalHandledSlots)],
+      ['cleanup', () => cleanup(g)],
       ['shop', () => shop(g)],
       ['gems', () => gems(g)],
       ['appraise', () => appraise(g)],
@@ -845,6 +883,224 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
 
     report.dryRun = !canWrite();
     return report;
+  }
+
+  // ── 自动整理：按「每槽保留一半」计划，卖掉多余的低品质件（q<=2）──
+  async function tidyInventory(g0, { upgrades: doUpgrades = false } = {}) {
+    if (!canWrite()) return { skipped: true };
+    const g = g0 || await refresh();
+    if (!g?.role) return { skipped: true };
+    const whList = warehouseList(g);
+    const plan = buildInventoryPlan({
+      equipments: g.equipments || [],
+      warehouse: whList,
+      bagItems: g.bagItems || [],
+      equipSets: g.equipSets || [],
+      gemInfo: g.gemInfo,
+    });
+    let sold = 0, failed = 0;
+    const upgrades = [];
+    // 仓库更好件：取出（服务端会换新 id）→ 官方 bestInSlot 评分 → 过闸门才换；否则原路存回仓库
+    for (const u of (doUpgrades ? (plan.upgrade || []).slice(0, 2) : [])) {
+      try {
+        const w = await withdrawItem(u.id);
+        if (!w?.ok || !w.bagId) { failed++; upgrades.push({ slot: u.slot, name: u.name, ok: false, why: w?.message || '取出失败' }); continue; }
+        await sleep(250);
+        const gx = await refresh();
+        const r = await bestInSlot(ws, gx, u.slot).catch(e => ({ error: e?.message || String(e) }));
+        if (r?.shouldSwap) {
+          const target = r.best.item;
+          const old = (gx.equipments || []).find(x => x.isEquipped && x.equipTmpl?.slotType === u.slot) || null;
+          const before = gx.role?.combatPower ?? 0;
+          const res = await guarded(
+            { action: 'EQUIP_ITEM', op: 'EQUIP_ITEM_WH', unequip: true, itemId: target.id, item: target, owned: gx.equipments },
+            () => ws.req('EQUIP_ITEM', { roleEquipId: target.id }, { ms: 8000 }),
+          );
+          await sleep(300);
+          const g2 = await refresh();
+          const after = g2?.role?.combatPower ?? before;
+          if (res?.success && after >= before - 200) {
+            upgrades.push({ slot: u.slot, name: u.name, ok: true, gain: after - before, official: { damagePct: r.best.raw?.damagePct, power: r.best.raw?.equipmentPower } });
+            note(`仓库换装 slot${u.slot} → ${u.name}（官方 damage ${Number(r.best.raw?.damagePct || 0).toFixed(2)}%）`);
+            clearEvalCache();
+            continue;
+          }
+          if (res?.success && old) { // 回滚
+            await ws.req('EQUIP_ITEM', { roleEquipId: old.id }, { ms: 7000 }).catch(() => null);
+            await sleep(250);
+          }
+        }
+        await depositItem(w.bagId);
+        upgrades.push({ slot: u.slot, name: u.name, ok: false, why: r?.why || r?.error || '官方评分未通过' });
+      } catch (err) { failed++; }
+    }
+    const sellOne = async (x) => {
+      const item = (g.equipments || []).find(y => String(y.id) === String(x.id));
+      if (!item || item.isEquipped) return false;
+      const r = await guarded(
+        { action: 'SHOP_SELL', op: 'SHOP_SELL', itemId: item.id, item, owned: g.equipments, dryRun: false, confirmed: true },
+        () => ws.req('SHOP_SELL', { roleEquipId: item.id, count: 1 }, { ms: 6000 }),
+      );
+      if (r?.success) { note(`整理直卖 ${item.equipTmpl?.name}（iv ${Math.round(itemValue(item, { gemInfo: g.gemInfo }))}）`); return true; }
+      return false;
+    };
+    // 背包多余 q<=2
+    for (const x of (plan.sellBag || []).filter(x => !x.bound && Number(x.q ?? 1) <= 2).slice(0, 20)) {
+      const ok = await sellOne(x); ok ? sold++ : failed++;
+      await sleep(120);
+    }
+    // 仓库多余 q<=2：取出 → 卖（先刷新一次拿到背包实例）
+    const whSell = (plan.sellWarehouse || []).filter(x => !x.bound && Number(x.q ?? 1) <= 2).slice(0, 20);
+    const withdrawn = [];
+    for (const x of whSell) {
+      const w = await ws.req('WAREHOUSE_WITHDRAW', { roleEquipId: x.id }, { ms: 7000 });
+      if (w?.success) withdrawn.push(x); else failed++;
+      await sleep(120);
+    }
+    if (withdrawn.length) {
+      const g2 = await refresh();
+      for (const x of withdrawn) {
+        const item = (g2?.equipments || []).find(y => String(y.id) === String(x.id));
+        if (!item) { failed++; continue; }
+        const r = await guarded(
+          { action: 'SHOP_SELL', op: 'SHOP_SELL', itemId: item.id, item, owned: g2.equipments, dryRun: false, confirmed: true },
+          () => ws.req('SHOP_SELL', { roleEquipId: item.id, count: 1 }, { ms: 6000 }),
+        );
+        if (r?.success) { note(`整理直卖仓库件 ${item.equipTmpl?.name}`); sold++; } else failed++;
+        await sleep(120);
+      }
+    }
+    // ── 装备数量上限（用户 2026-11-17）：仓库装备 ≤ 200 的一半=100，背包装备 ≤ 背包容量的一半 ──
+    // 只卖「计划里本来就不保留」的低价值非绑定件；先卖 q1/q2，再 q3；q4/套装/已穿/同槽前二不动。
+    const whCap = Number(process.env.TL_WH_EQUIP_CAP || 100);
+    const bagCap = Number(process.env.TL_BAG_EQUIP_CAP || 50);
+    const keepIds = new Set();
+    for (const sl of (plan.slots || [])) for (const k of (sl.keep || [])) keepIds.add(String(k.id));
+    for (const p2 of (plan.protectedSet || [])) keepIds.add(String(p2.id));
+    let cur = await refresh();
+    let bagGear = (cur?.equipments || []).filter(x => !x.isEquipped && x.equipTmpl);
+    const bagCand = bagGear
+      .filter(x => !keepIds.has(String(x.id)) && !x.isBound && Number(x.quality ?? 1) <= 3)
+      .map(x => ({ x, iv: itemValue(x, { gemInfo: cur.gemInfo }) }))
+      .sort((a, b) => (Number(a.x.quality) - Number(b.x.quality)) || (a.iv - b.iv));
+    for (const c of bagCand.slice(0, Math.max(0, bagGear.length - bagCap))) {
+      const ok = await sellItem(c.x.id, { confirmed: true }).catch(() => null);
+      if (ok?.ok) sold++; else failed++;
+      await sleep(100);
+    }
+    cur = await refresh();
+    let whGear = warehouseList(cur).filter(x => x.equipTmpl);
+    if (whGear.length > whCap) {
+      const whCand = whGear
+        .filter(x => !keepIds.has(String(x.id)) && !x.isBound && Number(x.quality ?? 1) <= 3)
+        .map(x => ({ x, iv: itemValue(x, { gemInfo: cur.gemInfo }) }))
+        .sort((a, b) => (Number(a.x.quality) - Number(b.x.quality)) || (a.iv - b.iv))
+        .slice(0, Math.min(20, whGear.length - whCap));
+      for (const c of whCand) {
+        const w = await withdrawItem(c.x.id).catch(() => null);
+        if (!w?.ok) { failed++; continue; }
+        const ok = await sellItem(w.bagId, { confirmed: true }).catch(() => null);
+        if (ok?.ok) sold++; else failed++;
+        await sleep(100);
+      }
+      cur = await refresh();
+      whGear = warehouseList(cur).filter(x => x.equipTmpl);
+    }
+    note(`装备上限：背包 ${bagGear.length}→${(cur?.equipments || []).filter(x => !x.isEquipped).length}/${bagCap}，仓库 ${whGear.length}/${whCap}，本轮卖出 ${sold}`);
+    await refresh();
+    return { sold, failed, upgrades, keep: plan.summary, caps: { bagCap, whCap } };
+  }
+
+  // ── 单件 NPC 直卖（confirmed=true 才真发；红线的 R6 会再校验）──
+  async function sellItem(roleEquipId, { confirmed = false } = {}) {
+    if (!confirmed) return { dryRun: true, roleEquipId };
+    if (!canWrite()) return { skipped: true, reason: 'stage/halt' };
+    const g = await refresh();
+    const item = (g?.equipments || []).find(x => String(x.id) === String(roleEquipId));
+    if (!item) return { error: '找不到该装备' };
+    const r = await guarded(
+      { action: 'SHOP_SELL', op: 'SHOP_SELL', itemId: item.id, item, owned: g.equipments, dryRun: false, confirmed: true },
+      () => ws.req('SHOP_SELL', { roleEquipId: item.id, count: 1 }, { ms: 6000 }),
+    );
+    return { ok: !!r?.success, message: r?.message, name: item.equipTmpl?.name };
+  }
+
+  // ── 背包/仓库整理：只出计划，不发包 ─────────────────────────
+  async function auditInventory() {
+    const g = await refresh();
+    if (!g) return { error: '无状态' };
+    const whList = warehouseList(g);
+    const plan = buildInventoryPlan({
+      equipments: g.equipments || [],
+      warehouse: whList,
+      bagItems: g.bagItems || [],
+      equipSets: g.equipSets || [],
+      gemInfo: g.gemInfo,
+    });
+    return { at: new Date().toISOString(), power: g.role?.combatPower ?? null, ...plan };
+  }
+
+  // ── 从仓库取出一件装备到背包 ───────────────────────────────
+  async function withdrawItem(roleEquipId) {
+    if (!canWrite()) return { skipped: true, reason: 'stage/halt' };
+    const before = await refresh();
+    if (!before) return { error: '无状态' };
+    const wh = warehouseList(before);
+    const wItem = wh.find(x => String(x.id) === String(roleEquipId)) || null;
+    const beforeIds = new Set((before.equipments || []).map(x => String(x.id)));
+    const r = await ws.req('WAREHOUSE_WITHDRAW', { roleEquipId }, { ms: 7000 });
+    await sleep(500);
+    const g = await refresh();
+    const wh2 = g ? warehouseList(g) : [];
+    const added = g ? (g.equipments || []).filter(x => !beforeIds.has(String(x.id))) : [];
+    const moved = wItem ? added.find(x => String(x.tmplId) === String(wItem.tmplId)) || null : (added[0] || null);
+    return {
+      ok: !!r?.success, message: r?.message || null,
+      warehouseBefore: wh.length, warehouseAfter: wh2.length,
+      bagId: moved?.id ?? null, bagItem: moved?.equipTmpl?.name ?? null, moved: !!moved,
+      bagEquipCount: (g?.equipments || []).filter(x => !x.isEquipped).length,
+    };
+  }
+
+  // ── 把背包里未穿的装备存回仓库（升级候选评分没过时用）──────────
+  async function depositItem(roleEquipId) {
+    if (!canWrite()) return { skipped: true, reason: 'stage/halt' };
+    const g = await refresh();
+    const item = (g?.equipments || []).find(x => String(x.id) === String(roleEquipId) && !x.isEquipped);
+    if (!item) return { error: '背包里找不到该装备' };
+    const r = await ws.req('WAREHOUSE_DEPOSIT', { roleEquipId: item.id, count: 1 }, { ms: 7000 });
+    await sleep(250);
+    await refresh();
+    return { ok: !!r?.success, message: r?.message || null, name: item.equipTmpl?.name };
+  }
+
+  // ── 把背包里的一件装备换上（写前快照 + 掉战力回滚）──────────
+  async function equipItem(roleEquipId) {
+    if (!canWrite()) return { skipped: true, reason: 'stage/halt' };
+    const g = await refresh();
+    if (!g) return { error: '无状态' };
+    const item = (g.equipments || []).find(x => String(x.id) === String(roleEquipId) && !x.isEquipped);
+    if (!item) return { error: '背包里找不到该装备' };
+    const slot = item.equipTmpl?.slotType;
+    const old = (g.equipments || []).find(x => x.isEquipped && x.equipTmpl?.slotType === slot) || null;
+    const before = g.role?.combatPower ?? null;
+    const snap = snapshotEquipped(g, `equip-item-${slot}`);
+    const r = await guarded(
+      { action: 'EQUIP_ITEM', op: 'EQUIP_ITEM', unequip: true, snapshot: snap, itemId: item.id, item, owned: g.equipments },
+      () => ws.req('EQUIP_ITEM', { roleEquipId: item.id }, { ms: 7000 }),
+    );
+    await sleep(400);
+    const g2 = await refresh();
+    const after = g2?.role?.combatPower ?? null;
+    let rollback = false;
+    if ((r?.success) && old && before != null && after != null && after < before - 200) {
+      try {
+        await ws.req('EQUIP_ITEM', { roleEquipId: old.id }, { ms: 7000 });
+        rollback = true;
+        await sleep(300);
+      } catch { }
+    }
+    return { ok: !!r?.success, message: r?.message, slot, before, after, gain: after != null && before != null ? after - before : null, rollback, item: item.equipTmpl?.name };
   }
 
   // 单槽位优化（craft_slot）：从已有装备里选该槽最优并换上
@@ -903,7 +1159,7 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
     return resolveTargetImpl(target, g, opts);
   }
 
-  return { maintain, autoMaintain: maintain, craftSlot, upgradePet, listAuction, resolve, refresh, report, equipByEvaluation };
+  return { maintain, autoMaintain: maintain, craftSlot, upgradePet, listAuction, resolve, refresh, report, equipByEvaluation, auditInventory, withdrawItem, equipItem, sellItem, applyPotionSettings, tidyInventory };
 }
 
 export { LUOYANG, SUZHOU, MAP_XUANWU };

@@ -52,7 +52,7 @@ async function run(activeId) {
   ws.setResponse('PET_COMMAND', () => ({ data: pets(activeId) }));
   ws.setResponse('GET_LEADERBOARD', () => ({
     data: [
-      { nickname: 'YourCharName', combatPower: 65763, level: 56 },
+      { nickname: '吃西瓜', combatPower: 65763, level: 56 },
       { nickname: '张无忌', combatPower: 120286, level: 56 },
     ],
   }));

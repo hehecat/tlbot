@@ -11,8 +11,27 @@
 set -u
 ROOT=$(cd "$(dirname "$0")" && pwd)
 NODE=${NODE:-/Applications/Alma.app/Contents/Resources/alma-server/runtime/node}
-PIDFILE=${TL_ENGINE_PIDFILE:-/tmp/tlbot-engine.pid}
-PORT=${TL_PORT:-9527}
+INSTANCE=${TL_INSTANCE:-main}
+case "$INSTANCE" in
+  main) DEF_PORT=9527; DEF_DATA="$ROOT/data"; DEF_PID=/tmp/tlbot-engine.pid; DEF_LOG="$ROOT/logs/engine.log"; DEF_HALT="$ROOT/.halt"; DEF_CREDS="$ROOT/creds.json";;
+  alt1) DEF_PORT=9528; DEF_DATA="$ROOT/data-alt1"; DEF_PID=/tmp/tlbot-engine-alt1.pid; DEF_LOG="$ROOT/logs/engine-alt1.log"; DEF_HALT="$ROOT/.halt-alt1"; DEF_CREDS="$ROOT/creds.hehecat2.json";;
+  alt2) DEF_PORT=9529; DEF_DATA="$ROOT/data-alt2"; DEF_PID=/tmp/tlbot-engine-alt2.pid; DEF_LOG="$ROOT/logs/engine-alt2.log"; DEF_HALT="$ROOT/.halt-alt2"; DEF_CREDS="$ROOT/creds.hehecat3.json";;
+  *) echo "未知 TL_INSTANCE=$INSTANCE（main|alt1|alt2）"; exit 1;;
+esac
+PORT=${TL_PORT:-$DEF_PORT}
+DATA_DIR=${TL_DATA_DIR:-$DEF_DATA}
+PIDFILE=${TL_ENGINE_PIDFILE:-$DEF_PID}
+ENGINE_LOG=${TL_LOG_FILE:-$DEF_LOG}
+HALT_FILE=${TL_HALT_FILE:-$DEF_HALT}
+CREDS=${TL_CREDS:-$DEF_CREDS}
+TL_STATUS_FILE=${TL_STATUS_FILE:-$ROOT/tl_status-${INSTANCE}.json}
+[ "$INSTANCE" = main ] && TL_STATUS_FILE=${TL_STATUS_FILE:-$ROOT/tl_status.json}
+if [ "$INSTANCE" != "main" ]; then
+  export TL_FEED_RESERVE="${TL_FEED_RESERVE:-50000}"
+  export TL_EQUIP_MIN_GAIN="${TL_EQUIP_MIN_GAIN:-20}"
+fi
+export TL_INSTANCE PORT DATA_DIR PIDFILE ENGINE_LOG HALT_FILE CREDS TL_STATUS_FILE
+export TL_PORT="$PORT" TL_DATA_DIR="$DATA_DIR" TL_ENGINE_PIDFILE="$PIDFILE" TL_LOG_FILE="$ENGINE_LOG" TL_HALT_FILE="$HALT_FILE" TL_CREDS="$CREDS"
 
 alive() {
   [ -f "$PIDFILE" ] && P=$(cat "$PIDFILE" 2>/dev/null) && [ -n "$P" ] && ps -p "$P" >/dev/null 2>&1
@@ -45,7 +64,7 @@ case "${1:-status}" in
     fi
 
     sleep "${TL_START_DELAY:-3}"
-    TL_STAGE="$STAGE" TL_PORT="$PORT" TL_DNS_FIX="${TL_DNS_FIX:-}" nohup "$NODE" engine/runtime.mjs >> "$ROOT/logs/engine.out" 2>&1 &
+    TL_STAGE="$STAGE" TL_PORT="$PORT" TL_DNS_FIX="${TL_DNS_FIX:-}" nohup "$NODE" engine/runtime.mjs >> "$ENGINE_LOG" 2>&1 &
     sleep 4
     if alive; then
       echo "engine 已启动 pid=$(cat "$PIDFILE") stage=$STAGE port=$PORT"
@@ -86,7 +105,7 @@ case "${1:-status}" in
     fi
     ;;
   logs)
-    tail -"${2:-40}" "$ROOT/logs/engine.log"
+    tail -"${2:-40}" "$ENGINE_LOG"
     ;;
   watch)
     # 服务器恢复守护：探测 DNS/HTTP/WS，恢复后自动拉起引擎

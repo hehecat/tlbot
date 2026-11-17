@@ -20,7 +20,7 @@ const ROOT = path.resolve(import.meta.dirname, '..');
 const GOAL_STATE = path.join(ROOT, 'goal_state.json');
 const STATUS5 = path.join(ROOT, 'status5.json');
 
-const ME_NAME = 'YourCharName';
+const ME_NAME = '吃西瓜';
 
 const readJson = f => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return null; } };
 const round = n => (n == null ? null : Math.round(n));

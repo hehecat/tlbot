@@ -338,6 +338,48 @@ export function createActivities(ws, store, { log = () => { }, stage = 0, allowW
     return out;
   }
 
+  // ── 伪宋军单次/多次（可控测试，不跑其他日常）──────────────
+  async function campRun(options = {}) {
+    const A = 'camp';
+    const maxRuns = Math.max(1, Math.min(5, Number(options.maxRuns ?? 1)));
+    out.at = new Date().toISOString();
+    out.activities = []; out.errors = []; out.blocked = []; out.halted = false;
+    const results = [];
+    const g0 = await refresh();
+    const before = { gold: g0?.role?.money ?? null, exp: g0?.role?.currentExp ?? null, bag: (g0?.bagItems || []).length };
+    for (let i = 0; i < maxRuns; i++) {
+      if (isHalted()) { out.halted = true; break; }
+      let remaining = 0;
+      try {
+        const st = await ws.req('CAMP_STATUS', {}, { ms: 6000 });
+        remaining = Number(st?.data?.remainingToday ?? 0);
+        note(A, `第${i + 1}次：剩余 ${remaining}/${st?.data?.dailyMaxEntries ?? '?'} 次`);
+      } catch (e) { out.errors.push('CAMP_STATUS: ' + (e?.message || e)); break; }
+      if (remaining <= 0) { note(A, '次数已用完'); break; }
+      const en = await guarded(A, { action: 'CAMP_ENTER', op: 'CAMP_ENTER' },
+        () => ws.req('CAMP_ENTER', {}, { ms: 10000 }));
+      if (!en?.success) { out.errors.push('CAMP_ENTER: ' + (en?.message || '')); break; }
+      await sleep(1200);
+      const realMap = Number(en?.data?.role?.mapId) || Number((await refresh())?.role?.mapId) || 0;
+      note(A, `进入副本 map=${realMap || '?'}（额度 ${remaining}→${remaining - 1}）`);
+      if (!realMap) { out.errors.push('拿不到副本内 mapId，中止以避免浪费额度'); break; }
+      const trace = []; let lastTrace = 0;
+      const res = await fightInMap(ws, store, realMap, { mode: 'dungeon', secsMax: 480_000, label: `伪宋军#${i + 1}`, onTick: (D) => {
+        if (Date.now() - lastTrace < 10_000) return;
+        lastTrace = Date.now();
+        trace.push({ t: new Date().toISOString().slice(11, 19), stage: D.stage, def: D.combatProgress?.defeated, total: D.combatProgress?.total, hp: D.player?.currentHp, map: D.mapId });
+        if (trace.length > 12) trace.shift();
+      } });
+      const endRole = (await refresh().catch(() => null))?.role;
+      results.push({ run: i + 1, remainingBefore: remaining, realMap, why: res?.why, kills: res?.kills, secs: res?.secs, started: res?.started, endMap: endRole?.mapId, endHp: endRole?.currentHp, trace });
+      note(A, `第${i + 1}次结束 why=${res?.why} kills=${res?.kills} ${res?.secs}s`);
+      await sleep(800);
+    }
+    const g1 = await refresh();
+    const after = { gold: g1?.role?.money ?? null, exp: g1?.role?.currentExp ?? null, bag: (g1?.bagItems || []).length };
+    return { at: new Date().toISOString(), ok: out.errors.length === 0, maxRuns, results, before, after, activities: out.activities, errors: out.errors, mapId: g1?.role?.mapId };
+  }
+
   // ── 塔 ──────────────────────────────────────────────────────
   async function tower(options = {}) {
     const A = 'tower';
@@ -751,6 +793,10 @@ export function createActivities(ws, store, { log = () => { }, stage = 0, allowW
   // 熔炼：如果已启动，把多余经验投进去（留 2000 万给日常）
   async function investSmelting() {
     const A = 'craft';
+    // 规划器结论：升星约 0.28 CP/M exp，远低于喂珍兽(1.55)与升级(1.11)。
+    // 默认不自动烧经验；需要时显式设 TL_SMELT_BUDGET=<经验数>（如 10000000）。
+    const budget = Number(process.env.TL_SMELT_BUDGET || 0);
+    if (budget <= 0) return { active: false, skipped: 'TL_SMELT_BUDGET=0（低 ROI，默认不投）' };
     const g = await refresh();
     if (!g?.role?.smeltingItemId) return { active: false };
     const target = g.role.smeltingTargetExp || 0;
@@ -762,7 +808,7 @@ export function createActivities(ws, store, { log = () => { }, stage = 0, allowW
     }
     const spare = (g.role.currentExp || 0) - 20_000_000;
     if (spare <= 0) return { active: true, invested: 0, progress: `${cur}/${target}` };
-    const amount = spare;
+    const amount = Math.min(spare, budget);
     const r = await ws.req('SMITHY_SMELT_INVEST', { expAmount: amount }, { ms: 15000 }).catch(e => ({ success: false, message: e?.message }));
     note(A, `熔炼投经验 ${amount.toLocaleString()}（进度 ${(cur + (r?.success ? amount : 0)).toLocaleString()}/${target.toLocaleString()}）`);
     if (r?.success) audit.log('smelt_invest', { cat: 'craft', reason: '熔炼进度未满，投入多余经验',
@@ -771,5 +817,5 @@ export function createActivities(ws, store, { log = () => { }, stage = 0, allowW
     return { active: true, invested: r?.success ? amount : 0, progress: `${cur}/${target}` };
   }
 
-  return { dailyTasks, tower, huntPet, synthesizeGems, synthesizeCotton, enhanceGear, investSmelting, craftMaterials, lottery, out, refresh };
+  return { dailyTasks, campRun, tower, huntPet, synthesizeGems, synthesizeCotton, enhanceGear, investSmelting, craftMaterials, lottery, out, refresh };
 }

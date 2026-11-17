@@ -12,7 +12,7 @@ import assert from 'node:assert/strict';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const PI_ROOT = process.env.PI_PACKAGE_ROOT ||
-  '~/.pi/agent/install/releases/1.5.2/node_modules';
+  '/Users/hehecat/.pi/agent/install/releases/1.5.2/node_modules';
 
 const links = [
   ['@earendil-works/pi-coding-agent', path.join(PI_ROOT, '@earendil-works/pi-coding-agent')],

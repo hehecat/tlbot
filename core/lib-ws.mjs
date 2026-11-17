@@ -7,7 +7,9 @@ import dns from 'node:dns';
 const DIR = path.dirname(new URL(import.meta.url).pathname);
 // 2026-11-14 重构：本文件已移入 core/，creds.json 仍在项目根。
 // 先找 core/creds.json，找不到再回退到上一级（项目根）。
-const CREDS_PATH = [path.join(DIR, 'creds.json'), path.join(DIR, '..', 'creds.json')]
+const CREDS_PATH = (process.env.TL_CREDS
+  ? [process.env.TL_CREDS]
+  : [path.join(DIR, 'creds.json'), path.join(DIR, '..', 'creds.json')])
   .find(p => fs.existsSync(p));
 export const creds = JSON.parse(fs.readFileSync(CREDS_PATH, 'utf8'));
 
@@ -175,11 +177,14 @@ export function createSession({ trace = false } = {}) {
       rej(new Error(msg));
     };
     ws.onopen = () => {
+      // 先注册等待再发包：服务端回包很快时，先 send 会丢响应（login fail / enter fail）
+      const loginP = wait('LOGIN_RESPONSE');
       send('LOGIN', creds);
-      wait('LOGIN_RESPONSE').then(lr => {
+      loginP.then(lr => {
         if (!lr) return bad('login fail');
+        const enterP = wait('ENTER_GAME_RESPONSE');
         send('ENTER_GAME');
-        wait('ENTER_GAME_RESPONSE').then(g => {
+        enterP.then(g => {
           if (!g || !g.data) return bad('enter fail');
           state.pr = g.data.role.persistenceRevision;
           state.ready = true;

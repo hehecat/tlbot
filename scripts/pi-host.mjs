@@ -16,7 +16,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const PI = process.env.PI_BIN || 'pi';
+const PI = process.env.PI_BIN || '/Users/hehecat/.local/bin/pi';
 const PIDFILE = process.env.TL_HOST_PIDFILE || '/tmp/tlbot-pi-host.pid';
 const LOG = path.join(ROOT, 'logs', 'host.log');
 const STAGE = process.env.TL_STAGE || '1';
