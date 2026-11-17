@@ -30,6 +30,8 @@ import { decideActions, loadState as loadSched, saveState as saveSched, dateKey 
 import { scanAllSlots, bestInSlot, clearCache as clearEvalCache } from '../src/evaluate.mjs';
 import * as gamedata from './gamedata.mjs';
 import { audit } from '../core/audit.mjs';
+import { computeAllocation, readAllocation, writeAllocation, appendAnqiHistory } from '../src/allocation.mjs';
+import { checkNpcRoutes } from '../scripts/npc-routes.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 // data 目录：子模块（activities/logistics）通过 TL_DATA_DIR 找落盘位置，
@@ -56,6 +58,78 @@ function log(...a) {
 }
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// ── 更新探测：账号/角色位快照 + 客户端资源哈希 ──────────────
+const UPD_DATA = process.env.TL_DATA_DIR || path.join(ROOT, 'data');
+const ACCOUNT_F = path.join(UPD_DATA, 'account-snapshot.json');
+const ACCOUNT_CH = path.join(UPD_DATA, 'account-changes.jsonl');
+const CLIENT_F = path.join(UPD_DATA, 'client-hash.json');
+const CLIENT_CH = path.join(UPD_DATA, 'client-changes.jsonl');
+
+function pickRoles(login) {
+  const arr = login?.roles || login?.roleList || login?.characters || login?.role_list || [];
+  const role = login?.role || login?.roleInfo?.role;
+  const list = Array.isArray(arr) ? arr : [];
+  const out = list.map(r => ({
+    id: r?.id ?? r?.roleId ?? null, nickname: r?.nickname ?? r?.name ?? null,
+    level: r?.level ?? null, sect: r?.sect ?? null, status: r?.status ?? null,
+  }));
+  if (role && !out.length) out.push({ id: role.id, nickname: role.nickname, level: role.level, sect: role.sect, status: role.status });
+  return out;
+}
+
+function writeAccountSnapshot(login, logger = log) {
+  try {
+    const snap = {
+      at: new Date().toISOString(),
+      topKeys: Object.keys(login || {}).sort(),
+      roles: pickRoles(login),
+      accountKeys: Object.keys(login?.account || {}).sort(),
+      flags: Object.keys(login || {}).filter(k => typeof login[k] === 'boolean' || typeof login[k] === 'number'),
+    };
+    let prev = null;
+    try { prev = JSON.parse(fs.readFileSync(ACCOUNT_F, 'utf8')); } catch { }
+    fs.mkdirSync(UPD_DATA, { recursive: true });
+    fs.writeFileSync(ACCOUNT_F, JSON.stringify(snap, null, 1));
+    if (!prev) return;
+    const changes = [];
+    const addedKeys = snap.topKeys.filter(k => !(prev.topKeys || []).includes(k));
+    const removedKeys = (prev.topKeys || []).filter(k => !snap.topKeys.includes(k));
+    if (addedKeys.length) changes.push({ kind: 'login_keys_added', keys: addedKeys });
+    if (removedKeys.length) changes.push({ kind: 'login_keys_removed', keys: removedKeys });
+    const oldRoles = new Map((prev.roles || []).map(r => [String(r.id), r]));
+    const newRoles = new Map((snap.roles || []).map(r => [String(r.id), r]));
+    for (const [id, r] of newRoles) {
+      const o = oldRoles.get(id);
+      if (!o) changes.push({ kind: 'role_added', id, nickname: r.nickname, level: r.level, sect: r.sect });
+      else if (JSON.stringify(o) !== JSON.stringify(r)) changes.push({ kind: 'role_changed', id, from: o, to: r });
+    }
+    for (const [id, r] of oldRoles) if (!newRoles.has(id)) changes.push({ kind: 'role_removed', id, nickname: r.nickname });
+    if (prev.roles?.length !== snap.roles?.length) changes.push({ kind: 'role_count', from: prev.roles?.length || 0, to: snap.roles?.length || 0 });
+    if (changes.length) {
+      fs.appendFileSync(ACCOUNT_CH, JSON.stringify({ at: snap.at, changes }) + '\n');
+      logger(`[update] 账号/角色变化 ${changes.length} 处：${changes.map(c => c.kind).join(',')}`);
+    }
+  } catch (e) { logger('[update] 账号快照失败:', e?.message || e); }
+}
+
+function hashClient(logger = log) {
+  try {
+    const file = path.join(ROOT, 'data', 'frontend-app.js');
+    if (!fs.existsSync(file)) return;
+    const buf = fs.readFileSync(file);
+    const hash = crypto.createHash('sha256').update(buf).digest('hex');
+    const rec = { at: new Date().toISOString(), file: 'frontend-app.js', sha256: hash, bytes: buf.length };
+    let prev = null;
+    try { prev = JSON.parse(fs.readFileSync(CLIENT_F, 'utf8')); } catch { }
+    fs.writeFileSync(CLIENT_F, JSON.stringify(rec, null, 1));
+    if (prev && prev.sha256 !== hash) {
+      fs.appendFileSync(CLIENT_CH, JSON.stringify({ at: rec.at, from: prev.sha256, to: hash, fromBytes: prev.bytes, toBytes: rec.bytes }) + '\n');
+      logger(`[update] 客户端资源变化 ${prev.bytes}→${rec.bytes} bytes`);
+    }
+    checkNpcRoutes(logger);
+  } catch (e) { logger('[update] 客户端哈希失败:', e?.message || e); }
+}
 
 // ── 运行时状态 ─────────────────────────────────────────────
 const state = {
@@ -94,7 +168,11 @@ async function connect() {
     }
   }
   if (!g?.role) throw new Error('ENTER_GAME 始终无 role');
-  if (loginData) state.loginMeta = loginData;
+  if (loginData) {
+    state.loginMeta = loginData;
+    writeAccountSnapshot(loginData, log);
+  }
+  hashClient(log);
 
   const store = initStore(ws);
   store.ingest(g);
@@ -168,6 +246,8 @@ async function reconnect(reason = 'manual') {
   if (reconnectPromise) return reconnectPromise;
   reconnectPromise = (async () => {
     log(`重连（原因：${reason}）`);
+    // 记住断线前的地图（autoMap 可能会把 alt 换到低图，重建不能用 TL_MAP 默认值）
+    const prevMap = Number(state.daemon?.config?.mapId || state.store?.st?.role?.mapId || process.env.TL_MAP || 10027);
     try { state.store?.close?.(); } catch { }
     try { state.ws?.close?.(); } catch { }
     await sleep(2500);
@@ -175,10 +255,13 @@ async function reconnect(reason = 'manual') {
       try {
         const g = await rebuild();
         log(`✓ 重连成功（第 ${attempt + 1} 次尝试）`);
-        // 重连后恢复战斗
+        // 重连后恢复战斗：先回到断线前地图，避免 alt 用 TL_MAP=10027 越级送死
         if (state.daemon && !isHalted()) {
+          if (Number.isFinite(prevMap) && prevMap > 0) {
+            state.daemon.configure({ mapId: prevMap });
+          }
           state.daemon.start();
-          log('战斗循环已恢复');
+          log(`战斗循环已恢复（map=${prevMap}）`);
         }
         return g;
       } catch (e) {
@@ -194,7 +277,7 @@ async function reconnect(reason = 'manual') {
 
 // ── 后勤 / 日常（纯 JS，零 token）──────────────────────────
 async function runMaintain() {
-  if (state.schedBusy || state.levelBusy || isHalted() || !state.logistics) return null;
+  if (state.schedBusy || state.strategyBusy || state.levelBusy || isHalted() || !state.logistics) return null;
   state.schedBusy = true;
   const wasRunning = state.daemon?.running;
   try {
@@ -215,7 +298,7 @@ async function runMaintain() {
 }
 
 async function runDaily() {
-  if (state.schedBusy || state.levelBusy || isHalted() || !state.activities) return null;
+  if (state.schedBusy || state.strategyBusy || state.levelBusy || isHalted() || !state.activities) return null;
   state.schedBusy = true;
   const wasRunning = state.daemon?.running;
   try {
@@ -255,8 +338,13 @@ setInterval(async () => {
   if (!state.store || state.ws?.state?.closed) return;
   if (state.schedBusy) return;
   try {
+    // 事件驱动维护：背包装备堆积/药少才 30min，否则 2h 一次，减少停战
+    const st = state.store?.st || {};
+    const bagEquip = (st.equipments || []).length;
+    const hpPot = (st.bagItems || []).find(i => Number(i.itemId) === 6)?.count || 0;
+    const maintenanceMs = (bagEquip >= 60 || hpPot < 2000) ? MAINT_MS : Math.max(MAINT_MS, 2 * 60 * 60_000);
     const actions = decideActions(state.schedState, Date.now(), {
-      maintenanceMs: MAINT_MS, dailyHour: DAILY_HOUR, dailyMinute: DAILY_MINUTE,
+      maintenanceMs, dailyHour: DAILY_HOUR, dailyMinute: DAILY_MINUTE,
     });
     for (const a of actions) {
       if (a === 'maintain') await runMaintain();
@@ -297,9 +385,53 @@ setInterval(async () => {
   }
 }, 60_000).unref?.();
 
+// ── P1：成交驱动补挂（有成交才补 1 件，不做定时降价）──
+let lastSaleCount = null;
+async function saleCount() {
+  const r = await state.ws.req('CONSIGNMENT_RECORD_LIST', { page: 1, size: 50, type: 'SELL' }, { ms: 8000 });
+  const arr = r?.data?.records || r?.data?.items || (Array.isArray(r?.data) ? r.data : []);
+  return arr.length;
+}
+async function primeSaleBaseline() {
+  try { lastSaleCount = await saleCount(); log(`[listing] 成交基线 ${lastSaleCount}`); }
+  catch (e) { log(`[listing] 基线读取失败: ${e?.message || e}`); }
+}
+setInterval(async () => {
+  let was = false, prevMap = null;
+  try {
+    if (STAGE < 2 || !AUTOPILOT || isHalted()) return;
+    if (state.schedBusy || state.strategyBusy || state.levelBusy || state.ws?.state?.closed) return;
+    const cnt = await saleCount();
+    if (lastSaleCount == null) { lastSaleCount = cnt; return; }
+    if (cnt <= lastSaleCount) return;
+    const gained = cnt - lastSaleCount;
+    lastSaleCount = cnt;
+    if (isHalted() || state.strategyBusy) return;
+    state.strategyBusy = true;
+    was = !!state.daemon?.running;
+    prevMap = Number(state.game?.role?.mapId || state.store?.st?.role?.mapId || 0) || null;
+    if (was) state.daemon.pause('sale_relist');
+    await sleep(1200);
+    const out = await state.strategy.sellUnusedGear({ max: 1, dryRun: false });
+    log(`[listing] 成交 +${gained}，补挂 ${JSON.stringify(out).slice(0, 200)}`);
+  } catch (e) {
+    log(`[listing] 成交补挂异常: ${e?.message || e}`);
+  } finally {
+    try {
+      if (was && state.daemon?.running) {
+        if (prevMap) state.daemon.configure({ mapId: prevMap });
+        // pause() 可能已让 _loopPromise 退出；resume() 只清 paused 不会重启循环
+        state.daemon.start();
+      }
+    } catch { }
+    state.strategyBusy = false;
+  }
+}, 300_000);
+
 // ── 挂单 5 折挂满 3 小时未售 → 自动 3 折重挂（只做一次）──
 setInterval(async () => {
   try {
+    if (process.env.TL_CLEARANCE_AUTO !== '1') return; // P1：取消自动 3 折，改成交驱动
     if (STAGE < 2 || !AUTOPILOT || isHalted()) return;
     const c = state.strategy?.state?.clearance;
     if (!c || c.repricedAt) return;
@@ -328,6 +460,56 @@ setInterval(async () => {
   }
 }, 10 * 60_000).unref?.();
 
+// ── 统一经验分配器（P0）──────────────────────────────────
+// 每 60s 把角色/珍兽/技能/暗器放到同一张表，按保守 P10 排序写 data/allocation.json；
+// 各执行器（autoLevelUp / maintain 喂宠 / 技能 / 暗器）只读它决定是否动手。
+async function loadPetsForAlloc() {
+  const st = state.store?.st;
+  if (st?.pets?.list?.length) return { pets: st.pets.list, activePetId: st.pets.activePetId };
+  const c = state._petsAllocCache;
+  if (c && Date.now() - c.at < 10 * 60_000) return c;
+  if (!state.ws || state.ws.state?.closed) return { pets: [], activePetId: null };
+  try {
+    const pr = await state.ws.req('PET_COMMAND', { action: 'list', requestId: crypto.randomUUID() }, { ms: 8000 });
+    const ps = pr?.data?.state || pr?.data || {};
+    const pets = (ps?.pets || []).map(p => ({
+      id: p.pet?.id, name: p.speciesName || p.pet?.name, form: p.pet?.form,
+      level: p.pet?.level, average: p.average, exp: p.pet?.exp, nextExp: p.nextExp ?? p.pet?.nextExp,
+      status: p.status, active: ps.activePetId === p.pet?.id,
+    }));
+    state._petsAllocCache = { pets, activePetId: ps?.activePetId || null, at: Date.now() };
+    if (!pets.length) log(`[alloc] 珍兽列表为空（keys=${Object.keys(ps || {}).join(',')}）`);
+    return state._petsAllocCache;
+  } catch (e) { log(`[alloc] 珍兽列表失败：${e?.message || e}`); return { pets: [], activePetId: null }; }
+}
+
+async function refreshAllocation() {
+  try {
+    const st = state.store?.st;
+    const me = state.store?.getSnapshot?.()?.me;
+    if (!st || !me) return null;
+    const { pets, activePetId } = await loadPetsForAlloc();
+    const tmpl = (state.gamedata?.levelTmpls || []).find(t => Number(t.level) === Number(me.level));
+    const skills = (state.game?.skills || []).map(sk => {
+      let arr = [];
+      try { arr = JSON.parse(sk.skillDetail?.expCost || '[]'); } catch { }
+      const nx = arr.find(x => Number(x.skill_level) === Number(sk.currentLevel) + 1);
+      return { id: sk.id, name: sk.skillDetail?.name, level: sk.currentLevel, nextExp: nx?.exp, unlockLevel: sk.skillDetail?.unlockLevel };
+    });
+    const alloc = computeAllocation({
+      role: { level: me.level, exp: me.exp, nextExp: tmpl?.upgradeExp || 0 },
+      pets,
+      skills,
+      activePetId,
+    });
+    writeAllocation(alloc);
+    state.alloc = alloc;
+    return alloc;
+  } catch (e) { try { log('[alloc] ' + e.message); } catch { } return null; }
+}
+setInterval(() => refreshAllocation().catch(() => { }), 60_000).unref?.();
+setTimeout(() => refreshAllocation().catch(() => { }), 6_000);
+
 // ── 飞蝗石经验喂养（NPC 直接升级，当前经验最优去处）────────
 async function runAnqiFeed() {
   try {
@@ -343,6 +525,26 @@ async function runAnqiFeed() {
     const role = state.store?.st?.role || state.game?.role || {};
     const expNow = Number(role.currentExp ?? role.exp ?? 0);
     if (expNow < need + 2_000_000) return;
+    // P0：暗器必须排到分配器第一才喂；历史上多次 +0 时 P10=0，会被直接挡掉。
+    const st = state.store?.st;
+    const skills = (state.game?.skills || []).map(sk => {
+      let arr = []; try { arr = JSON.parse(sk.skillDetail?.expCost || '[]'); } catch { }
+      const nx = arr.find(x => Number(x.skill_level) === Number(sk.currentLevel) + 1);
+      return { id: sk.id, name: sk.skillDetail?.name, level: sk.currentLevel, nextExp: nx?.exp, unlockLevel: sk.skillDetail?.unlockLevel };
+    });
+    const allocA = computeAllocation({
+      role: { level: Number(role.level), exp: expNow, nextExp: 0 },
+      pets: st?.pets?.list || [], skills, activePetId: st?.pets?.activePetId,
+      anqi: { level: t0.level, cost: need },
+    });
+    if (allocA.sink !== 'anqi') {
+      const now = Date.now();
+      if (now - (globalThis.__lastAnqiSkip || 0) > 30 * 60_000) {
+        globalThis.__lastAnqiSkip = now;
+        log(`[anqi] 暂不喂：分配器首选 ${allocA.sink || '无'}（P10 分 ${allocA.score}）`);
+      }
+      return;
+    }
     const map0 = Number(role.mapId || process.env.TL_MAP || 10027);
     state.strategyBusy = true;
     const was = !!state.daemon?.running;
@@ -364,7 +566,9 @@ async function runAnqiFeed() {
       const r2 = await state.ws.req('TRIAL_COMMAND', { action: 'status', requestId: rid() }, { ms: 9000 }).catch(() => null);
       const t2 = r2?.data?.trial || t1;
       const after = Number(state.store?.getSnapshot?.()?.me?.power || 0);
-      log(`[anqi] feed ${fed} Lv${t1.level}→${t1.level + 1} 战力 ${before}→${after} (+${after - before})`);
+      const cost = Math.max(0, Number(t2.weapon?.experience || 0) - Number(t1.weapon?.experience || 0));
+      appendAnqiHistory({ level: t1.level, cost, deltaCP: after - before, cpPerM: cost > 0 ? +((after - before) / (cost / 1e6)).toFixed(3) : 0, powerBefore: before, powerAfter: after });
+      log(`[anqi] feed ${fed} Lv${t1.level}→${t1.level + 1} 战力 ${before}→${after} (+${after - before}) 耗经验 ${(cost/1e6).toFixed(1)}M`);
     } finally {
       try {
         if (was) { state.daemon.configure({ mapId: map0 }); state.daemon.resume(); }
@@ -387,6 +591,11 @@ async function autoLevelUp(max = 20) {
   if (state.schedBusy || state.strategyBusy || state.ws?.state?.closed) return;
   const me = state.store?.getSnapshot?.()?.me;
   if (!me) return;
+  // 56 级后用户明确“不生 57”：除非分配器把角色列为最优，否则不自动升级消耗经验
+  if (Number(me.level) >= 56) {
+    const alloc = readAllocation();
+    if (alloc?.sink !== 'role') return;
+  }
   const tmplOf = (lv) => (state.gamedata?.levelTmpls || []).find((t) => Number(t.level) === Number(lv));
   let lv = Number(me.level), exp = Number(me.exp || 0);
   const first = tmplOf(lv);
@@ -412,14 +621,14 @@ async function autoLevelUp(max = 20) {
       }
       await sleep(300);
     }
-    try { await autoMap(); } catch { }
-    // 升完再刷新一次状态树，避免 store 里还是旧等级
-    try { const snap = state.store?.getSnapshot?.(); if (snap?.me) snap.me.level = lv, snap.me.exp = exp; } catch { }
   } finally {
     try { if (was) state.daemon.resume(); } catch { }
     levelBusy = false;
     state.levelBusy = false;
   }
+  // 必须在 levelBusy 释放后调用，否则 autoMap 首行的 levelBusy 守卫会直接 return
+  try { await autoMap(); } catch { }
+  try { const snap = state.store?.getSnapshot?.(); if (snap?.me) snap.me.level = lv, snap.me.exp = exp; } catch { }
 }
 setInterval(autoLevelUp, 20_000).unref?.();
 setTimeout(autoLevelUp, 10_000);
@@ -510,8 +719,31 @@ setInterval(() => {
 }, 60_000).unref?.();
 
 // ── 状态落盘 ───────────────────────────────────────────────
-const PERF_FILE = path.join(ROOT, 'data', 'performance.json');
-setInterval(() => { try { state.perf.sample(state.store?.getSnapshot?.(), state.game); state.perf.save(PERF_FILE); } catch { } }, 15_000);
+const PERF_FILE = path.join(process.env.TL_DATA_DIR || path.join(ROOT, 'data'), 'performance.json');
+const DATA_DIR = process.env.TL_DATA_DIR || path.join(ROOT, 'data');
+const LEDGER_FILE = path.join(DATA_DIR, 'ledger.jsonl');
+function appendLedger() {
+  try {
+    const s = state.store?.getSnapshot?.();
+    if (!s?.me) return;
+    const rep = state.perf?.report?.(60)?.rows?.[0] || null;
+    const g = state.game;
+    const line = {
+      ts: new Date().toISOString(), instance: INSTANCE,
+      roleId: g?.role?.id ?? null, name: g?.role?.name ?? null,
+      level: s.me.level, power: s.me.power, gold: s.me.gold, exp: s.me.exp,
+      mapId: s.me.mapId ?? g?.role?.mapId ?? null,
+      kills: s.combat?.defeated ?? null, deaths: rep?.deaths ?? null,
+      xpPerHour: rep?.xpPerHour ?? null, goldPerHour: rep?.goldPerHour ?? null,
+      bagCount: s.me.bagCount ?? null,
+    };
+    fs.appendFileSync(LEDGER_FILE, JSON.stringify(line) + '\n');
+  } catch { }
+}
+setInterval(appendLedger, 300_000);
+setTimeout(appendLedger, 12_000);
+setInterval(() => { try { state.perf.sample(state.store?.getSnapshot?.(), state.game, state.daemon?.status?.()); state.perf.save(PERF_FILE); } catch { } }, 15_000);
+setInterval(() => { try { const me = state.store?.getSnapshot?.()?.me; if (me?.exp != null) state.store.recordMapSample?.(me.exp, me.mapId); } catch { } }, 60_000).unref?.();
 
 const STATUS_FILE = process.env.TL_STATUS_FILE || path.join(ROOT, INSTANCE === 'main' ? 'tl_status.json' : `tl_status-${INSTANCE}.json`);
 setInterval(() => {
@@ -594,6 +826,7 @@ export async function boot() {
   writePid();
   log(`=== engine 启动 stage=${STAGE} map=${process.env.TL_MAP || 10027} ===`);
   await rebuild();
+  await primeSaleBaseline();
   if (STAGE >= 1 && !isHalted()) {
     state.daemon.start();
     log('战斗循环已启动');

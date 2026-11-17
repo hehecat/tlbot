@@ -142,3 +142,20 @@ cd /Users/hehecat/Documents/Alma/2026-11-11/chat-mwbmk2wc/work/tlbot-v2
 - **自动整理 + 单次入口**：`POST /inventory/tidy {dryRun:true}` 出计划；`{dryRun:false}` 执行一次（仓库更好件取出换上、背包/仓库按每槽保留一半、多余 q1/q2 NPC 直卖）。maintain 每轮也会自动卖 q1/q2 多余件（不做仓库升级，保持 30 分钟内完成）。
 - 一键执行：`node scripts/inventory-cleanup.mjs`（只读）/ `--apply`（换装+卖+下架重挂）。
 - 喝药设置：`src/logistics.mjs applyPotionSettings()` 在引擎启动时执行一次，蓝药选 `id5 参心丹`、放 priority 第 1 槽（原 `id12 甘露丹` + 第 6 槽是无效根因）；`potions()` 每轮 maintain 也会校正。
+
+## P0–P3 改造（2026-11-17）
+- **P0 统一经验分配器**：`src/allocation.mjs` 每 60s 由 runtime 计算写 `data/allocation.json`；`GET /allocation` 查看 sink/候选/P10。autoLevelUp、暗器自动喂养、maintain 的 pet/skill 投喂都以 `state.alloc` 为准；暗器历史 P10<0.6 时停喂。
+- **观测**：`GET /performance?minutes=5..240`（按 loadout 分组，含 deaths/mapId/goldNet/xpPerHour/goldPerHour/killsPerMin）；`/performance` 文件按实例落 `TL_DATA_DIR`。
+- **P1**：自动 3 折默认关闭（`TL_CLEARANCE_AUTO=1` 才开）；手动降价 `POST /consignment/reprice {factor,dryRun}`（默认 dry-run）；maintain 事件化：背包装备≥60 或红药<2000 才 30min，否则 2h；红线 R6 已按 op 判定（PET_RELEASE 受控）。
+- **P2**：每实例每 5min 写 `ledger.jsonl`；`GET /ledger`；主号 `GET /accounts` 汇总三实例（status+ledger+allocation+totals），只读。
+- **P3**：指定交易 `POST /trade/designated/{preview,create,buy}`；`preview` 默认安全；`create` 需 `dryRun:false,confirm:true` 且目标昵称非空；`targetNickname` 定向是否被服务端强约束未实测，先 dry-run。
+- 验证：main /accounts 三号 ledger 正常；/allocation 在 exp<203.8M 时 sink=null（攒整级）；/performance 行含 deaths/mapIds。
+- 追加：分配器 reserve 按等级缩放（<30 级 5 万，其余 200 万），技能按 unlockLevel 过滤；`/accounts` 带每号下一步建议；成交后 5 分钟内自动补挂 1 件（`CONSIGNMENT_RECORD_LIST` 计数驱动，不降价）。
+- 追加：`POST /trade/designated/create` 指定 targetNickname 后，挂单对非目标不可见；实单已验证主号→alt1 成交（sales 记录含 buyer）。`buy` 回包丢失时按 BUY 记录增量做幂等确认。
+- 追加：重连会保留断线前地图；alt 启动默认 TL_MAP=10000，autoMap 再按等级上换。
+- P2 半自动跨号调拨：`node scripts/transfer.mjs --from 9528 --to 9527 --id <roleEquipId> --price 100`（默认 dry-run），加 `--confirm` 执行；目标号购买后自动 `/settings` 刷新再核对背包与 sales。
+- P1 成交基线在启动时读取（`[listing] 成交基线 N`），之后每 5 分钟只对新增成交补挂 1 件；若启动后 5 分钟内成交且进程重启，会丢一次事件（已知限制）。
+- 通用公开上架：`POST /consignment/list {roleEquipId,price,currency,targetNickname}`。
+
+- 同槽保护：R1 默认保护已穿 + 每槽第 1；第 2 名仅 q>=3/套装/绑定受保护。`TL_TOP_GEAR_PER_SLOT=1` 只保第 1，`=0` 只保已穿。q1/q2 的第 2 名现在可被清理/挂售。
+- P2 自动跨号装备交换：`node scripts/gear-exchange.mjs [--apply --max 1] [--min-q 3]`。流程=三号 /raw 建表→本地职业加权粗筛→指定交易 100 金投递→接收号 /gear 官方评分→`/inventory/equip` 或原路退回；结果写 `data/gear-exchange.jsonl`。已加入 30 分钟巡检第 8 步，每轮最多 1 件，默认目标背包接近上限时跳过。

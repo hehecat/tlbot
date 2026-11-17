@@ -28,6 +28,34 @@ function safeParse(s, fallback = []) {
   try { return JSON.parse(s); } catch { return fallback; }
 }
 
+/** NPC 功能识别：id 关键词 → 功能；未知则按中文名兜底 */
+export function npcFunction(n) {
+  const id = String(n?.id || '').toLowerCase();
+  const name = String(n?.name || '');
+  const RULES = [
+    [/gem/, '宝石/镶嵌/合成'], [/smithy/, '锻造/强化/熔炼'], [/tailor/, '裁缝/材料'],
+    [/zenlong/, '珍珑棋局'], [/yuci/, '御赐兑换'], [/xiaowei/, '边军/伪宋军'],
+    [/biwu/, '比武'], [/wushuang/, '无双/双倍经验'], [/yanhou/, '燕侯/套装'],
+    [/yanwu/, '演武/打桩'], [/xuefei/, '无相兑换'], [/pet/, '珍兽'],
+    [/kuaihuosan/, '抽奖/福彩'],
+  ];
+  for (const [re, fn] of RULES) if (re.test(id)) return fn;
+  if (/宝石/.test(name)) return '宝石/镶嵌/合成';
+  if (/铁匠|锻造|强化|熔炼/.test(name)) return '锻造/强化/熔炼';
+  if (/裁缝|材料/.test(name)) return '裁缝/材料';
+  if (/珍珑/.test(name)) return '珍珑棋局';
+  if (/御赐/.test(name)) return '御赐兑换';
+  if (/边军|伪宋/.test(name)) return '边军/伪宋军';
+  if (/比武/.test(name)) return '比武';
+  if (/无双|双倍/.test(name)) return '无双/双倍经验';
+  if (/燕侯/.test(name)) return '燕侯/套装';
+  if (/演武|打桩/.test(name)) return '演武/打桩';
+  if (/无相|兑换/.test(name)) return '无相兑换';
+  if (/珍兽|宠物/.test(name)) return '珍兽';
+  if (/抽奖|福彩|彩票/.test(name)) return '抽奖/福彩';
+  return '未知';
+}
+
 /** 从 ENTER_GAME 的 data 里抽出元数据（不含角色实时状态） */
 export function extractMeta(game) {
   if (!game) return null;
@@ -39,7 +67,7 @@ export function extractMeta(game) {
       monsters: safeParse(m.monsterConfig),
       drops: safeParse(m.dropConfig),
       costs: safeParse(m.costConfig),
-      npcs: safeParse(m.npcs).map(n => ({ id: n.id, name: n.name })),
+      npcs: safeParse(m.npcs).map(n => ({ id: n.id, name: n.name, fn: npcFunction(n) })),
     })),
     equipSets: game.equipSets || [],
     shopItems: game.shopItems || [],
@@ -86,6 +114,18 @@ export function diffMeta(oldMeta, newMeta) {
     if (om !== nm) changes.push({ kind: 'map_monsters', id, name: m.name, note: '怪物配置变化' });
     const od = JSON.stringify(o.drops || []), nd = JSON.stringify(m.drops || []);
     if (od !== nd) changes.push({ kind: 'map_drops', id, name: m.name, note: '掉落配置变化' });
+    const oc = JSON.stringify(o.costs || []), nc = JSON.stringify(m.costs || []);
+    if (oc !== nc) changes.push({ kind: 'map_costs', id, name: m.name, note: '消耗配置变化' });
+    // NPC：新增/删除/改名
+    const oldNpcs = new Map((o.npcs || []).map(n => [n.id, n]));
+    const newNpcs = new Map((m.npcs || []).map(n => [n.id, n]));
+    for (const [nid, n] of newNpcs) {
+      const on = oldNpcs.get(nid);
+      if (!on) changes.push({ kind: 'npc_added', mapId: id, mapName: m.name, id: nid, name: n.name, fn: n.fn });
+      else if (on.name !== n.name) changes.push({ kind: 'npc_renamed', mapId: id, mapName: m.name, id: nid, from: on.name, to: n.name, fromFn: on.fn, toFn: n.fn });
+      else if (on.fn && n.fn && on.fn !== n.fn) changes.push({ kind: 'npc_function_changed', mapId: id, mapName: m.name, id: nid, name: n.name, from: on.fn, to: n.fn });
+    }
+    for (const [nid, n] of oldNpcs) if (!newNpcs.has(nid)) changes.push({ kind: 'npc_removed', mapId: id, mapName: m.name, id: nid, name: n.name });
   }
   for (const [id, o] of oldMaps) {
     if (!newMaps.has(id)) changes.push({ kind: 'map_removed', id, name: o.name });
@@ -101,19 +141,34 @@ export function diffMeta(oldMeta, newMeta) {
     if (!newSets.has(s.id)) changes.push({ kind: 'set_removed', id: s.id, name: s.name });
   }
 
-  // 商城
-  const oldShop = new Set((oldMeta.shopItems || []).map(s => s.id));
-  const newShop = new Set((newMeta.shopItems || []).map(s => s.id));
-  for (const s of (newMeta.shopItems || [])) {
-    if (!oldShop.has(s.id)) changes.push({ kind: 'shop_added', id: s.id, name: s.itemName || s.name });
+  // 商城：增删 + 同 id 改价/改内容
+  const oldShop = new Map((oldMeta.shopItems || []).map(s => [s.id, s]));
+  const newShop = new Map((newMeta.shopItems || []).map(s => [s.id, s]));
+  for (const [id, x] of newShop) {
+    const o = oldShop.get(id);
+    if (!o) changes.push({ kind: 'shop_added', id, name: x.itemName || x.name });
+    else if (JSON.stringify(o) !== JSON.stringify(x)) changes.push({ kind: 'shop_changed', id, name: x.itemName || x.name });
   }
-  for (const s of (oldMeta.shopItems || [])) {
-    if (!newShop.has(s.id)) changes.push({ kind: 'shop_removed', id: s.id, name: s.itemName || s.name });
-  }
+  for (const [id, x] of oldShop) if (!newShop.has(id)) changes.push({ kind: 'shop_removed', id, name: x.itemName || x.name });
 
   // 装备模板数量（新增装备会变）
   if (oldMeta.templateCount !== newMeta.templateCount) {
     changes.push({ kind: 'templates_count', from: oldMeta.templateCount, to: newMeta.templateCount });
+  }
+
+  // 技能：等级/下一级经验/名称
+  const oldSkills = new Map((oldMeta.skills || []).map(x => [x.id, x]));
+  const newSkills = new Map((newMeta.skills || []).map(x => [x.id, x]));
+  for (const [id, x] of newSkills) {
+    const o = oldSkills.get(id);
+    if (!o) changes.push({ kind: 'skill_added', id, name: x.name });
+    else if (JSON.stringify(o) !== JSON.stringify(x)) changes.push({ kind: 'skill_changed', id, name: x.name, from: o, to: x });
+  }
+  for (const [id, x] of oldSkills) if (!newSkills.has(id)) changes.push({ kind: 'skill_removed', id, name: x.name });
+
+  // 等级模板变化（升级经验曲线）
+  if (JSON.stringify(oldMeta.levelTmpls || []) !== JSON.stringify(newMeta.levelTmpls || [])) {
+    changes.push({ kind: 'level_tmpls', note: '等级/升级经验模板变化' });
   }
 
   // 数值常量（战力公式可能就在这）
@@ -150,6 +205,13 @@ export function sync(game, log = () => { }) {
     recordChanges(changes);
   }
   saveSnapshot(meta);
+  try {
+    const catalog = {};
+    for (const m of meta.maps || []) for (const n of m.npcs || []) {
+      catalog[n.id] = { name: n.name, fn: n.fn, mapId: m.id, mapName: m.name };
+    }
+    fs.writeFileSync(path.join(DATA, 'npc-catalog.json'), JSON.stringify(catalog, null, 1));
+  } catch { }
   return { meta, changes, firstRun };
 }
 

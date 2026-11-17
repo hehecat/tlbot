@@ -72,6 +72,8 @@ function rememberWorkingIp() {
   } catch { }
 }
 
+const SENTINEL = Symbol('timeout');
+
 export function createSession({ trace = false } = {}) {
   const ws = new WebSocket(WS_URL);
   const handlers = new Map();   // type -> resolve
@@ -147,8 +149,10 @@ export function createSession({ trace = false } = {}) {
     state.closed = true;
     state.closeCode = ev?.code ?? null;
     state.closeReason = ev?.reason || '';
-    for (const w of waiters) w(null);
+    // 断线时立刻唤醒所有挂起请求（否则 req 必等满 12s 超时）
+    const pending = waiters.slice();
     waiters = [];
+    for (const w of pending) { try { w(null); } catch { } }
   };
   ws.onerror = ev => { state.lastError = ev?.message || 'ws error'; };
 
@@ -201,13 +205,24 @@ export function createSession({ trace = false } = {}) {
     return new Promise(resolve => {
       const arr = handlers.get(type) || [];
       let done = false;
-      const fn = d => { if (done) return; done = true; resolve(d); };
+      let timer = null;
+      const cleanup = () => {
+        if (timer) { clearTimeout(timer); timer = null; }
+        const wi = waiters.indexOf(fn);
+        if (wi >= 0) waiters.splice(wi, 1);
+      };
+      const fn = d => { if (done) return; done = true; cleanup(); resolve(d); };
       arr.push(fn);
       handlers.set(type, arr);
-      const timer = setTimeout(() => { if (!done) { done = true; const a = handlers.get(type) || []; const i = a.indexOf(fn); if (i >= 0) a.splice(i, 1); resolve(null); } }, ms);
-      // 清理：成功时也移除 timer
-      const orig = fn;
-      fn.cleanup = () => clearTimeout(timer);
+      waiters.push(fn);
+      timer = setTimeout(() => {
+        if (done) return;
+        done = true;
+        const a = handlers.get(type) || [];
+        const i = a.indexOf(fn); if (i >= 0) a.splice(i, 1);
+        cleanup();
+        resolve(null);
+      }, ms);
     });
   };
 
@@ -227,7 +242,15 @@ export function createSession({ trace = false } = {}) {
     const offErr = on('ERROR', d => { if (myErr.msg == null) myErr.msg = d.message; });
     const p = wait(respType(type), ms);
     if (revision) write(type, payload); else send(type, payload);
-    const r = await p;
+    // ERROR 包通常先于（或替代）正式响应；不要死等满 ms，250ms 轮询提前结束
+    const deadline = Date.now() + ms;
+    let r = null;
+    while (Date.now() < deadline) {
+      r = await Promise.race([p, new Promise(x => setTimeout(() => x(SENTINEL), 250))]);
+      if (r && r !== SENTINEL) break;
+      r = null;
+      if (myErr.msg) break;
+    }
     await new Promise(x => setTimeout(x, 30));   // 给 ERROR 一点时间落到 myErr
     offErr();
     if (r) return r;

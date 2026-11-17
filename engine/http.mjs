@@ -23,7 +23,14 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { topGearIds } from '../core/redlines.mjs';
 import { buildPlan, collectCtx } from '../src/planner.mjs';
+import { readAllocation } from '../src/allocation.mjs';
+import { enhanceDelta } from '../src/power-delta.mjs';
+import { planSets } from '../src/set-solver.mjs';
+import { summary as calibrationSummary } from '../src/calibration.mjs';
+import { snapshot as loadoutSnapshot, list as loadoutList, diff as loadoutDiff } from '../src/loadouts.mjs';
+import { summarizeAccounts } from '../src/accounts.mjs';
 import { itemValue } from '../core/lib-value.mjs';
 import { evalMaps, DEFAULT_MAP_WEIGHTS } from '../src/map-eval.mjs';
 
@@ -59,6 +66,7 @@ export function startHttp(engine, port = 9527) {
     if (!state.strategy) return { error: 'strategy 未初始化' };
     state.schedBusy = true;
     const was = !!state.daemon?.running;
+    const map0 = Number(state.game?.role?.mapId || state.store?.st?.role?.mapId || process.env.TL_MAP || 10027);
     try {
       if (was) { state.daemon.pause('strategy'); await state.daemon.whenIdle?.(15_000); }
       await new Promise(r => setTimeout(r, 600));
@@ -87,6 +95,27 @@ export function startHttp(engine, port = 9527) {
       // ── 只读 ──
       if (method === 'GET' && p === '/sects') {
         return json(res, 200, { at: new Date().toISOString(), sects: state.loginMeta?.sects || [] });
+      }
+      if (method === 'GET' && p === '/allocation') {
+        return json(res, 200, state.alloc || readAllocation() || { error: 'allocation not ready' });
+      }
+      if (method === 'GET' && p === '/accounts') {
+        return json(res, 200, summarizeAccounts(ROOT));
+      }
+      if (method === 'GET' && p === '/ledger') {
+        try {
+          const f = path.join(process.env.TL_DATA_DIR || path.join(ROOT, 'data'), 'ledger.jsonl');
+          const lines = fs.readFileSync(f, 'utf8').trim().split('\n').slice(-Number(url.searchParams.get('limit') || 20));
+          return json(res, 200, { at: new Date().toISOString(), lines: lines.map(x => { try { return JSON.parse(x); } catch { return x; } }) });
+        } catch (e) { return json(res, 200, { lines: [], error: e?.message || String(e) }); }
+      }
+      if (method === 'GET' && p === '/consignment/sales') {
+        try {
+          const r = await state.ws.req('CONSIGNMENT_RECORD_LIST', { page: 1, size: 50, type: 'SELL' }, { ms: 8000 });
+          const raw = r?.data?.records || r?.data?.items || r?.data || [];
+          const arr = Array.isArray(raw) ? raw : [];
+          return json(res, 200, { at: new Date().toISOString(), count: arr.length, sales: arr });
+        } catch (e) { return json(res, 502, { error: e?.message || String(e) }); }
       }
       if (method === 'GET' && p === '/performance') {
         const u = new URL(req.url, 'http://127.0.0.1');
@@ -144,6 +173,76 @@ export function startHttp(engine, port = 9527) {
         });
       }
 
+      if (method === 'GET' && p === '/updates') {
+        const limit = Math.max(1, Math.min(100, Number(url.searchParams.get('limit') || 20)));
+        let rows = [];
+        try {
+          rows = fs.readFileSync(path.join(ROOT, 'data', 'gamedata-changes.jsonl'), 'utf8').split('\n').filter(Boolean).map(x => { try { return JSON.parse(x); } catch { return null; } }).filter(Boolean);
+        } catch { }
+        return json(res, 200, { at: new Date().toISOString(), count: rows.length, updates: rows.slice(-limit).reverse() });
+      }
+      if (method === 'GET' && (p === '/protocol/changes' || p === '/account/changes' || p === '/client/changes')) {
+        const limit = Math.max(1, Math.min(200, Number(url.searchParams.get('limit') || 20)));
+        const file = p === '/protocol/changes' ? 'protocol-changes.jsonl' : p === '/account/changes' ? 'account-changes.jsonl' : 'client-changes.jsonl';
+        let rows = [];
+        try {
+          rows = fs.readFileSync(path.join(ROOT, 'data', file), 'utf8').split('\n').filter(Boolean).map(x => { try { return JSON.parse(x); } catch { return null; } }).filter(Boolean);
+        } catch { }
+        return json(res, 200, { at: new Date().toISOString(), count: rows.length, changes: rows.slice(-limit).reverse() });
+      }
+      if (method === 'POST' && p === '/npc/probe') {
+        const PROBES = {
+          npc_kuaihuosan: [['ONLINE_LOTTERY_STATE', {}]],
+          npc_pet_keeper: [['PET_COMMAND', { action: 'list' }]],
+          npc_zenlong: [['ZL_STATUS', {}]],
+          npc_xiaowei: [['CAMP_STATUS', {}]],
+          npc_wushuang: [['WUSHUANG_STATUS', {}]],
+          npc_yanwu: [['TRIAL_COMMAND', { action: 'status' }]],
+          npc_xuefei: [['TRIAL_COMMAND', { action: 'status' }]],
+        };
+        const ids = (() => { try { return JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'npc-routes.json'), 'utf8')).ids || []; } catch { return []; } })();
+        const out = await exclusive(async () => {
+          const rows = {};
+          for (const id of ids) {
+            if (id === 'npc_biwu') {
+              const t0 = Date.now();
+              const rr = { supported: true, checks: [] };
+              try {
+                const r = await state.ws.req('ARENA_COMMAND', { action: 'list', requestId: crypto.randomUUID(), page: 0 }, { ms: 10000 });
+                rr.checks.push({ cmd: 'ARENA_COMMAND:list', ok: r?.success !== false, ms: Date.now() - t0, error: r?.message || null });
+              } catch (e) {
+                rr.checks.push({ cmd: 'ARENA_COMMAND:list', ok: false, ms: Date.now() - t0, error: String(e?.message || e).slice(0, 200) });
+              }
+              rows[id] = rr;
+              continue;
+            }
+            const list = PROBES[id];
+            if (!list) { rows[id] = { supported: false, reason: 'client-only-panel' }; continue; }
+            rows[id] = { supported: true, checks: [] };
+            for (const [cmd, params] of list) {
+              const t0 = Date.now();
+              try {
+                const r = await state.ws.req(cmd, params, { ms: 8000 });
+                rows[id].checks.push({ cmd, ok: r?.success !== false, ms: Date.now() - t0, error: r?.message || r?.error || null });
+              } catch (e) {
+                rows[id].checks.push({ cmd, ok: false, ms: Date.now() - t0, error: String(e?.message || e).slice(0, 200) });
+              }
+            }
+          }
+          return { at: new Date().toISOString(), npcs: rows };
+        });
+        return json(res, 200, out);
+      }
+      if (method === 'GET' && p === '/npc/routes') {
+        let routes = null;
+        try { routes = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'npc-routes.json'), 'utf8')); } catch { }
+        return json(res, 200, { at: new Date().toISOString(), ...(routes || {}) });
+      }
+      if (method === 'GET' && p === '/npc/catalog') {
+        let catalog = {};
+        try { catalog = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'npc-catalog.json'), 'utf8')); } catch { }
+        return json(res, 200, { at: new Date().toISOString(), count: Object.keys(catalog).length, npcs: catalog });
+      }
       if (method === 'GET' && p === '/drops') {
         const map = url.searchParams.get('map');
         const limit = Number(url.searchParams.get('limit') || 20);
@@ -248,10 +347,12 @@ export function startHttp(engine, port = 9527) {
 
       // ── 跑塔（独占战斗）──
       if (method === 'POST' && p === '/tower/run') {
-        if (state.schedBusy) return json(res, 409, { error: '调度忙' });
+        if (state.schedBusy || state.strategyBusy || state.levelBusy) return json(res, 409, { error: '调度忙' });
+        state.schedBusy = true;
         const body = await readBody(req);
         const maxFloors = Math.max(1, Math.min(20, Number(body.maxFloors || 5)));
         const was = !!state.daemon?.running;
+        const map0 = Number(state.game?.role?.mapId || state.store?.st?.role?.mapId || 0) || null;
         try {
           if (was) state.daemon.pause('tower');
           await new Promise(r => setTimeout(r, 1500));
@@ -260,7 +361,14 @@ export function startHttp(engine, port = 9527) {
         } catch (e) {
           return json(res, 500, { error: e?.message || String(e) });
         } finally {
-          if (was) { try { state.daemon.resume(); } catch { } }
+          try {
+            if (map0 && state.game?.role?.mapId && state.game.role.mapId !== map0) {
+              state.ws.send('ENTER_MAP', { mapId: map0 });
+              await new Promise(r => setTimeout(r, 1200));
+            }
+            if (was) state.daemon.start();
+          } catch { }
+          state.schedBusy = false;
         }
       }
 
@@ -435,8 +543,7 @@ export function startHttp(engine, port = 9527) {
           for (const x of all) if (x.isEquipped) { const sl = x.equipTmpl.slotType; bestWorn[sl] = Math.max(bestWorn[sl] || 0, iv(x)); }
           const bySlot = {};
           for (const x of all) { const sl = x.equipTmpl.slotType; (bySlot[sl] ||= []).push(x); }
-          const top2 = new Set();
-          for (const arr of Object.values(bySlot)) arr.slice().sort((a, b) => iv(b) - iv(a)).slice(0, 2).forEach(x => top2.add(x.id));
+          const top2 = topGearIds(all);
           const setTmpl = new Set();
           for (const st0 of (g.equipSets || [])) { try { for (const id of JSON.parse(st0.equipTmplIds || '[]')) setTmpl.add(Number(id)); } catch { } }
           const cand = all.filter(x => {
@@ -460,6 +567,45 @@ export function startHttp(engine, port = 9527) {
         }));
       }
 
+      if (method === 'POST' && p === '/trade/designated/preview') {
+        try {
+          const body = await readBody(req);
+          return json(res, 200, await state.strategy.designatedPreview({
+            roleEquipId: body.roleEquipId, targetNickname: body.targetNickname, price: body.price,
+          }));
+        } catch (e) { return json(res, 502, { error: e?.message || String(e) }); }
+      }
+      if (method === 'POST' && p === '/trade/designated/create') {
+        try {
+          const body = await readBody(req);
+          return json(res, 200, await state.strategy.designatedCreate({
+            roleEquipId: body.roleEquipId, targetNickname: body.targetNickname,
+            price: body.price, dryRun: body.dryRun !== false, confirm: body.confirm === true,
+          }));
+        } catch (e) { return json(res, 502, { error: e?.message || String(e) }); }
+      }
+      if (method === 'POST' && p === '/trade/designated/buy') {
+        try {
+          const body = await readBody(req);
+          return json(res, 200, await state.strategy.designatedBuy({
+            consignmentId: body.consignmentId, dryRun: body.dryRun !== false,
+          }));
+        } catch (e) { return json(res, 502, { error: e?.message || String(e) }); }
+      }
+      if (method === 'POST' && p === '/consignment/list') {
+        const body = await readBody(req);
+        return json(res, 200, await state.strategy.listItem({
+          roleEquipId: body.roleEquipId, price: body.price, currency: body.currency, targetNickname: body.targetNickname,
+        }));
+      }
+      if (method === 'POST' && p === '/consignment/reprice') {
+        try {
+          const body = await readBody(req);
+          const factor = Math.min(1, Math.max(0.1, Number(body.factor || 0.85)));
+          const r = await state.strategy.repriceListings({ factor, dryRun: body.dryRun !== false, max: Number(body.max || 10) });
+          return json(res, 200, r);
+        } catch (e) { return json(res, 502, { error: e?.message || String(e) }); }
+      }
       if (method === 'POST' && p === '/sell/good') {
         const body = await readBody(req);
         const max = Math.min(10, Math.max(1, Number(body.max || 5)));
@@ -616,6 +762,14 @@ export function startHttp(engine, port = 9527) {
           const v = url.searchParams.get(k);
           if (v != null && Number.isFinite(Number(v))) weights[k] = Number(v);
         }
+        // 经验影子价格：默认取 planner 当前第一经验动作的 cpPerMexp（不再用静态 24.2）
+        if (weights.xpCpPerMexp == null) {
+          try {
+            const plan = buildPlan(await collectCtx(engine, { live: true }));
+            const v = Number(plan?.expAllocation?.cpPerMexp);
+            if (Number.isFinite(v) && v > 0) weights.xpCpPerMexp = +v.toFixed(2);
+          } catch { }
+        }
         const maps = evalMaps({
           drops: state.store?.st?.drops || {},
           mapStats: state.store?.st?.mapStats || {},
@@ -623,10 +777,16 @@ export function startHttp(engine, port = 9527) {
           equipped: g.equipments || [],
           templates: g.allEquipTemplates || [],
           weights,
+          powerCtx: {
+            role: g.role, equipments: g.equipments || [], gemInfo: g.gemInfo || [],
+            bagItems: g.bagItems || [], skills: g.skills || g.skillDetail || [],
+            levelTmpls: g.levelTmpls || [],
+          },
         });
         return json(res, 200, {
           at: new Date().toISOString(),
           weights: { ...DEFAULT_MAP_WEIGHTS, ...weights },
+          weightSource: { xpCpPerMexp: 'planner.expAllocation.cpPerMexp（动态）', goldCpPer1000: '静态近似' },
           maps,
           dataGaps: [
             '物品 ΔV 需要掉落实例品质，live_drops 只存名字；暂不计入 CP/h',
@@ -634,6 +794,33 @@ export function startHttp(engine, port = 9527) {
             '20080 尚无样本，需挂机 30-60 分钟后再比较',
           ],
         });
+      }
+
+      if (method === 'GET' && p === '/loadouts') return json(res, 200, loadoutList());
+      if (method === 'GET' && p === '/loadouts/diff') {
+        return json(res, 200, loadoutDiff(url.searchParams.get('a') || 'farm', url.searchParams.get('b') || 'peak'));
+      }
+      if (method === 'POST' && p === '/loadout/snapshot') {
+        const b = await readBody(req);
+        return json(res, 200, loadoutSnapshot(engine.game || {}, b.name || 'current'));
+      }
+
+      if (method === 'GET' && p === '/sets/plan') {
+        const g = engine.game || {};
+        return json(res, 200, planSets({
+          role: g.role || {}, equipments: g.equipments || [], gemInfo: g.gemInfo || [],
+          skills: g.skills || [], equipSets: g.equipSets || [], levelTmpls: g.levelTmpls || [],
+        }));
+      }
+
+      if (method === 'GET' && p === '/power/delta') {
+        const id = url.searchParams.get('equipId');
+        if (!id) return json(res, 400, { error: 'equipId required' });
+        return json(res, 200, enhanceDelta(engine.game || {}, id));
+      }
+
+      if (method === 'GET' && p === '/calibration') {
+        return json(res, 200, calibrationSummary());
       }
 
       if (method === 'GET' && p === '/auction') {

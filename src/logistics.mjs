@@ -11,13 +11,14 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { itemValue, analyzeSets, bestLoadout, suggestPrice } from '../core/lib-value.mjs';
 import { computePower } from '../core/lib-power.mjs';
-import { assertSafe, safeSnapshot, RedlineError } from '../core/redlines.mjs';
+import { assertSafe, safeSnapshot, RedlineError, topGearIds, topGearPerSlot, protectSecondGear } from '../core/redlines.mjs';
 import { goMap, isHalted, sleep } from './combat-daemon.mjs';
 import { recordSample, predictEquipDelta } from './verifier.mjs';
 import { resolveTarget as resolveTargetImpl } from './resolver.mjs';
 import { bestInSlot, clearCache as clearEvalCache } from './evaluate.mjs';
 import { buildInventoryPlan } from './inventory-plan.mjs';
 import { audit } from '../core/audit.mjs';
+import { readAllocation } from './allocation.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const SNAP_DIR = path.join(process.env.TL_DATA_DIR ? path.resolve(process.env.TL_DATA_DIR) : path.join(ROOT, 'data'), 'equip-snapshots');
@@ -191,9 +192,12 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
       }
       const bySlotPower = {};
       for (const e of eqs) { const sl = e.equipTmpl?.slotType; if (sl) (bySlotPower[sl] ||= []).push(e); }
+      const perSlotP = topGearPerSlot();
       for (const arr of Object.values(bySlotPower)) {
-        arr.slice().sort((a, b) => (powerOf.get(b.id) || 0) - (powerOf.get(a.id) || 0))
-          .slice(0, 2).forEach(e => powerTopIds.add(e.id));
+        const sortedP = arr.slice().sort((a, b) => (powerOf.get(b.id) || 0) - (powerOf.get(a.id) || 0));
+        sortedP.forEach((e, i) => {
+          if (i === 0 || e.isEquipped || (perSlotP >= 2 && i === 1 && protectSecondGear(e))) powerTopIds.add(e.id);
+        });
       }
     } catch { }
 
@@ -221,17 +225,8 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
       await sleep(200);
     }
 
-    // 同槽前 2 强（保险，redlines 里还会再判一次）
-    const topIds = new Set();
-    const grouped = {};
-    for (const e of eqs) {
-      const sl = e.equipTmpl?.slotType;
-      if (!sl) continue;
-      (grouped[sl] ||= []).push(e);
-    }
-    for (const arr of Object.values(grouped)) {
-      arr.slice().sort((a, b) => iv(b) - iv(a)).slice(0, 2).forEach(e => topIds.add(e.id));
-    }
+    // 同槽保护（统一策略：第1名+已穿必保；第2名仅高价值必保；redlines 还会再判一次）
+    const topIds = topGearIds(eqs);
 
     const bestOfTmpl = new Map();
     for (const e of eqs) {
@@ -748,15 +743,26 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
     // 而 Lv51 乌龟一整级 160.8M 只 +~250（1.55 CP/M）。低等级边际收益高两个数量级。
     // 旧逻辑「只喂出战 + 整级投喂」会把 160M 经验浪费在满级宠的最后一格。
     const expNow = g.role?.currentExp || 0;
-    if (expNow > 3_000_000) {
+    const alloc = readAllocation();
+    if (expNow > 3_000_000 && alloc && alloc.allow && !alloc.allow.pets) {
+      note(`经验分配：当前首选 ${alloc.sink || '无'}，跳过喂宠`);
+    } else if (expNow > 3_000_000) {
       const activePet = petsArr.find(p => p.pet.id === activeId) || null;
       const growth = petsArr
         .filter(p => p.pet.id !== activeId && p.pet.status === 'OWNED' &&
           (p.pet.form === 'SECOND' || p.pet.form === 'MUTANT'))
         .sort((a, b) => (b.average || 0) - (a.average || 0))[0];
-      const invest = growth && (growth.average || 0) > (activePet?.average || 0) + 1 ? growth : null;
+      let invest = growth && (growth.average || 0) > (activePet?.average || 0) + 1 ? growth : null;
+      // P0：默认不再喂出战宠（Lv42+ 每级 200-300M 经验只换 ~300 CP，约 1.2 CP/M）。
+      // 只有显式 TL_FEED_ACTIVE_PET=1 才恢复旧行为；高成长二代仍优先。
+      if (!invest && activePet && alloc?.allow?.pets && process.env.TL_FEED_ACTIVE_PET === '1') invest = activePet;
       if (invest) {
-        const amount = Math.max(0, Math.min(expNow - 6_000_000, 300_000_000));
+        const petExp = Number(invest.pet?.exp || 0);
+        const petNext = Number(invest.nextExp ?? invest.pet?.nextExp ?? 0);
+        const need = petNext > petExp ? petNext - petExp : 0;
+        const amount = invest === growth
+          ? Math.max(0, Math.min(expNow - 6_000_000, 300_000_000))
+          : Math.max(0, Math.min(expNow - 2_000_000, need));
         if (amount > 1_000_000) {
           const fromLevel = invest.pet.level;
           const powerBefore = g.role?.combatPower ?? null;
@@ -785,6 +791,11 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
 
   // ── 8. 技能（只在经验溢出时升；ROI 远低于珍兽）───────────────
   async function skills(g) {
+    const alloc = readAllocation();
+    if (alloc && alloc.allow && !alloc.allow.skills) {
+      try { log(`[skill] 分配器首选 ${alloc.sink || '无'}，本轮不升技能`); } catch { }
+      return;
+    }
     let best = null;
     for (const sk of g.skills || []) {
       if (sk.currentLevel >= (sk.skillDetail?.maxLevel ?? 99)) continue;
@@ -881,6 +892,8 @@ export function createLogistics(ws, store, { log = () => { }, stage = 0, allowWr
       }
     } catch { }
 
+    const trim = (a) => { if (a.length > 200) a.splice(0, a.length - 200); };
+    trim(report.actions); trim(report.blocked); trim(report.errors);
     report.dryRun = !canWrite();
     return report;
   }

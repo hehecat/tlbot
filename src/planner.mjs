@@ -7,6 +7,9 @@
 // 设计原则：任何没有实测数据的系数都标注 confidence=low，并由 System2 用
 // audit / live_drops 回填（见 data/roi-calibration.json）。
 
+import { evalMaps, updateShadowWeights } from './map-eval.mjs';
+import { enhanceCandidates } from './power-delta.mjs';
+
 const M = 1_000_000;
 
 // 经验去向的边际系数（CP / 1M exp）。实测回填后覆盖。
@@ -137,6 +140,12 @@ function oneOffActions(ctx) {
   const { pets, bagItems, breed, tower, auction, role } = ctx;
   const { list, active } = petOf(pets);
   const activeId = pets?.activePetId || active?.pet?.id;
+  const bestAvg = list.reduce((m, p) => Math.max(m, num(p?.average)), num(active?.average, DEFAULT_ROI.basePetAvg));
+  // 成长率越高，MUTANT 相对提升空间越小：按 117.5~197 区间折算，避免对 SECOND 主宠高估
+  const headroom = Math.max(0.15, Math.min(1.2, (197 - bestAvg) / (197 - DEFAULT_ROI.basePetAvg)));
+  const dynMutantGain = Math.round(DEFAULT_ROI.mutantGain * headroom);
+  const expRateM = Math.max(1, num(ctx.rates?.xpPerHour, 60_000_000) / 1e6);
+  const levelHours = 244.5 / expRateM; // 新宠 Lv1→51 约 244.5M 经验
   const eggs = (bagItems || []).filter(b => /珍兽蛋/.test(b.itemTmpl?.name || ''));
   const eggCount = eggs.reduce((a, b) => a + num(b.count, 1), 0);
   const freeSlots = Math.max(0, num(pets?.capacity, 6) - num(pets?.reserved) - list.length);
@@ -148,23 +157,27 @@ function oneOffActions(ctx) {
     out.push({
       id: 'breed_claim', name: '珍兽繁殖领取 + 孵化（未来资产）',
       deltaCP: 0,
-      futureCP: +(DEFAULT_ROI.mutantGain * DEFAULT_ROI.mutantChanceBreed).toFixed(0),
+      futureCP: +(dynMutantGain * DEFAULT_ROI.mutantChanceBreed).toFixed(0),
+      pipelineCpPerHour: +((dynMutantGain * DEFAULT_ROI.mutantChanceBreed) / (1 + levelHours)).toFixed(1),
+      pipelineHours: +(1 + levelHours).toFixed(2),
       levelingExp: 244_500_000,
       cost: { timeMin: 6, slots: 1 }, confidence: 'low',
       available: !due,
       waitSec: due ? Math.round(due / 1000) : 0,
       cpPerHour: 0,
-      note: `1h/次；新宠 Lv1，须再投约 244.5M 经验练到 Lv51 才兑现约 +${DEFAULT_ROI.mutantGain}（MUTANT 概率未实测）。免费选项，照领但不计入即时 CP/h`,
+      note: `1h/次；新宠 Lv1，须再投约 244.5M 经验练到 Lv51 才兑现约 +${dynMutantGain}（当前最高资质 ${bestAvg.toFixed(1)}%，MUTANT 概率未实测）。免费选项，照领但不计入即时 CP/h`,
     });
   }
 
   // 孵蛋
   if (eggCount > 0) {
-    const eggFuture = DEFAULT_ROI.eggCp * (1 - DEFAULT_ROI.mutantChanceEgg) + DEFAULT_ROI.mutantGain * DEFAULT_ROI.mutantChanceEgg;
+    const eggFuture = DEFAULT_ROI.eggCp * (1 - DEFAULT_ROI.mutantChanceEgg) + dynMutantGain * DEFAULT_ROI.mutantChanceEgg;
     out.push({
       id: 'hatch_egg', name: `孵珍兽蛋 ×${Math.min(eggCount, Math.max(1, freeSlots))}（未来资产）`,
       deltaCP: 0,
       futureCP: +eggFuture.toFixed(0),
+      pipelineCpPerHour: +(eggFuture / (1 + levelHours)).toFixed(1),
+      pipelineHours: +(1 + levelHours).toFixed(2),
       levelingExp: 244_500_000,
       cost: { timeMin: 1, slots: 1 }, confidence: 'low',
       available: eggCount > 0,
@@ -178,12 +191,17 @@ function oneOffActions(ctx) {
   const essences = (bagItems || []).filter(b => b.itemId === 5051 || /高级强化精华/.test(b.itemTmpl?.name || ''));
   const essenceCount = essences.reduce((a, b) => a + num(b.count, 1), 0);
   if (essenceCount > 0) {
+    let cands = [];
+    try { cands = enhanceCandidates(ctx); } catch { }
+    const best = cands[0];
+    const use = Math.min(essenceCount, 3);
+    const total = best ? cands.slice(0, use).reduce((a, x) => a + x.deltaCP, 0) : DEFAULT_ROI.essenceCp * use;
     out.push({
-      id: 'enhance_weapon', name: `强化武器 ×${Math.min(essenceCount, 3)}`,
-      deltaCP: DEFAULT_ROI.essenceCp * Math.min(essenceCount, 3),
-      cost: { essence: Math.min(essenceCount, 3), gold: 0, timeMin: 1 },
-      confidence: 'high', available: true,
-      note: `高级强化精华 ${essenceCount} 个；只乘基础属性，q4 武器每级约 +629~944`,
+      id: 'enhance_weapon', name: best ? `强化最优部位 [${best.name} +${best.from}→+${best.to}] ×${use}` : `强化武器 ×${use}`,
+      deltaCP: total,
+      cost: { essence: use, gold: 0, timeMin: 1 },
+      confidence: best ? 'high' : 'medium', available: true,
+      note: `高级强化精华 ${essenceCount} 个；computePower 精确差分：首步 ${best ? best.name + ' +' + best.deltaCP : '估算 +' + DEFAULT_ROI.essenceCp}，${use} 步累计 +${total}`,
     });
   }
 
@@ -273,6 +291,7 @@ export function buildPlan(ctx) {
   for (const a of once) {
     const p = priorityOf(a, { ...budget, slots: Math.max(1, budget.slots) });
     a.priority = a.available ? p.priority : 0;
+    if (a.available && a.pipelineCpPerHour) a.priority = a.pipelineCpPerHour;
     a.binding = p.binding;
   }
   once.sort((a, b) => (b.priority || 0) - (a.priority || 0) || (b.deltaCP || 0) - (a.deltaCP || 0));
@@ -282,6 +301,24 @@ export function buildPlan(ctx) {
   const stableCpPerHour = expCpPerHour + breedCpPerHour;
   const stockEV = once.filter(a => a.id === 'hatch_egg').reduce((s, a) => s + (a.stockEV || 0), 0);
 
+  // 把规划器的实测边际回写给 map-eval，避免选图仍用静态 24.2
+  const eggAct = once.find(a => a.id === 'hatch_egg');
+  const shadowPrices = updateShadowWeights({
+    xpCpPerMexp: bestExp?.cpPerExp || 0,
+    goldCpPer1000: 2,
+    essenceCp: 629,
+    eggEvCp: eggAct?.futureCP || 450,
+  });
+  const mapRecommendations = (ctx.drops || ctx.mapStats)
+    ? evalMaps({
+        drops: ctx.drops || {}, mapStats: ctx.mapStats || {},
+        equipSets: ctx.equipSets || [], equipped: ctx.equipments || [],
+        templates: ctx.templates || [], shadowPrices,
+        powerCtx: { role: ctx.role, equipments: ctx.equipments || [], gemInfo: ctx.gemInfo || [],
+          bagItems: ctx.bagItems || [], skills: ctx.skills || [], levelTmpls: ctx.levelTmpls || [] },
+      }).slice(0, 5)
+    : undefined;
+
   return {
     at: new Date().toISOString(),
     budget,
@@ -290,6 +327,8 @@ export function buildPlan(ctx) {
       const p = priorityOf(a, budget);
       return { ...a, cpPerHour: a.cpPerExp ? +(a.cpPerExp * (expRate / M)).toFixed(2) : null, priority: a.available ? p.priority : 0, binding: p.binding };
     }),
+    shadowPrices,
+    mapRecommendations,
     oneOffActions: once.map(a => ({ ...a, deltaCP: +(a.deltaCP || 0).toFixed(0) })),
     plan: [...once.filter(a => a.available), ...exp.map(a => ({ ...a, priority: priorityOf(a, budget).priority })).filter(a => a.available)]
       .sort((a, b) => (b.priority || 0) - (a.priority || 0)).slice(0, 5)
@@ -352,6 +391,9 @@ export async function collectCtx(engine, { live = false } = {}) {
   return {
     role, pets, bagItems: g.bagItems || [], levelTmpl, skills,
     tower, rates: st.rates,
+    drops: st.drops || null, mapStats: st.mapStats || null,
+    templates: g.allEquipTemplates || [], equipments: g.equipments || [],
+    equipSets: g.equipSets || [], gemInfo: g.gemInfo || [],
     smelt: role.smeltingItemId ? {
       itemId: role.smeltingItemId, progressPct: 100 * num(role.smeltingExp) / Math.max(1, num(role.smeltingTargetExp)),
     } : null,

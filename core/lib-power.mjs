@@ -40,18 +40,28 @@ export function computePower(data) {
       const ex = JSON.parse(it.extraStats || '{}');
       for (const [k, v] of Object.entries(ex)) if (typeof v === 'number') add(k, v);
     } catch { }
-    // 宝石
+    // 宝石：subType 1..18 是客户端 GEM 属性表（BB）
     try {
       const slots = JSON.parse(it.gemSlots || '[]');
       const gemMap = {};
-      for (const g of (data.gemInfo || [])) gemMap[g.id] = g;
+      for (const g of (data.gemInfo || [])) gemMap[g.itemId ?? g.id] = g;
+      // ENTER_GAME 的 bagItems 里带 itemTmpl.subType/value，用它补全已镶嵌宝石
+      if (!data.gemInfo?.length) {
+        for (const b of (data.bagItems || [])) {
+          const id = Number(b.itemId);
+          if (id >= 4000 && id < 4100 && b.itemTmpl) gemMap[id] = { id, subType: b.itemTmpl.subType, value: b.itemTmpl.value };
+        }
+      }
+      const attrMap = {
+        1: 'hp', 2: 'mp', 3: 'ext_atk', 4: 'int_atk', 5: 'ext_def', 6: 'int_def',
+        7: 'precision', 8: 'avoidance', 9: 'crit_rate', 10: 'crit_def',
+        11: 'ice_atk', 12: 'fire_atk', 13: 'poison_atk', 14: 'holy_atk',
+        15: 'ice_def', 16: 'fire_def', 17: 'poison_def', 18: 'holy_def',
+      };
       for (const gid of slots) {
         const g = gemMap[gid];
-        if (g && typeof g.value === 'number') {
-          const attrMap = { 0: 'extAtk', 1: 'intAtk', 2: 'extDef', 3: 'intDef' };
-          const key = attrMap[g.subType];
-          if (key) x[key] += g.value;
-        }
+        const key = g && attrMap[g.subType];
+        if (key && typeof g.value === 'number') add(key, g.value);
       }
     } catch { }
   }
@@ -64,8 +74,11 @@ export function computePower(data) {
         if (eff.type !== 'PASSIVE_STAT') continue;
         const c = canon(eff.attr);
         if (!c || x[c] === undefined) continue;
-        if (eff.calc === 'MULTIPLY') x[c] = Math.ceil(x[c] * (1 + eff.base));
-        else if (eff.calc === 'PLUS') x[c] += eff.base;
+        const lv = Math.max(1, Number(s.currentLevel) || 1);
+        const grow = Number(eff.grow) || 0;
+        const val = eff.calc === 'PLUS' ? Number(eff.base) + grow * (lv - 1) : Number(eff.base);
+        if (eff.calc === 'MULTIPLY') x[c] = Math.ceil(x[c] * (1 + val));
+        else if (eff.calc === 'PLUS') x[c] += val;
       }
     } catch { }
   }

@@ -277,7 +277,7 @@ export class CombatDaemon {
       stopWhen: contract.stopWhen || {},
       maxGoldSpend: Number(contract.maxGoldSpend ?? 0) || 0,
       maxMinutes: Number(contract.maxMinutes ?? 30) || 30,
-      maxDeaths: Number(contract.maxDeaths ?? 3) || 3,
+      maxDeaths: Number.isFinite(Number(contract.maxDeaths)) ? Number(contract.maxDeaths) : 3,
       createdAt: new Date().toISOString(),
     };
     if (!Number.isFinite(c.mapId)) throw new Error('contract.mapId 无效');
@@ -285,6 +285,11 @@ export class CombatDaemon {
     this._contractStart = Date.now();
     this._contractGold0 = this.store?.st?.role?.money ?? 0;
     this._contractDeaths0 = this.stats.deaths;
+    if (Number(c.mapId) !== Number(this.config.mapId)) {
+      this.log(`[contract] 地图切换 ${this.config.mapId} → ${c.mapId}，中断当前批`);
+      try { this._abort?.('map-changed'); } catch { }
+      try { if (!isHalted()) this.ws.send('COMBAT_STOP'); } catch { }
+    }
     this.config.mapId = c.mapId;
     if (c.monsterId != null) this.config.monsterId = c.monsterId;
     if (this._contractTimer) clearInterval(this._contractTimer);
@@ -413,8 +418,15 @@ export class CombatDaemon {
   async whenIdle(timeoutMs = 15_000) {
     if (!this._busy) return true;
     return new Promise(resolve => {
-      const t = setTimeout(() => resolve(false), timeoutMs);
-      this._idleWaiters.push(() => { clearTimeout(t); resolve(true); });
+      let done = false;
+      const onIdle = () => { if (done) return; done = true; clearTimeout(t); resolve(true); };
+      const t = setTimeout(() => {
+        if (done) return; done = true;
+        const idx = this._idleWaiters.indexOf(onIdle);
+        if (idx >= 0) this._idleWaiters.splice(idx, 1);
+        resolve(false);
+      }, timeoutMs);
+      this._idleWaiters.push(onIdle);
     });
   }
 
@@ -490,12 +502,16 @@ export class CombatDaemon {
       if (this._paused || this._stopped || isHalted()) return;
 
       const ac = new AbortController();
-      const result = await new Promise(resolve => {
-        this._abort = why => { try { ac.abort(); } catch { } resolve({ why: why || 'aborted', kills: 0, started: false, secs: 0 }); };
-        fightInMap(this.ws, this.store, mapId, { mode: 'batch', label: 'batch', signal: ac.signal })
-          .then(resolve, e => resolve({ why: '异常', error: e?.message }));
-      });
-      this._abort = null;
+      let abortWhy = null;
+      this._abort = why => { abortWhy = why || 'aborted'; try { ac.abort(abortWhy); } catch { } };
+      let result;
+      try {
+        result = await fightInMap(this.ws, this.store, mapId, { mode: 'batch', label: 'batch', signal: ac.signal })
+          .catch(e => ({ why: '异常', error: e?.message }));
+      } finally {
+        this._abort = null;
+      }
+      if (abortWhy && result && result.why !== '死亡') result.why = abortWhy;
 
       this.stats.batches++;
       this.stats.lastBatchAt = new Date().toISOString();
@@ -508,6 +524,7 @@ export class CombatDaemon {
         if (!isHalted()) {
           try { this.ws.send('COMBAT_STOP'); } catch { }
           await sleep(500);
+          if (this._paused || this._stopped || isHalted()) return;
           await goMap(this.ws, this.store, mapId);
         }
       }

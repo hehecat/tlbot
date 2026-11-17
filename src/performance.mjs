@@ -2,7 +2,7 @@
 // 不依赖服务器战力；exp/gold/kills 用相邻采样的正向增量（花费导致的负增量忽略）。
 import fs from 'node:fs';
 
-export function createPerformance({ maxPoints = 720 } = {}) {
+export function createPerformance({ maxPoints = 2880 } = {}) {
   const points = [];
   let lastSave = 0;
 
@@ -12,7 +12,7 @@ export function createPerformance({ maxPoints = 720 } = {}) {
     return ids.join(',') || 'none';
   }
 
-  function sample(g, equipSource) {
+  function sample(g, equipSource, daemon) {
     if (!g) return null;
     const role = g.me || g.role || {};
     const combat = g.combat || {};
@@ -23,7 +23,8 @@ export function createPerformance({ maxPoints = 720 } = {}) {
       gold: Number(role.gold ?? role.money) || 0,
       kills: Number(combat.defeated) || 0,
       cp: Number(role.power ?? role.combatPower) || 0,
-      mapId: combat.mapId ?? role.mapId ?? null,
+      mapId: role.mapId ?? combat.mapId ?? null,
+      deaths: Number(daemon?.deaths) || 0,
       loadout: loadoutOf(g, equipSource),
     };
     const prev = points[points.length - 1];
@@ -43,19 +44,23 @@ export function createPerformance({ maxPoints = 720 } = {}) {
       const dtMin = (b.at - a.at) / 60_000;
       if (dtH <= 0 || dtH > 0.1) continue; // 间隔 >6min 视为断线，跳过
       const key = b.loadout;
-      const g0 = groups.get(key) || { loadout: key, cp: b.cp, minutes: 0, exp: 0, gold: 0, kills: 0, samples: 0, mapIds: new Set() };
+      const g0 = groups.get(key) || { loadout: key, cp: b.cp, minutes: 0, exp: 0, gold: 0, goldNet: 0, kills: 0, deaths: 0, samples: 0, mapIds: new Set() };
       g0.cp = b.cp; g0.minutes += dtMin; g0.samples++;
       g0.exp += Math.max(0, b.exp - a.exp);
       g0.gold += Math.max(0, b.gold - a.gold);
+      g0.goldNet += (b.gold - a.gold);
       if (b.kills >= a.kills) g0.kills += b.kills - a.kills;
+      if (b.deaths >= a.deaths) g0.deaths += b.deaths - a.deaths;
       if (b.mapId != null) g0.mapIds.add(b.mapId);
       groups.set(key, g0);
     }
     const rows = [...groups.values()].map(x => ({
-      loadout: x.loadout, cp: x.cp, minutes: +x.minutes.toFixed(1), samples: x.samples,
+      loadout: x.loadout, cp: x.cp, minutes: +x.minutes.toFixed(1), samples: x.samples, deaths: x.deaths,
       mapIds: [...x.mapIds],
       xpPerHour: x.minutes > 0 ? Math.round(x.exp / (x.minutes / 60)) : 0,
       goldPerHour: x.minutes > 0 ? Math.round(x.gold / (x.minutes / 60)) : 0,
+      goldNet: x.goldNet,
+      goldNetPerHour: x.minutes > 0 ? Math.round(x.goldNet / (x.minutes / 60)) : 0,
       killsPerMin: x.minutes > 0 ? +(x.kills / x.minutes).toFixed(1) : 0,
     })).sort((a, b) => b.minutes - a.minutes);
     return { at: new Date().toISOString(), windowMinutes: minutes, points: ps.length, rows };

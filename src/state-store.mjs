@@ -24,7 +24,12 @@ const UNKNOWN_F = path.join(DATA, 'unknown_packets.jsonl');
 const DROPS_F = path.join(DATA, 'live_drops.json');
 const MAPS_F = path.join(DATA, 'maps.json');
 const CHAT_F = path.join(DATA, 'chat-log.jsonl');
+let dropsTimer = null;
+let chatWrites = 0;
 const MAPSTATS_F = path.join(DATA, 'map-stats.json');
+const PROTO_F = path.join(DATA, 'protocol-schema.json');
+const PROTO_CH_F = path.join(DATA, 'protocol-changes.jsonl');
+const PROTO_TYPES = /_RESPONSE$|^COMBAT_STATE$|^COMBAT_REWARD$|^CHAT_BROADCAST$|^PET_RESPONSE$|^NOTICE$|^ONLINE_LOTTERY_STATE$|^ROLE_SYNC$|^BAG_SYNC$/;
 
 const MAX_UNKNOWN_PER_CMD = 5;
 const RATE_WINDOW = 40;           // 保留最近 40 个采样点
@@ -86,6 +91,48 @@ function loadDrops() {
   try { return JSON.parse(fs.readFileSync(DROPS_F, 'utf8')); } catch { return { updatedAt: null, byMap: {} }; }
 }
 
+// ── 协议 schema 指纹：已知回包的结构变化（新字段/新命令）自动留痕 ──
+let protoCache = null;
+const protoSeen = {};
+function loadProto() {
+  if (protoCache) return protoCache;
+  try { protoCache = JSON.parse(fs.readFileSync(PROTO_F, 'utf8')); } catch { protoCache = { types: {} }; }
+  return protoCache;
+}
+function schemaShape(v, depth = 0) {
+  if (v == null) return { t: 'null' };
+  if (Array.isArray(v)) return { t: 'array', item: v.length ? schemaShape(v[0], depth + 1) : { t: 'empty' } };
+  if (typeof v === 'object') {
+    if (depth >= 2) return { t: 'object' };
+    const keys = {};
+    for (const k of Object.keys(v).sort().slice(0, 80)) keys[k] = schemaShape(v[k], depth + 1);
+    return { t: 'object', keys };
+  }
+  return { t: typeof v };
+}
+function noteProtocol(t, data) {
+  if (!data || typeof data !== 'object' || !PROTO_TYPES.test(t)) return;
+  const now = Date.now();
+  if (protoSeen[t] && now - protoSeen[t] < 60_000) return; // 同类 1 分钟最多算一次
+  protoSeen[t] = now;
+  const p = loadProto();
+  const sig = JSON.stringify(schemaShape(data));
+  const prev = p.types[t];
+  if (prev?.sig === sig) return;
+  const top = Object.keys(data).sort().slice(0, 40);
+  p.types[t] = { sig, at: new Date().toISOString(), top, keys: Object.keys(data).length };
+  try { fs.writeFileSync(PROTO_F, JSON.stringify(p, null, 1)); } catch { }
+  const rec = {
+    at: new Date().toISOString(), type: t,
+    kind: prev ? 'schema_changed' : 'schema_new',
+    beforeTop: prev?.top || [], afterTop: top,
+    addedTop: top.filter(k => !(prev?.top || []).includes(k)),
+    removedTop: (prev?.top || []).filter(k => !top.includes(k)),
+  };
+  try { fs.appendFileSync(PROTO_CH_F, JSON.stringify(rec) + '\n'); } catch { }
+  return rec;
+}
+
 export function initStore(ws, opts = {}) {
   const maxUnknown = opts.maxUnknownPerCmd ?? MAX_UNKNOWN_PER_CMD;
   ensureData();
@@ -107,6 +154,7 @@ export function initStore(ws, opts = {}) {
     errors: [],          // 最近 20 条错误
     samples: [],         // [{t, exp, money, level, power}]
     chat: [],            // 最近世界/门派聊天 [{at,channel,sender,sect,content,item}]
+    protocolChanges: [], // 协议 schema 变化（最近 50 条）
     drops: loadDrops(),
     mapStats: loadMapStats(), // 每图经验累计：{[mapId]:{exp,samples,firstAt,lastAt}}
   };
@@ -146,10 +194,31 @@ export function initStore(ws, opts = {}) {
       e.lastAt = new Date().toISOString();
     }
     st.drops.updatedAt = new Date().toISOString();
-    try { fs.writeFileSync(DROPS_F, JSON.stringify(st.drops, null, 1)); } catch { }
+    if (dropsTimer) return;
+    dropsTimer = setTimeout(() => {
+      dropsTimer = null;
+      try { fs.writeFileSync(DROPS_F, JSON.stringify(st.drops, null, 1)); } catch { }
+    }, 2000);
+    dropsTimer.unref?.();
   };
 
   let lastMapSave = 0;
+  let lastMapVal = null, lastMapAt = 0;
+  // 独立地图采样：runtime 每 60s 调一次；按 50s 节流，避免重复计数。
+  const recordMapSample = (exp, mapIdArg) => {
+    const mapId = String(mapIdArg ?? st.role?.mapId ?? st.combat.mapId ?? 'unknown');
+    const now = Date.now();
+    if (mapId === 'unknown' || exp == null) { lastMapVal = exp; lastMapAt = now; return; }
+    if (now - lastMapAt < 50_000) return;
+    const dExp = lastMapVal != null && exp >= lastMapVal ? exp - lastMapVal : 0;
+    lastMapVal = exp; lastMapAt = now;
+    if (dExp <= 0) return;
+    const m = (st.mapStats[mapId] ||= { exp: 0, samples: 0, firstAt: new Date().toISOString(), lastAt: null });
+    m.exp += dExp; m.samples += 1; m.lastAt = new Date().toISOString();
+    (m.recent ||= []).push({ at: now, exp: dExp });
+    if (m.recent.length > 240) m.recent.shift();
+    if (now - lastMapSave > 30_000) { lastMapSave = now; try { fs.writeFileSync(MAPSTATS_F, JSON.stringify(st.mapStats, null, 1)); } catch { } }
+  };
   const sample = role => {
     if (!role) return;
     const prev = st.samples[st.samples.length - 1];
@@ -161,15 +230,7 @@ export function initStore(ws, opts = {}) {
       power: role.combatPower ?? null,
     });
     if (st.samples.length > RATE_WINDOW) st.samples.shift();
-    // 按地图累计经验（用于 /maps/ev：哪张图 XP/金币收益高）
-    const mapId = String(st.role?.mapId ?? st.combat.mapId ?? 'unknown');
-    const dExp = prev && prev.exp != null && role.currentExp != null ? role.currentExp - prev.exp : 0;
-    if (dExp > 0 && mapId !== 'unknown') {
-      const m = (st.mapStats[mapId] ||= { exp: 0, samples: 0, firstAt: new Date().toISOString(), lastAt: null });
-      m.exp += dExp; m.samples += 1; m.lastAt = new Date().toISOString();
-      const now = Date.now();
-      if (now - lastMapSave > 30_000) { lastMapSave = now; try { fs.writeFileSync(MAPSTATS_F, JSON.stringify(st.mapStats, null, 1)); } catch { } }
-    }
+    recordMapSample(role.currentExp, st.role?.mapId ?? st.combat.mapId);
   };
 
   const handle = d => {
@@ -182,6 +243,11 @@ export function initStore(ws, opts = {}) {
     if (t === 'ERROR' || t === 'COMBAT_ERROR') pushError(d.message);
 
     const data = d.data || {};
+    const protoRec = noteProtocol(t, data);
+    if (protoRec) {
+      st.protocolChanges.push(protoRec);
+      if (st.protocolChanges.length > 50) st.protocolChanges.shift();
+    }
     const role = data.role || data.roleInfo?.role;
     if (role) {
       st.role = role; sample(role);
@@ -221,6 +287,7 @@ export function initStore(ws, opts = {}) {
         list: (s.pets || []).map(p => ({
           id: p.pet?.id, name: p.speciesName || p.pet?.name, form: p.pet?.form,
           level: p.pet?.level, average: p.average, quality: p.quality,
+          exp: p.pet?.exp, nextExp: p.nextExp ?? p.pet?.nextExp, status: p.status,
           cp: p.combatPower, active: s.activePetId === p.pet?.id,
         })),
       };
@@ -240,7 +307,10 @@ export function initStore(ws, opts = {}) {
         };
         st.chat.push(rec);
         if (st.chat.length > 300) st.chat.shift();
-        try { fs.appendFileSync(CHAT_F, JSON.stringify(rec) + '\n'); } catch { }
+        try {
+          fs.appendFileSync(CHAT_F, JSON.stringify(rec) + '\n');
+          if (++chatWrites % 200 === 0 && fs.statSync(CHAT_F).size > 5 * 1024 * 1024) fs.renameSync(CHAT_F, CHAT_F + '.1');
+        } catch { }
       }
     }
 
@@ -312,6 +382,7 @@ export function initStore(ws, opts = {}) {
         gold: r.money ?? null,
         yuanbao: r.yuanbao ?? 0,
         power: r.combatPower ?? null,
+        mapId: r.mapId ?? st.combat.mapId ?? null,
         equips: eqs.length,
         bagCount: (st.bagItems || []).length,
         warehouseCount: (st.warehouse || []).length,
@@ -330,6 +401,7 @@ export function initStore(ws, opts = {}) {
         unknownByType: st.unknownByType,
         lastPacketAt: st.lastPacketAt,
         recentErrors: st.errors.slice(-5),
+        protocolChanges: st.protocolChanges.slice(-3),
         // Watchdog 三条件之一：COMBAT_STATE 静默超 30 分钟
         stalled: silentMs != null && silentMs > 30 * 60_000,
       },
@@ -350,7 +422,7 @@ export function initStore(ws, opts = {}) {
   return {
     st,
     ingest,
-    getSnapshot,
+    getSnapshot, recordMapSample,
     get mapStats() { return st.mapStats; },
     rates,
     on: (type, fn) => {

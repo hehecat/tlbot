@@ -5,6 +5,7 @@
 //   3) 仓库里比已穿明显更好的，列入 upgrade（取出 → 官方评分 → 换装）
 //   4) 其余列入 sellBag / sellWarehouse；堆叠物不动
 import { itemValue } from '../core/lib-value.mjs';
+import { topGearPerSlot, protectSecondGear } from '../core/redlines.mjs';
 
 const isGear = x => x && x.equipTmpl && Number(x.equipTmpl.slotType) >= 1;
 
@@ -65,8 +66,10 @@ export function buildInventoryPlan({
       if (keep.size >= keepN) break;
       keep.add(String(e.x.id));
     }
-    // 同槽前二保护（即使数量少于 keepN）
-    for (const e of sorted.slice(0, 2)) keep.add(String(e.x.id));
+    // 同槽保护：第 1 永远保留；第 2 仅高价值（q>=3/套装/绑定）强制保留
+    const perSlot = topGearPerSlot();
+    if (perSlot >= 1 && sorted[0]) keep.add(String(sorted[0].x.id));
+    if (perSlot >= 2 && sorted[1] && protectSecondGear(sorted[1].x)) keep.add(String(sorted[1].x.id));
 
     const keepItems = [];
     const dropItems = [];

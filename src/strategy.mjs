@@ -9,6 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { goMap, isHalted } from './combat-daemon.mjs';
 import { itemValue, suggestPrice } from '../core/lib-value.mjs';
+import { topGearIds } from '../core/redlines.mjs';
 
 const SUZHOU = 5;
 const EGG_RE = /珍兽蛋/;
@@ -76,7 +77,7 @@ export function createStrategy(ws, store, { log = () => { }, stage = 0, allowWri
         ps = (await petState()) || ps;
       }
     }
-    if (ps.reserved > 0 || (ps.pets || []).some(p => p.pet.status === 'WAITING')) {
+    if (ps.reserved > 0 || (ps.pets || []).some(p => p.pet.status === 'WAITING' || p.pet.status === 'BREEDING')) {
       await backToDefault();
       return { skipped: true, reason: '已有寄托', reserved: ps.reserved };
     }
@@ -110,7 +111,7 @@ export function createStrategy(ws, store, { log = () => { }, stage = 0, allowWri
     if (ok) { st.depositAt = Date.now(); st.depositPetId = pick.pet.id; save(); }
     note(`寄托 ${pick.speciesName} ${pick.pet.sex} Lv${pick.pet.level} avg${pick.average}% → ${ok ? '成功' : (r?.message || '失败')}`);
     const after = await petState();
-    await backToDefault();
+    await backToDefault(map0);
     return { ok, message: r?.message, released, summoned, pet: { id: pick.pet.id, name: pick.speciesName, sex: pick.pet.sex, level: pick.pet.level, average: pick.average }, reserved: after?.reserved ?? null, map0 };
   }
 
@@ -182,6 +183,7 @@ export function createStrategy(ws, store, { log = () => { }, stage = 0, allowWri
         if (!rel?.success) break;
         out.released++;
         await sleep(500);
+        i--; // 放生不算一次孵化配额
         continue;
       }
       const idsBefore = new Set(((await petState())?.pets || []).map(p => p.pet.id));
@@ -215,13 +217,8 @@ export function createStrategy(ws, store, { log = () => { }, stage = 0, allowWri
     const all = (g0.equipments || []).filter(x => x?.equipTmpl);
     const iv = x => itemValue(x, { gemInfo: g0.gemInfo });
     const equipped = all.filter(x => x.isEquipped);
-    // 同槽前 2 强保护（以全部装备计，含已穿戴）
-    const grouped = {};
-    for (const e of all) { const sl = e.equipTmpl?.slotType; if (sl != null) (grouped[sl] ||= []).push(e); }
-    const topIds = new Set();
-    for (const arr of Object.values(grouped)) {
-      arr.slice().sort((a, b) => iv(b) - iv(a)).slice(0, 2).forEach(e => topIds.add(e.id));
-    }
+    // 同槽保护（统一策略：第1名+已穿必保；第2名仅高价值必保）
+    const topIds = topGearIds(all);
     // 套装模板保护（equipSets.equipTmplIds 是 JSON 字符串）
     const setTmpl = new Set();
     for (const st0 of (g0.equipSets || [])) {
@@ -264,9 +261,11 @@ export function createStrategy(ws, store, { log = () => { }, stage = 0, allowWri
     });
 
     if (dryRun) return { dryRun: true, candidates: out };
+    if (!canWrite()) return { skipped: true, reason: 'stage/halt' };
 
     // 在售位检查（账号上限 25；CONSIGNMENT_RECORD_LIST 是历史成交，不能当在售列表，直接用 25 上限）
     let slotsLeft = Math.max(0, 25);
+    try { slotsLeft = Math.max(0, 25 - (await myListings()).length); } catch { }
     const results = [];
     for (const x of out) {
       if (slotsLeft <= 0) { results.push({ ...x, listed: false, why: '挂售位满' }); continue; }
@@ -287,6 +286,7 @@ export function createStrategy(ws, store, { log = () => { }, stage = 0, allowWri
   async function myListings() {
     const g = await refresh();
     const me = g?.role?.id;
+    if (me == null) return [];
     const out = [];
     for (let page = 1; page <= 60; page++) {
       let raw = [];
@@ -308,7 +308,7 @@ export function createStrategy(ws, store, { log = () => { }, stage = 0, allowWri
     const mine = await myListings();
     if (!mine.length) return { found: 0, message: '没有自己的在售挂单' };
     const plan = mine.slice(0, max).map(x => ({
-      id: x.id, name: x.equipTmpl?.name || x.itemName, price: Number(x.price) || 0,
+      id: x.id, tmplId: Number(x.tmplId), name: x.equipTmpl?.name || x.itemName, price: Number(x.price) || 0,
       newPrice: Math.max(100, Math.floor((Number(x.price) || 0) * factor)),
       q: Number(x.quality || 0), slot: x.equipTmpl?.slotType,
     }));
@@ -319,10 +319,122 @@ export function createStrategy(ws, store, { log = () => { }, stage = 0, allowWri
       cancelled.push({ id: x.id, ok: !!r?.success, message: r?.message });
       await sleep(250);
     }
-    const relisted = await sellUnusedGear({ max, dryRun: false, factor });
-    st.clearance = { at: Date.now(), factor, repricedAt: 0, listed: plan.length };
+    const g2 = await refresh();
+    const relistResults = [];
+    for (let i = 0; i < plan.length; i++) {
+      const p = plan[i];
+      if (!cancelled[i]?.ok) { relistResults.push({ id: p.id, name: p.name, listed: false, why: '下架失败跳过' }); continue; }
+      const item = (g2?.equipments || []).find(it => Number(it.equipTmpl?.id) === Number(p.tmplId) && !it.isEquipped);
+      if (!item) { relistResults.push({ id: p.id, name: p.name, newPrice: p.newPrice, listed: false, why: '背包找不到' }); continue; }
+      const r2 = await ws.req('CONSIGNMENT_CREATE', { roleEquipId: item.id, count: 1, price: p.newPrice, currency: 1, targetNickname: null }, { ms: 8000 });
+      relistResults.push({ id: p.id, name: p.name, newPrice: p.newPrice, listed: !!r2?.success, why: r2?.success ? null : (r2?.message || '失败') });
+      await sleep(300);
+    }
+    st.clearance = { at: Date.now(), factor, repricedAt: 0, listed: relistResults.filter(x => x.listed).length };
     save();
-    return { dryRun: false, found: plan.length, cancelled, relisted };
+    return { dryRun: false, found: plan.length, cancelled, relisted: relistResults };
+  }
+
+  // ── P3：商城指定交易（默认 dry-run；targetNickname 定向，未实测）──
+  async function designatedPreview({ roleEquipId, targetNickname, price } = {}) {
+    const g = await refresh();
+    const it = (g?.equipments || []).find(e => String(e.id) === String(roleEquipId));
+    if (!it) return { ok: false, error: '找不到装备' };
+    if (it.isEquipped) return { ok: false, error: '已穿戴装备不能上架' };
+    if (it.isBound === 1 || it.isBound === true) return { ok: false, error: '绑定装备不能交易' };
+    const p = Math.max(100, Math.floor(Number(price || suggestPrice(it, { gemInfo: g.gemInfo }) || 100)));
+    return {
+      ok: true, roleEquipId: it.id, name: it.equipTmpl?.name, tmplId: it.equipTmpl?.id,
+      q: Number(it.quality ?? 1), iv: Math.round(itemValue(it, { gemInfo: g.gemInfo })),
+      targetNickname: String(targetNickname || '').trim() || null, price: p,
+      note: 'targetNickname 定向支持未实测；create 需 confirm:true',
+    };
+  }
+
+  async function designatedCreate({ roleEquipId, targetNickname, price, dryRun = true, confirm = false } = {}) {
+    if (!canWrite()) return { skipped: true, reason: 'stage/halt' };
+    const pv = await designatedPreview({ roleEquipId, targetNickname, price });
+    if (!pv.ok || dryRun) return { dryRun: true, preview: pv };
+    if (!pv.targetNickname) return { ok: false, error: '缺少 targetNickname' };
+    if (!confirm) return { ok: false, error: '需要 confirm:true 才执行指定交易上架' };
+    const r = await ws.req('CONSIGNMENT_CREATE', {
+      roleEquipId: pv.roleEquipId, count: 1, price: pv.price, currency: 1, targetNickname: pv.targetNickname,
+    }, { ms: 8000 });
+    note(`P3 指定交易上架 ${pv.name} ${pv.price}金 -> ${pv.targetNickname}`);
+    return { ok: !!r?.success, message: r?.message, preview: pv };
+  }
+
+  // 通用上架（公开挂单，targetNickname=null）；用于受控测试与人工指定
+  async function listItem({ roleEquipId, price, currency = 1, targetNickname = null } = {}) {
+    if (!canWrite()) return { skipped: true, reason: 'stage/halt' };
+    const g = await refresh();
+    const it = (g?.equipments || []).find(e => String(e.id) === String(roleEquipId));
+    if (!it) return { ok: false, error: '找不到装备' };
+    if (it.isEquipped) return { ok: false, error: '已穿戴装备不能上架' };
+    if (it.isBound === 1 || it.isBound === true) return { ok: false, error: '绑定装备不能交易' };
+    const p = Math.max(100, Math.floor(Number(price || suggestPrice(it, { gemInfo: g.gemInfo }) || 100)));
+    const target = String(targetNickname || '').trim() || null;
+    const r = await ws.req('CONSIGNMENT_CREATE', {
+      roleEquipId: it.id, count: 1, price: p, currency: Number(currency) || 1, targetNickname: target,
+    }, { ms: 8000 });
+    note(`上架 ${it.equipTmpl?.name} ${p}金${target ? ` -> ${target}` : '（公开）'}`);
+    return { ok: !!r?.success, message: r?.message, roleEquipId: it.id, name: it.equipTmpl?.name, price: p, targetNickname: target };
+  }
+
+  async function countBuyRecords() {
+    try {
+      const rr = await ws.req('CONSIGNMENT_RECORD_LIST', { page: 1, size: 50, type: 'BUY' }, { ms: 8000 });
+      const arr = rr?.data?.records || rr?.data?.items || (Array.isArray(rr?.data) ? rr.data : []);
+      return arr.length;
+    } catch { return null; }
+  }
+
+  async function designatedBuy({ consignmentId, dryRun = true } = {}) {
+    if (!canWrite()) return { skipped: true, reason: 'stage/halt' };
+    if (!consignmentId) return { ok: false, error: '缺少 consignmentId' };
+    if (dryRun) return { dryRun: true, consignmentId };
+    const before = await countBuyRecords();
+    let r = null, err = null;
+    try { r = await ws.req('CONSIGNMENT_BUY', { consignmentId }, { ms: 8000 }); }
+    catch (e) { err = e; }
+    if (r?.success) {
+      try { await refresh(); } catch { }
+      return { ok: true, message: r?.message, data: r?.data };
+    }
+    // 回包丢失/连接断开时，服务端可能已经成交：查 BUY 记录做幂等确认
+    await sleep(1500);
+    try { await refresh(); } catch { }
+    const after = await countBuyRecords();
+    if (before != null && after != null && after > before) {
+      return { ok: true, verified: true, message: '成交记录已增加，确认购买成功（原回包丢失）', data: r?.data, error: err?.message };
+    }
+    return { ok: false, message: r?.message || err?.message || '结果未知，未查到成交记录', data: r?.data };
+  }
+
+  // ── P1：手动降价过期挂单（默认 dry-run；不自动定时执行）──
+  async function repriceListings({ factor = 0.85, dryRun = true, max = 10 } = {}) {
+    if (!canWrite()) return { skipped: true, reason: 'stage/halt' };
+    const mine = await myListings();
+    if (!mine.length) return { found: 0, message: '没有自己的在售挂单' };
+    const plan = mine.slice(0, max).map(x => ({
+      id: x.id, tmplId: Number(x.equipTmpl?.id ?? x.tmplId ?? x.itemId ?? 0) || null, name: x.equipTmpl?.name || x.itemName,
+      price: Number(x.price) || 0, newPrice: Math.max(100, Math.floor((Number(x.price) || 0) * factor)),
+    }));
+    if (dryRun) return { dryRun: true, found: plan.length, plan };
+    const results = [];
+    for (const x of plan) {
+      const c = await ws.req('CONSIGNMENT_CANCEL', { consignmentId: x.id }, { ms: 7000 });
+      if (!c?.success) { results.push({ ...x, cancelled: false, message: c?.message }); continue; }
+      await sleep(400);
+      const g = await refresh();
+      const it = (g?.equipments || []).find(e => !e.isEquipped && ((x.tmplId && Number(e?.equipTmpl?.id) === x.tmplId) || (!x.tmplId && (e?.equipTmpl?.name || '') === x.name)));
+      if (!it) { results.push({ ...x, cancelled: true, relisted: false, message: '背包找不到该装备' }); continue; }
+      const r = await ws.req('CONSIGNMENT_CREATE', { roleEquipId: it.id, count: 1, price: x.newPrice, currency: 1, targetNickname: null }, { ms: 8000 });
+      results.push({ ...x, cancelled: true, relisted: !!r?.success, newEquipId: it.id, message: r?.message });
+      await sleep(300);
+    }
+    note(`P1 降价重挂 ${results.filter(r => r.relisted).length}/${results.length}`);
+    return { dryRun: false, results };
   }
 
   // ── 喂出战珍兽：记录喂前/喂后真实战力，用于标定边际 ΔCP ──────
@@ -400,5 +512,5 @@ export function createStrategy(ws, store, { log = () => { }, stage = 0, allowWri
     return { ok: !!r?.success, message: r?.message, activePetId: after?.activePetId ?? null };
   }
 
-  return { breedDeposit, breedClaim, hatchEggs, feedPet, sellUnusedGear, clearanceListings, clearanceFollowup, myListings, wushuang, summonPet, refresh, petState, get state() { return st; } };
+  return { breedDeposit, breedClaim, hatchEggs, feedPet, sellUnusedGear, clearanceListings, clearanceFollowup, myListings, repriceListings, listItem, designatedPreview, designatedCreate, designatedBuy, wushuang, summonPet, refresh, petState, get state() { return st; } };
 }

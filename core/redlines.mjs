@@ -6,7 +6,8 @@
 //   3. 不确定的输入（缺 item / 缺 owned 列表）→ 宁可拒绝，不可放行
 //
 // 六条红线（从 GOAL.md 迁移）：
-//   R1 同槽战力前 2 强 → 永不卖 / 永不分解 / 永不放生
+//   R1 同槽第 1 强 + 已穿 → 永不卖；第 2 强仅 q>=3/套装/绑定受保护
+//      （TL_TOP_GEAR_PER_SLOT=0/1/2 可调，默认 2）
 //   R2 珍兽最高资质个体 → 永不放生
 //   R3 单次消耗元宝 > 0 → 必须先 dry-run 报告，等确认
 //   R4 单次金币消耗 > 当前总额 30% → 拒绝
@@ -16,6 +17,8 @@
 // 禁忌（继承 AGENTS.md / PRD §9）：
 //   禁 pgrep/pkill/kill/launchctl；停进程用 .halt；不得自建第二条 WS 连接。
 
+import fs from 'node:fs';
+import path from 'node:path';
 import { itemValue } from './lib-value.mjs';
 
 export const REDLINE_VERSION = '1.0.0';
@@ -34,7 +37,22 @@ const deny = (code, msg, details) => { throw new RedlineError(code, msg, details
 // ── R1：同槽战力前 N 强 ──────────────────────────────────────
 // owned: 服务端 g.equipments（含 isEquipped / equipTmpl.slotType）
 // 返回 Set<itemId>
-export function topGearIds(owned, { perSlot = 2 } = {}) {
+export function topGearPerSlot() {
+  const n = Number(process.env.TL_TOP_GEAR_PER_SLOT);
+  if (!Number.isFinite(n)) return 2;
+  return Math.max(0, Math.min(2, Math.trunc(n)));
+}
+
+// 第 2 名只有在“高价值”时才强制保护：q>=3 / 套装 / 绑定
+export function protectSecondGear(e) {
+  if (!e) return false;
+  const q = Number(e.quality ?? e.equipTmpl?.qualityBase ?? 1);
+  const suit = Number(e.equipTmpl?.suitType ?? e.suitType ?? 0);
+  const bound = e.isBound === 1 || e.isBound === true;
+  return q >= 3 || suit > 0 || bound;
+}
+
+export function topGearIds(owned, { perSlot = topGearPerSlot() } = {}) {
   const bySlot = new Map();
   for (const e of owned || []) {
     const slot = e?.equipTmpl?.slotType;
@@ -44,18 +62,19 @@ export function topGearIds(owned, { perSlot = 2 } = {}) {
   }
   const out = new Set();
   for (const arr of bySlot.values()) {
-    arr
-      .slice()
-      .sort((a, b) => itemValue(b) - itemValue(a))
-      .slice(0, perSlot)
-      .forEach(e => out.add(e.id));
+    const sorted = arr.slice().sort((a, b) => itemValue(b) - itemValue(a));
+    sorted.forEach((e, i) => {
+      if (e?.isEquipped) out.add(e.id);
+      if (perSlot >= 1 && i === 0) out.add(e.id);
+      else if (perSlot >= 2 && i === 1 && protectSecondGear(e)) out.add(e.id);
+    });
   }
   return out;
 }
 
-// 若待处理装备属于「同槽前 2 强」，拒绝
+// 若待处理装备属于受保护的「同槽强件」，拒绝
 // 原则：设备件（有 equipTmpl）但拿不到 owned 列表 → 无法确认 → 拒绝
-export function assertNotTopGear({ action, itemId, item, owned, perSlot = 2 }) {
+export function assertNotTopGear({ action, itemId, item, owned, perSlot = topGearPerSlot() }) {
   const id = itemId ?? item?.id;
   if (id == null) deny('R1', `${action}：缺少 itemId，无法确认是否前 2 强 → 拒绝`, { action });
   const isEquip = !!(item?.equipTmpl || item?.slotType != null);
@@ -64,9 +83,9 @@ export function assertNotTopGear({ action, itemId, item, owned, perSlot = 2 }) {
       action, itemId: id,
     });
   }
-  const top = topGearIds(owned, { perSlot });
-  if (top.has(id)) {
-    deny('R1', `${action}：物品 ${id}（${item?.equipTmpl?.name || item?.itemName || '?'}）是该槽位前 ${perSlot} 强，禁止卖/分解/放生`, {
+  const top = new Set([...topGearIds(owned, { perSlot })].map(String));
+  if (top.has(String(id))) {
+    deny('R1', `${action}：物品 ${id}（${item?.equipTmpl?.name || item?.itemName || '?'}）是该槽位受保护强件（第1/已穿或高价值第2），禁止卖/分解/放生`, {
       action, itemId: id,
     });
   }
@@ -83,7 +102,7 @@ export function bestPet(pets) {
 export function assertNotBestPet({ action, petId, pet, pets }) {
   const best = bestPet(pets);
   const id = petId ?? pet?.pet?.id ?? pet?.id;
-  if (best && best.pet?.id === id) {
+  if (best && String(best.pet?.id) === String(id)) {
     deny('R2', `${action}：珍兽 ${id} 是最高资质个体（${best.average}%），禁止放生`, {
       action, petId: id, bestAverage: best.average,
     });
@@ -134,7 +153,7 @@ export function assertEquipSnapshot({ action, snapshot }) {
 
 // ── R6：不可逆操作必须先 dry-run ────────────────────────────
 export const IRREVERSIBLE = new Set([
-  'SHOP_SELL', 'SMELT_START', 'SMELT', 'APPRAISE_REROLL', 'REAPPRAISE',
+  'SHOP_SELL', 'SELL', 'DISCARD', 'SMELT_START', 'SMELT', 'APPRAISE_REROLL', 'REAPPRAISE',
   'PET_RELEASE', 'ITEM_DECOMPOSE', 'DECOMPOSE', 'SMITHY_FORGE',
 ]);
 export function assertDryRunFirst({ action, op, dryRun = false, confirmed = false }) {
@@ -172,7 +191,7 @@ export function safeSnapshot(source = {}) {
 // ── 动作作用域（避免把「装备/存仓/出战」误判成破坏性操作）──
 // R1 只约束「会永久失去物品」的动作；存仓/换装/出战都不算。
 export const R1_ACTIONS = new Set([
-  'SHOP_SELL', 'SELL', 'ITEM_DECOMPOSE', 'DECOMPOSE', 'DISCARD',
+  'SHOP_SELL', 'SELL', 'ITEM_DECOMPOSE', 'DECOMPOSE', 'DISCARD', 'SMELT', 'SMELT_START',
 ]);
 // R2 只约束放生；召唤/喂食/鉴定都不算。
 export const R2_ACTIONS = new Set(['PET_RELEASE', 'RELEASE_PET']);
@@ -199,8 +218,11 @@ export function assertSafe(req = {}) {
   const notes = [];
   const snap = snapshot || safeSnapshot(req);
 
-  // 货币语义：goldCost 明确给了就是金币；否则 cost 默认按元宝算
-  const currency = req.currency || (goldCost != null ? 'gold' : 'yuanbao');
+  // 货币语义：必须显式且合法，未知 currency 一律拒绝（防止两者都按 0 绕过）
+  const currency = req.currency ?? (goldCost != null ? 'gold' : 'yuanbao');
+  if (currency !== 'gold' && currency !== 'yuanbao') {
+    throw new RedlineError('R3', `未知货币类型 ${String(currency)}，拒绝执行`, { action });
+  }
   const yuanbaoCost = currency === 'yuanbao' ? Number(cost) || 0 : 0;
   const goldCostNum = currency === 'gold' ? Number(goldCost ?? cost) || 0 : 0;
 
@@ -236,8 +258,14 @@ export function assertSafe(req = {}) {
 }
 
 // ── 永久禁调表（T5 用）─────────────────────────────────────
+const LOCK_FILE = path.join(process.env.TL_DATA_DIR || new URL('../data', import.meta.url).pathname, 'redline-locks.json');
 const LOCKED = new Set();
-export function lockCmd(cmd, reason = '') { LOCKED.add(cmd); return { cmd, reason }; }
+try { for (const c of JSON.parse(fs.readFileSync(LOCK_FILE, 'utf8'))) LOCKED.add(c); } catch { }
+function saveLocks() {
+  try { fs.mkdirSync(path.dirname(LOCK_FILE), { recursive: true }); fs.writeFileSync(LOCK_FILE, JSON.stringify([...LOCKED])); } catch { }
+}
+export function lockCmd(cmd, reason = '') { LOCKED.add(cmd); saveLocks(); return { cmd, reason }; }
+export function unlockCmd(cmd) { LOCKED.delete(cmd); saveLocks(); return { cmd }; }
 export function isLocked(cmd) { return LOCKED.has(cmd); }
 export function lockedCmds() { return [...LOCKED]; }
 export function assertNotLocked(cmd) {
@@ -249,7 +277,7 @@ export function assertNotLocked(cmd) {
 export function selfTest() {
   const owned = [
     { id: 1, isEquipped: true, equipTmpl: { slotType: 1, name: 'W1' }, equipTmpl2: null, extraStats: '{"ext_atk":500}' },
-    { id: 2, equipTmpl: { slotType: 1, name: 'W2' }, extraStats: '{"ext_atk":400}' },
+    { id: 2, quality: 3, equipTmpl: { slotType: 1, name: 'W2' }, extraStats: '{"ext_atk":400}' },
     { id: 3, equipTmpl: { slotType: 1, name: 'W3' }, extraStats: '{"ext_atk":100}' },
   ];
   const pets = [
@@ -264,6 +292,7 @@ export function selfTest() {
   };
   expect('R1 拒绝卖前2强(1)', () => assertSafe({ action: 'SHOP_SELL', op: 'SHOP_SELL', itemId: 1, item: owned[0], owned, dryRun: true }), true);
   expect('R1 拒绝卖前2强(2)', () => assertSafe({ action: 'SHOP_SELL', op: 'SHOP_SELL', itemId: 2, item: owned[1], owned, dryRun: true }), true);
+  expect('R1 允许卖q2第二名', () => assertSafe({ action: 'SHOP_SELL', op: 'SHOP_SELL', itemId: 999, item: { id: 999, quality: 2, equipTmpl: { slotType: 1, name: 'W9' } }, owned: [...owned, { id: 4, quality: 2, equipTmpl: { slotType: 1, name: 'W4' }, extraStats: '{"ext_atk":90}' }], dryRun: true }), false);
   expect('R1 允许卖弱件(3)', () => assertSafe({ action: 'SHOP_SELL', op: 'SHOP_SELL', itemId: 3, item: owned[2], owned, dryRun: true }), false);
   expect('R2 拒绝放生最高资质', () => assertSafe({ action: 'PET_COMMAND', op: 'PET_RELEASE', petId: 10, pets, dryRun: true }), true);
   expect('R2 允许放生低资质', () => assertSafe({ action: 'PET_COMMAND', op: 'PET_RELEASE', petId: 11, pets, dryRun: true }), false);
